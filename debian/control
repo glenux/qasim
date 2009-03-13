@@ -1,0 +1,13 @@
+Source: sshfs-mapper
+Section: net
+Priority: extra
+Maintainer: Glenn ROLLAND <glenux@glenux.net>
+Build-Depends: debhelper (>= 5)
+Standards-Version: 3.7.2
+
+Package: sshfs-mapper
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, sshfs (>= 1.7)
+Description: Easy mount solution for SSH filesystems.
+ Sshfs-Mapper is a helper script for sshfs, the filesystem client based on fuse
+ and ssh. It provides automating and global settings control for sshfs mounts.

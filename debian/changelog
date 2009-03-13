@@ -1,0 +1,41 @@
+sshfs-mapper (0.1-4.2) unstable; urgency=low
+
+  * Changed interpreter to /bin/sh instead of /bin/bash .
+
+ -- Glenn ROLLAND <glenux@glenux.net>  Tue, 30 Dec 2008 08:06:10 +0100
+
+sshfs-mapper (0.1-4.1) unstable; urgency=low
+
+  * Required dependencies were too strict on sshfs. 
+  * Required version of sshfs is now 1.7.
+
+ -- Glenn ROLLAND <glenux@glenux.net>  Tue, 30 Dec 2008 07:44:45 +0100
+
+sshfs-mapper (0.1-4) unstable; urgency=low
+
+  * Included REMOTE_PORT in default map example.
+  * Disabled compression for performance reasons.
+
+ -- Glenn ROLLAND <glenux@glenux.net>  Mon, 08 Oct 2008 01:15:00 +0100
+
+sshfs-mapper (0.1-3) unstable; urgency=low
+
+  * Port change support.
+
+ -- Glenn ROLLAND <glenux@glenux.net>  Mon, 18 Aug 2008 21:27:00 +0100
+
+sshfs-mapper (0.1-2) unstable; urgency=low
+
+  * A lot of fixes in the debian package:
+    - Updated short description.
+  * Added a .desktop file for ''XDG_CONFIG_HOME/.config/autostart''.
+  * Add config files in documentation dir.
+
+ -- Glenn ROLLAND <glenux@glenux.net>  Sat, 17 Mar 2008 12:29:00 +0100
+
+sshfs-mapper (0.1-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Glenn ROLLAND <glenux@glenux.net>  Sat, 15 Mar 2008 17:11:00 +0100
+

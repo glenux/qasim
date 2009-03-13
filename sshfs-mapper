@@ -1,0 +1,182 @@
+#!/bin/sh
+# vim: set ts=2 sw=2 et:
+set -u
+
+
+################################################################################
+##
+## Variables initializations
+##
+
+set |grep -q '^XDG_CONFIG_HOME' || XDG_CONFIG_HOME="$HOME/.config"
+SSHFS_DIR="$XDG_CONFIG_HOME/sshfs-mapper"
+SSHFS_CONFIG="$SSHFS_DIR/config"
+SSHFS_MOUNT=1
+SSHFS_HOSTS_SELECTION=0
+
+
+################################################################################
+##
+## Functions definitions
+##
+
+read_conf() {
+	local config=$1
+	local var=$2
+	local value=`eval echo \`cat $config |grep "^$2=" |sed "s/$2=//"\``
+	echo $value
+}
+
+do_mount() {
+  local remotedir=$1
+  local localdir=$2
+  local remoteport=$3
+
+  sshfs \
+    -o allow_root \
+    -o idmap=user \
+    -o uid=`id -u` \
+    -o gid=`id -g` \
+    -o reconnect \
+    -o workaround=all \
+    -o cache_timeout=240 \
+    -o Ciphers=arcfour \
+    -o Port=$remoteport \
+    $remotedir \
+    $localdir
+
+  #-o compression=yes
+}
+
+do_umount() {
+  local remotedir=$1
+  local localdir=$2
+  fusermount -u $localdir
+}
+
+do_usage() {
+  cat >&2 <<EOF
+Usage: `basename $0` [options]
+-h	Show this help and exit.
+-i	Initialize user configuration.
+-u	Umount user maps.
+EOF
+exit 1
+}
+
+do_initialize()
+{
+  echo "Initializing user maps..."
+  if [ -d "$SSHFS_DIR" ]; then
+    echo -e "\nERROR: Configuration directory already exists!" >&2 
+    echo "To erase your setup, please manually remove directory \"$SSHFS_DIR\" first." >&2
+    exit 1
+  else
+    mkdir -p "$SSHFS_DIR" 
+    cat > "$SSHFS_DIR/config" <<EOF
+MOUNTPOINT=\$HOME/mnt
+LINKTO=\$HOME
+EOF
+
+    cat > "$SSHFS_DIR/default.map" <<EOF
+REMOTE_USER=\$USER
+REMOTE_HOST=example.com
+REMOTE_PORT=22
+
+MAP=RemoteDocs /home/\$USER/Documents
+MAP=RemoteMusic /home/\$USER/Music
+EOF
+    echo -e "\nManually edit configuration files in \"$SSHFS_DIR\""
+    echo "to adjust sshfs-mapper configuration to your settings."
+    echo -e "\nType \"man sshfs-mapper\" to get more help."
+
+    exit 0
+  fi
+}
+
+
+################################################################################
+##
+## Parse options and mount/umount
+##
+
+#TODO:while getopts h:u o
+while getopts hiu o
+do
+  case "$o" in
+    i)  # init (copy config files in user HOME)
+        do_initialize
+        ;;
+    u)  # umount
+        echo "Umounting..."
+        SSHFS_MOUNT=0
+        ;;
+#    s)  # only selected hosts
+#        #SSHFS_HOST_SELECTION=1
+#        SSHFS_HOST_PATTERN="$OPTARG"
+#        ;;
+    h)
+    	do_usage
+	;;
+    [?]) 
+      do_usage
+        ;;
+  esac
+done
+
+[ ! -d $SSHFS_DIR ] && mkdir $SSHFS_DIR
+[ ! -d $SSHFS_DIR ] && {
+	echo -e "\nERROR: Unable to create $SSHFS_DIR" >&2
+	exit 1
+}
+
+[ ! -f "$SSHFS_CONFIG" ] && {
+	echo "MOUNTPOINT=\$HOME/mnt" >> "$SSHFS_CONFIG"
+}
+[ ! -f "$SSHFS_CONFIG" ] && {
+	echo -e "\nERROR: Unable to find config file." >&2
+	exit 1
+}
+
+mountpoint=$( read_conf "$SSHFS_CONFIG" MOUNTPOINT )
+[ "x$mountpoint" = "x" ] && {
+	echo -e "\nERROR: Mountpoint undefined." >&2
+  echo "Edit mountpoint definition in \"$SSHFS_CONFIG\"" >&2
+	exit 1;
+}
+echo "MOUNTPOINT=$mountpoint"
+
+for map_file in `find "$SSHFS_DIR" -type f -name '*.map' `; do
+	remote_host=$( read_conf $map_file REMOTE_HOST )
+	remote_user=$( read_conf $map_file REMOTE_USER )
+	remote_port=$( read_conf $map_file REMOTE_PORT )
+	map=$( read_conf $map_file MAP )
+	echo "Map: $remote_user@$remote_host"
+
+  map_count=0
+  map_name=""
+  remote_dir=""
+  for map_item in $map; do
+    [ $map_count = 0 ] && map_name=$map_item
+    [ $map_count = 1 ] && remote_dir=$map_item
+    map_count=$(( ( $map_count + 1 ) % 2 ))
+    [ $map_count = 0 ] && {
+      echo "  $map_name => $remote_dir"
+      if ! mount | grep -q " $mountpoint/$map_name " ; then
+        [ $SSHFS_MOUNT = 1 ] && {
+          mkdir -p $mountpoint/$map_name
+          do_mount $remote_user@$remote_host:$remote_dir $mountpoint/$map_name $remote_port
+          rm -f $HOME/$map_name
+          ln -s $mountpoint/$map_name $HOME/$map_name
+        }
+      else
+        [ $SSHFS_MOUNT = 0 ] && {
+          do_umount $remote_user@$remote_host:$remote_dir $mountpoint/$map_name
+          rm -f $HOME/$map_name
+        }
+        [ $SSHFS_MOUNT = 1 ] && echo "    (Already mounted on $mountpoint/$map_name)"
+      fi 
+    }
+	done
+done
+
