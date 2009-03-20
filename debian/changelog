@@ -1,3 +1,9 @@
+sshfs-mapper (0.1-4.3) unstable; urgency=low
+
+  * .map parser was buggy with some kind of whitespaces.
+
+ --  <warbrain@daneel.glenux.net>  Fri, 20 Mar 2009 17:49:17 +0100
+
 sshfs-mapper (0.1-4.2) unstable; urgency=low
 
   * Changed interpreter to /bin/sh instead of /bin/bash .
