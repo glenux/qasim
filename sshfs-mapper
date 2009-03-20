@@ -23,8 +23,8 @@ SSHFS_HOSTS_SELECTION=0
 read_conf() {
 	local config=$1
 	local var=$2
-	local value=`eval echo \`cat $config |grep "^$2=" |sed "s/$2=//"\``
-	echo $value
+	local value="`eval echo \`cat $config |grep "^$2=" |sed "s/$2=//"\``"
+	echo "$value"
 }
 
 do_mount() {
