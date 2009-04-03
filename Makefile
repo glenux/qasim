@@ -2,9 +2,13 @@
 BINDIR=$(DESTDIR)/usr/bin
 MANDIR=$(DESTDIR)/usr/share/man
 DOCDIR=$(DESTDIR)/usr/share/doc/sshfs-mapper
+
 all:
+	racc -v -o mapparser.rb mapparser.y
+	cat mapparser.output
 
 clean:
+	rm -f mapparser.rb
 
 install:
 	mkdir -p $(BINDIR)

@@ -1,0 +1,33 @@
+
+server "daneel.glenux.net" {
+	user "glenux";
+	port 22;
+	automount true; // default
+	compress true; // default
+
+	map "Media" { 
+		user "glenux";
+		remote "/opt/media";
+	};
+
+	map "MediaSafe" {
+		user $USER;
+		remote "/home/media";
+	};
+
+	map "Documents" {
+		user $USER;
+		remote "/home/$USER";
+	};
+
+	map "Extra" {
+		user $USER;
+		remote "/opt
+	};
+
+	map "DocumentsPapa" {
+		user papa;
+		remote "/home/papa"
+	};
+
+};
