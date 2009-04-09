@@ -3,49 +3,63 @@ class MapParser
 rule
 
 commands 
-	: commands command SEMICOLON { puts "GOT A COMMAND" }
-	| /* none */ { result =  0 }
+	: commands command_blk SEMICOLON { puts "GOT A COMMAND" }
+	| /* none */ { puts "no command found" }
 
-command 
+command_blk
 	: global_blk
 	| server_blk
 
 server_blk
-	: SERVER SEP STRING SEP OBRACE server_opts EBRACE
-	: SERVER SEP STRING OBRACE server_opts EBRACE
+	: SERVER STRING OBRACE server_opts EBRACE { puts "[server #{val[1]}]" }
 
 global_blk
 	: GLOBAL OBRACE global_opts EBRACE
 
 server_opts 
 	: server_opts server_opt SEMICOLON
-	| /* none */ { result = 0 }
+	| /* none */
 
 server_opt 
-	: user_opt 
-	|	port_opt
-	|	automount_opt
-	|	compress_opt
-	|	reconnect_opt
+	: user_opt { puts "=> user opt" }
+	| port_opt { puts "=> port opt" }
+	| automount_opt { puts "=> automount opt" }
+	| compress_opt { puts "=> compress opt" }
+	| reconnect_opt { puts "=> reconnect opt" }
+	| server_map_blk { puts "=> server_map blk" }
+
+server_map_blk
+	: MAP STRING OBRACE server_map_opts EBRACE
+
+server_map_opts
+	: server_map_opts server_map_opt SEMICOLON
+	| /* none */
+	
+server_map_opt
+	: remote_opt
+	| local_opt
+	| user_opt
+	| port_opt
+	| compress_opt
 
 user_opt 
-	: USER QUOTE STRING QUOTE
+	: USER STRING { puts "* user = #{val[1]}" }
 
 port_opt 
-	: PORT INTEGER
+	: PORT NUMBER { puts "* port = #{val[1]}" }
 
 automount_opt 
-	: AUTOMOUNT boolean { puts ( "AUTOMOUNT => " + val[1] ) }
+	: AUTOMOUNT boolean { puts "* automount = #{@bool_result}" }
 
 compress_opt 
-	: COMPRESS boolean { puts ( "COMPRESS => " + val[1] ) }
+	: COMPRESS boolean { puts "* compress = #{@bool_result}" }
 
 reconnect_opt 
-	: RECONNECT boolean { puts ( "RECONNECT => " + val[1] ) }
+	: RECONNECT boolean { puts ( "* reconnect = #{@bool_result}" ) }
 
 boolean
-	: BOOL_TRUE { result = true }
-	| BOOL_FALSE { result = false }
+	: BOOL_TRUE { @bool_result = true }
+	| BOOL_FALSE { @bool_result = false }
 
 end
 
@@ -61,27 +75,25 @@ require 'strscan'
 	def parse( str )
 		puts "parse start..."
 		tokens = []
+
 		scanner = StringScanner.new( str )
 		puts ( "scanner?" + scanner.string )
-
 		
 		until scanner.eos?
 			puts "scanning.. at #{scanner.pos}"
 			case
 				when m = scanner.scan( /\/\/.*$/ )
 					# comments
-					tokens.push [:SEP, m]
 				when m = scanner.scan( /(\s+|\n)/ )
 					# whitespace and newlines
-					tokens.push [:SEP, m]
-				when m = scanner.scan( /;/ )
-					 tokens.push [:SEMICOLON, m]
-				when m = scanner.scan( /\d+/ )
-					 tokens.push [:NUMBER, m]
 				when m = scanner.scan( /\{/ )
 					tokens.push [:OBRACE, m]
 				when m = scanner.scan( /\}/ )
 					tokens.push [:EBRACE, m]
+				when m = scanner.scan( /;/ )
+					tokens.push [:SEMICOLON, m]
+				when m = scanner.scan( /\d+/ )
+					tokens.push [:NUMBER, m]
 				when m = scanner.scan( /user/i )
 					tokens.push [:USER, m]
 				when m = scanner.scan( /automount/i )
