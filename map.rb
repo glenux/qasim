@@ -1,6 +1,12 @@
+module SshfsMapper
+	class Map 
+		def initialize 
+			@host = nil
+			@port = 22
+			@user = nil
 
-class Map 
-	def initialize 
+
+		end
+
 	end
-
 end
