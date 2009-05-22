@@ -1,33 +1,33 @@
 #!/usr/bin/ruby
 
 require 'config'
+require 'map'
 
-class Map 
-	def initialize() 
+module SshfsMapper
+	class SshfsMapper 
+		def initialize()
+			@maps = nil
+			puts "-- sshfs-mapper --"
+			conf = Config.new
+			conf.parseCmd ARGV
+			@maps = conf.parseFile
+			puts conf
+		end
+
+
+		def run()
+			if @maps.nil? then
+				return
+			end
+			@maps.each do |map_path|
+				map = Map.new( map_path )
+			end
+			puts "--run"
+		end
+
 	end
-
-	def self.loadFromFile( filename ) 
-	end
-
-
 end
 
-class Config 
-
-end
-
-
-class SshfsMapper 
-	def initialize()
-		puts "-- sshfs-mapper --"
-		conf = Config.new
-		conf.parseCmd ARGV
-		conf.parseFile
-		puts conf
-	end
-
-end
-
-
-SshfsMapper.new
+app = SshfsMapper::SshfsMapper.new
+app.run
 
