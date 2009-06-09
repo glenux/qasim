@@ -1,10 +1,10 @@
-sshfs-mapper (0.2) unstable; urgency=low
+sshfs-mapper (0.2-1) unstable; urgency=low
 
   * .map parser was buggy with some kind of whitespaces.
   * Added an option for listing available .map files.
   * Added an option for (u)mounting only given .map files.
 
- -- Glenn Y. Rolland <glenux@192.168.46.180>  Tue, 09 Jun 2009 10:26:49 +0200
+ -- Glenn Y. Rolland <glenux@glenux.net>  Tue, 09 Jun 2009 10:26:49 +0200
 
 sshfs-mapper (0.1-4.1) unstable; urgency=low
 
