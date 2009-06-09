@@ -1,14 +1,10 @@
-sshfs-mapper (0.1-4.3) unstable; urgency=low
+sshfs-mapper (0.2) unstable; urgency=low
 
   * .map parser was buggy with some kind of whitespaces.
+  * Added an option for listing available .map files.
+  * Added an option for (u)mounting only given .map files.
 
- --  <warbrain@daneel.glenux.net>  Fri, 20 Mar 2009 17:49:17 +0100
-
-sshfs-mapper (0.1-4.2) unstable; urgency=low
-
-  * Changed interpreter to /bin/sh instead of /bin/bash .
-
- -- Glenn ROLLAND <glenux@glenux.net>  Tue, 30 Dec 2008 08:06:10 +0100
+ -- Glenn Y. Rolland <glenux@192.168.46.180>  Tue, 09 Jun 2009 10:26:49 +0200
 
 sshfs-mapper (0.1-4.1) unstable; urgency=low
 
