@@ -100,8 +100,11 @@ EOF
 ## Parse options and mount/umount
 ##
 
+SSHFS_HOST_PATTERN=" "
+SSHFS_HOST_LIMIT=0
+SSHFS_HOST_LIST=0
 #TODO:while getopts h:u o
-while getopts hiu o
+while getopts hiuls: o
 do
   case "$o" in
     i)  # init (copy config files in user HOME)
@@ -111,10 +114,15 @@ do
         echo "Umounting..."
         SSHFS_MOUNT=0
         ;;
-#    s)  # only selected hosts
-#        #SSHFS_HOST_SELECTION=1
-#        SSHFS_HOST_PATTERN="$OPTARG"
-#        ;;
+    s)  # only selected hosts
+        #SSHFS_HOST_SELECTION=1
+        SSHFS_HOST_PATTERN+="$OPTARG "
+        SSHFS_HOST_LIMIT=1
+        ;;
+      l)
+        SSHFS_HOST_LIST=1
+        ;;
+
     h)
     	do_usage
 	;;
@@ -144,9 +152,17 @@ mountpoint=$( read_conf "$SSHFS_CONFIG" MOUNTPOINT )
   echo "Edit mountpoint definition in \"$SSHFS_CONFIG\"" >&2
 	exit 1;
 }
-echo "MOUNTPOINT=$mountpoint"
 
 for map_file in `find "$SSHFS_DIR" -type f -name '*.map' `; do
+  if [ $SSHFS_HOST_LIST -eq 1 ]; then
+    basename ${map_file/.map/}
+    continue
+  fi
+  if [ $SSHFS_HOST_LIMIT -eq 1 ]; then
+    if ! echo "$SSHFS_HOST_PATTERN" | grep -q " `basename ${map_file/.map/}` " ; then
+      continue
+    fi
+  fi
 	remote_host=$( read_conf $map_file REMOTE_HOST )
 	remote_user=$( read_conf $map_file REMOTE_USER )
 	remote_port=$( read_conf $map_file REMOTE_PORT )
