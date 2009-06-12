@@ -59,6 +59,8 @@ do_usage() {
 Usage: `basename $0` [options]
 -h	Show this help and exit.
 -i	Initialize user configuration.
+-l  List available maps.
+-s  Only use specified map.
 -u	Umount user maps.
 EOF
 exit 1
@@ -115,7 +117,6 @@ do
         SSHFS_MOUNT=0
         ;;
     s)  # only selected hosts
-        #SSHFS_HOST_SELECTION=1
         SSHFS_HOST_PATTERN+="$OPTARG "
         SSHFS_HOST_LIMIT=1
         ;;
@@ -153,6 +154,13 @@ mountpoint=$( read_conf "$SSHFS_CONFIG" MOUNTPOINT )
 	exit 1;
 }
 
+is_mounted() {
+  local map_name=$1
+
+  mount | grep -q " $mountpoint/$map_name "
+  return $?
+}
+
 for map_file in `find "$SSHFS_DIR" -type f -name '*.map' `; do
   if [ $SSHFS_HOST_LIST -eq 1 ]; then
     basename ${map_file/.map/}
@@ -184,7 +192,7 @@ for map_file in `find "$SSHFS_DIR" -type f -name '*.map' `; do
     map_count=$(( ( $map_count + 1 ) % 2 ))
     [ $map_count = 0 ] && {
       echo "  $map_name => $remote_dir"
-      if ! mount | grep -q " $mountpoint/$map_name " ; then
+      if ! is_mounted $map_name  ; then
         [ $SSHFS_MOUNT = 1 ] && {
           mkdir -p $mountpoint/$map_name
           do_mount $remote_user@$remote_host:$remote_dir $mountpoint/$map_name $remote_port

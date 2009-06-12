@@ -21,6 +21,7 @@ module SshfsMapper
 			end
 			@maps.each do |map_path|
 				map = Map.new( map_path )
+				map.parse()
 			end
 			puts "--run"
 		end
