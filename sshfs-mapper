@@ -105,10 +105,14 @@ EOF
 SSHFS_HOST_PATTERN=" "
 SSHFS_HOST_LIMIT=0
 SSHFS_HOST_LIST=0
+SSHFS_HOST_AUTO=0
 #TODO:while getopts h:u o
-while getopts hiuls: o
+while getopts ahiuls: o
 do
   case "$o" in
+    a)  # mount all
+        SSHFS_HOST_AUTO=1
+        ;;
     i)  # init (copy config files in user HOME)
         do_initialize
         ;;
@@ -168,6 +172,10 @@ for map_file in `find "$SSHFS_DIR" -type f -name '*.map' `; do
   fi
   if [ $SSHFS_HOST_LIMIT -eq 1 ]; then
     if ! echo "$SSHFS_HOST_PATTERN" | grep -q " `basename ${map_file/.map/}` " ; then
+      continue
+    fi
+  else
+    if [ $SSHFS_HOST_AUTO -eq 0 ]; then
       continue
     fi
   fi
