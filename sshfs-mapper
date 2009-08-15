@@ -1,5 +1,5 @@
 #!/bin/sh
-# vim: set ts=2 sw=2 et:
+# vim: set ts=2 sw=2 :
 set -u
 
 
@@ -69,7 +69,7 @@ exit 1
 do_initialize()
 {
   echo "Initializing user maps..."
-  if [ -d "$SSHFS_DIR" ]; then
+  if [ -e "$SSHFS_DIR" ]; then
     echo -e "\nERROR: Configuration directory already exists!" >&2 
     echo "To erase your setup, please manually remove directory \"$SSHFS_DIR\" first." >&2
     exit 1
@@ -88,12 +88,12 @@ REMOTE_PORT=22
 MAP=RemoteDocs /home/\$USER/Documents
 MAP=RemoteMusic /home/\$USER/Music
 EOF
-    echo -e "\nManually edit configuration files in \"$SSHFS_DIR\""
-    echo "to adjust sshfs-mapper configuration to your settings."
-    echo -e "\nType \"man sshfs-mapper\" to get more help."
+				echo -e "\nManually edit configuration files in \"$SSHFS_DIR\""
+				echo "to adjust sshfs-mapper configuration to your settings."
+				echo -e "\nType \"man sshfs-mapper\" to get more help."
 
-    exit 0
-  fi
+				exit 0
+				fi
 }
 
 
@@ -137,26 +137,26 @@ do
   esac
 done
 
-[ ! -d $SSHFS_DIR ] && mkdir $SSHFS_DIR
-[ ! -d $SSHFS_DIR ] && {
+if [ ! -e $SSHFS_DIR ]; then mkdir $SSHFS_DIR ; fi
+if [ ! -e $SSHFS_DIR ]; then
 	echo -e "\nERROR: Unable to create $SSHFS_DIR" >&2
 	exit 1
-}
+fi
 
-[ ! -f "$SSHFS_CONFIG" ] && {
+if [ ! -e "$SSHFS_CONFIG" ]; then
 	echo "MOUNTPOINT=\$HOME/mnt" >> "$SSHFS_CONFIG"
-}
-[ ! -f "$SSHFS_CONFIG" ] && {
+fi
+if [ ! -e "$SSHFS_CONFIG" ]; then
 	echo -e "\nERROR: Unable to find config file." >&2
 	exit 1
-}
+fi
 
 mountpoint=$( read_conf "$SSHFS_CONFIG" MOUNTPOINT )
-[ "x$mountpoint" = "x" ] && {
+if [ "x$mountpoint" = "x" ]; then
 	echo -e "\nERROR: Mountpoint undefined." >&2
   echo "Edit mountpoint definition in \"$SSHFS_CONFIG\"" >&2
 	exit 1;
-}
+fi
 
 is_mounted() {
   local map_name=$1
@@ -167,11 +167,11 @@ is_mounted() {
 
 for map_file in `find "$SSHFS_DIR" -type f -name '*.map' `; do
   if [ $SSHFS_HOST_LIST -eq 1 ]; then
-    basename ${map_file/.map/}
+    basename `echo ${map_file} | sed 's/.map$//'`
     continue
   fi
   if [ $SSHFS_HOST_LIMIT -eq 1 ]; then
-    if ! echo "$SSHFS_HOST_PATTERN" | grep -q " `basename ${map_file/.map/}` " ; then
+    if ! echo "$SSHFS_HOST_PATTERN" | grep -q " `basename \`echo ${map_file} |sed s'/.map$//' \`` " ; then
       continue
     fi
   else
@@ -195,26 +195,28 @@ for map_file in `find "$SSHFS_DIR" -type f -name '*.map' `; do
   map_name=""
   remote_dir=""
   for map_item in $map; do
-    [ $map_count = 0 ] && map_name=$map_item
-    [ $map_count = 1 ] && remote_dir=$map_item
+    if [ $map_count = 0 ]; then map_name=$map_item ; fi
+    if [ $map_count = 1 ]; then remote_dir=$map_item ; fi
     map_count=$(( ( $map_count + 1 ) % 2 ))
-    [ $map_count = 0 ] && {
+    if [ $map_count = 0 ]; then
       echo "  $map_name => $remote_dir"
       if ! is_mounted $map_name  ; then
-        [ $SSHFS_MOUNT = 1 ] && {
+        if [ $SSHFS_MOUNT = 1 ]; then
           mkdir -p $mountpoint/$map_name
           do_mount $remote_user@$remote_host:$remote_dir $mountpoint/$map_name $remote_port
           rm -f $HOME/$map_name
           ln -s $mountpoint/$map_name $HOME/$map_name
-        }
+        fi
       else
-        [ $SSHFS_MOUNT = 0 ] && {
+        if [ $SSHFS_MOUNT = 0 ]; then
           do_umount $remote_user@$remote_host:$remote_dir $mountpoint/$map_name
           rm -f $HOME/$map_name
-        }
-        [ $SSHFS_MOUNT = 1 ] && echo "    (Already mounted on $mountpoint/$map_name)"
+        fi
+        if [ $SSHFS_MOUNT = 1 ]; then
+           echo "    (Already mounted on $mountpoint/$map_name)"
+        fi
       fi 
-    }
+    fi
 	done
 done
 
