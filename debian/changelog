@@ -1,3 +1,13 @@
+sshfs-mapper (0.3-1) unstable; urgency=low
+
+  * Allow using symbolic links for configuration files or directories.
+    The idea behind is to centralize data for multi-user configurations.
+  * Replaced bashisms (braces & substitutions) to run on dash.
+  * Renamed example directory from conf/ to examples/ .
+  * Added default configuration in /etc/sshfs-mapper.
+
+ --  <warbrain@daneel.glenux.net>  Sat, 15 Aug 2009 19:14:23 +0200
+
 sshfs-mapper (0.2-1) unstable; urgency=low
 
   * .map parser was buggy with some kind of whitespaces.
