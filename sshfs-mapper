@@ -165,7 +165,7 @@ is_mounted() {
   return $?
 }
 
-for map_file in `find "$SSHFS_DIR" -type f -name '*.map' `; do
+for map_file in `find "$SSHFS_DIR" -follow -type f -name '*.map' `; do
   if [ $SSHFS_HOST_LIST -eq 1 ]; then
     basename `echo ${map_file} | sed 's/.map$//'`
     continue
