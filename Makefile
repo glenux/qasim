@@ -19,7 +19,7 @@ install:
 	#
 	mkdir -p $(CONFDIR)
 	for f in `ls conf`; do \
-	  cp conf/$$f $(CONFDIR)/$ff ;  \
+	  cp conf/$$f $(CONFDIR)/$$f ;  \
 	done
 	#
 	mkdir -p $(DOCDIR)/examples
