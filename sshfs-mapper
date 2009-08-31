@@ -121,7 +121,7 @@ do
         SSHFS_MOUNT=0
         ;;
     s)  # only selected hosts
-        SSHFS_HOST_PATTERN="$SSHFS_HOST_PATTERN $OPTARG "
+        SSHFS_HOST_PATTERN="${SSHFS_HOST_PATTERN}${OPTARG} "
         SSHFS_HOST_LIMIT=1
         ;;
       l)
