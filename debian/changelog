@@ -1,3 +1,11 @@
+sshfs-mapper (0.3-2) unstable; urgency=low
+
+  * Removed another set of bashisms.
+  * Typo in installation scripts.
+  * Fixed symlinks in installation.
+
+ --  <warbrain@daneel.glenux.net>  Fri, 04 Sep 2009 22:15:46 +0200
+
 sshfs-mapper (0.3-1) unstable; urgency=low
 
   * Allow using symbolic links for configuration files or directories.
