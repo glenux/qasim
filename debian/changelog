@@ -1,10 +1,22 @@
+sshfs-mapper (0.4-1) unstable; urgency=low
+
+ * r1429 - Allow long command-line options. Test selected map existance.
+ * r1428 - Miscellanous help fixes.
+   * Added help for the -a option
+   * Fixed bad column alignment.
+   * Added precisions for the -u option.
+ * r1427 - Replaced cp by install for binary installation.
+ * r1426 - Added bash completion.
+
+ -- Glenn Y. Rolland <glenux@glenux.net>  Tue, 15 Sep 2009 12:24:29 +0200
+
 sshfs-mapper (0.3-2) unstable; urgency=low
 
   * Removed another set of bashisms.
   * Typo in installation scripts.
   * Fixed symlinks in installation.
 
- --  <warbrain@daneel.glenux.net>  Fri, 04 Sep 2009 22:15:46 +0200
+ -- Glenn Y. Rolland <glenux@glenux.net>  Fri, 04 Sep 2009 22:15:46 +0200
 
 sshfs-mapper (0.3-1) unstable; urgency=low
 
@@ -14,7 +26,7 @@ sshfs-mapper (0.3-1) unstable; urgency=low
   * Renamed example directory from conf/ to examples/ .
   * Added default configuration in /etc/sshfs-mapper.
 
- --  <warbrain@daneel.glenux.net>  Sat, 15 Aug 2009 19:14:23 +0200
+ -- Glenn Y. Rolland <glenux@glenux.net>  Sat, 15 Aug 2009 19:14:23 +0200
 
 sshfs-mapper (0.2-1) unstable; urgency=low
 
