@@ -1,0 +1,23 @@
+#!/bin/sh
+
+_sshfsmapper_opts()
+{
+	local cur prev sshfsmapper_opts
+
+	COMPREPLY=()
+	cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+	sshfsmapper_opts='-s -h -i -l -u -a'
+	if [[ "$cur" == -* ]]; then
+		COMPREPLY=( $( compgen -W "$sshfsmapper_opts" -- $cur ) )
+	else
+		if [[ "$prev" == -s ]]; then
+			COMPREPLY=( $( sshfs-mapper -l 2> /dev/null ) )
+		else	
+			COMPREPLY=( $( compgen -W "$sshfsmapper_opts" -- $cur ) )
+		fi
+	fi
+}
+
+complete -F _sshfsmapper_opts $default sshfs-mapper
