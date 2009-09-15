@@ -57,12 +57,12 @@ do_umount() {
 do_usage() {
   cat >&2 <<EOF
 Usage: `basename $0` [options]
--h  Show this help and exit.
--i  Initialize user configuration.
--l  List available maps.
--a  Use all maps.
--s  Only use specified map.
--u  Umount user maps (mount if not specified).
+-h, --help            Show this help and exit.
+-i, --init            Initialize user configuration.
+-l, --list            List available maps.
+-a, --all             Use all maps.
+-s, --select <map>    Only use specified map.
+-u, --umount          Umount user maps (mount if not specified).
 EOF
 exit 1
 }
@@ -107,36 +107,48 @@ SSHFS_HOST_PATTERN=" "
 SSHFS_HOST_LIMIT=0
 SSHFS_HOST_LIST=0
 SSHFS_HOST_AUTO=0
-#TODO:while getopts h:u o
-while getopts ahiuls: o
+OPTFOUND=0
+while OPT=${1:-} ; shift
 do
-  case "$o" in
-    a)  # mount all
-        SSHFS_HOST_AUTO=1
-        ;;
-    i)  # init (copy config files in user HOME)
-        do_initialize
-        ;;
-    u)  # umount
-        echo "Umounting..."
-        SSHFS_MOUNT=0
-        ;;
-    s)  # only selected hosts
-        SSHFS_HOST_PATTERN="${SSHFS_HOST_PATTERN}${OPTARG} "
-        SSHFS_HOST_LIMIT=1
-        ;;
-      l)
-        SSHFS_HOST_LIST=1
-        ;;
-
-    h)
-    	do_usage
-	;;
-    [?]) 
-      do_usage
-        ;;
+  OPTARG=${1:-}
+  #echo "$OPT?"
+  case "$OPT" in
+    --all|-a)  # mount all
+    SSHFS_HOST_AUTO=1
+    OPTFOUND=1
+    ;;
+    --init|-i)  # init (copy config files in user HOME)
+    do_initialize
+    OPTFOUND=1
+    ;;
+    --umount|-u)  # umount
+    echo "Umounting..."
+    SSHFS_MOUNT=0
+    OPTFOUND=1
+    ;;
+    --select|-s)  # only selected hosts
+    SSHFS_HOST_PATTERN="${SSHFS_HOST_PATTERN}${OPTARG} "
+    SSHFS_HOST_LIMIT=1
+    shift
+    OPTFOUND=1
+    ;;
+    --list|-l)
+    SSHFS_HOST_LIST=1
+    OPTFOUND=1
+    ;;
+    --help|-h)
+    do_usage
+    OPTFOUND=1
+    ;;
+    *) 
+    do_usage
+    OPTFOUND=1
+    ;;
   esac
 done
+if [ $OPTFOUND -eq 0 ]; then
+  do_usage
+fi
 
 if [ ! -e $SSHFS_DIR ]; then mkdir $SSHFS_DIR ; fi
 if [ ! -e $SSHFS_DIR ]; then
@@ -151,6 +163,12 @@ if [ ! -e "$SSHFS_CONFIG" ]; then
 	echo -e "\nERROR: Unable to find config file." >&2
 	exit 1
 fi
+
+for map_file in $SSHFS_HOST_PATTERN; do
+  if [ ! -e "$SSHFS_DIR/$map_file.map" ]; then
+    echo -e "\nERROR: Unable to find map file '$map_file.map'." >&2
+  fi
+done
 
 mountpoint=$( read_conf "$SSHFS_CONFIG" MOUNTPOINT )
 if [ "x$mountpoint" = "x" ]; then
