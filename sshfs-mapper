@@ -57,11 +57,12 @@ do_umount() {
 do_usage() {
   cat >&2 <<EOF
 Usage: `basename $0` [options]
--h	Show this help and exit.
--i	Initialize user configuration.
+-h  Show this help and exit.
+-i  Initialize user configuration.
 -l  List available maps.
+-a  Use all maps.
 -s  Only use specified map.
--u	Umount user maps.
+-u  Umount user maps (mount if not specified).
 EOF
 exit 1
 }
