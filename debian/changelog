@@ -1,3 +1,9 @@
+sshfs-mapper (0.4-2) unstable; urgency=low
+
+  * r1432 - Fixed completion ( map names were not correctly completed ).
+
+ -- Glenn Y. Rolland <glenux@glenux.net>  Tue, 15 Sep 2009 14:18:25 +0200
+
 sshfs-mapper (0.4-1) unstable; urgency=low
 
  * r1429 - Allow long command-line options. Test selected map existance.
