@@ -108,8 +108,11 @@ SSHFS_HOST_LIMIT=0
 SSHFS_HOST_LIST=0
 SSHFS_HOST_AUTO=0
 OPTFOUND=0
-while OPT=${1:-} ; shift
+while true
 do
+  OPT=${1:-}
+  if [ -z $OPT ]; then break ; fi
+  shift
   OPTARG=${1:-}
   #echo "$OPT?"
   case "$OPT" in
