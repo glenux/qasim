@@ -1,3 +1,9 @@
+sshfs-mapper (0.4-3) unstable; urgency=low
+
+  * r1435 - fix 'shift : can't shift that many' error with old dash.
+
+ -- Glenn Y. Rolland <glenux@glenux.net> Fri, 18 Sep 2009 22:38:17 +0200
+
 sshfs-mapper (0.4-2) unstable; urgency=low
 
   * r1432 - Fixed completion ( map names were not correctly completed ).
