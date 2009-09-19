@@ -1,4 +1,5 @@
 #!/usr/bin/ruby
+# vim: set ts=2 sw=2 :
 
 require 'config'
 require 'map'
@@ -19,9 +20,8 @@ module SshfsMapper
 			if @maps.nil? then
 				return
 			end
-			@maps.each do |map_path|
-				map = Map.new( map_path )
-				map.parse()
+			@maps.each do |map|
+				map.connect()
 			end
 			puts "--run"
 		end

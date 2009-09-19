@@ -1,4 +1,5 @@
 #!/usr/bin/ruby
+# vim: set ts=2 sw=2:
 
 require 'optparse'
 require 'ostruct'
@@ -39,16 +40,20 @@ module SshfsMapper
 		end
 
 		def parseFile(&blk)
-			puts "Parsing #{@options.config_dir}/config"
-			puts "Parsing maps..."
+			puts "Parsing config #{@options.config_dir}/config"
 
 			maps = []
 			Find.find( @options.config_dir ) do |path|
 				if File.file?( path )
 					if File.basename( path ) =~ /.map$/
 						puts "* #{File.basename( path )}"
-						maps.push( path )
-						if blk then yield path end
+						map = Map.new( path )
+						map.parse()
+						if blk then 
+							yield map 
+						else 
+							maps.push( map )
+						end
 					else
 						Find.prune       # Don't look any further into this way
 					end
