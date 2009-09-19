@@ -8,7 +8,20 @@ module SshfsMapper
 		end
 
 		def parse()
-			puts "Parsing #{@path}"
+			puts "Parsing map #{@path}"
+			#
+		end
+
+		def connect() 
+			puts "Connecting map #{@path}"
+			# do something
+			# test server connection
+			# mount
+		end
+
+		def disconnect()
+			puts "Disconnecting map #{@path}"
+			# umount	
 		end
 	end
 end
