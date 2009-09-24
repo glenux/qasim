@@ -43,16 +43,25 @@ command.
 .SH OPTIONS
 
 .TP
-.B \-h
+.B \-h\fP, \fB--help
 Show summary of options.
 .TP
-.B \-i
+.B \-i\fP, \fB--init
 Initialize sshfs-mapper configuration.
 .TP
-.B \-u
-Umount
+.B \-l\fP, \fB--list
+List available maps.
 .TP
-.B \-v
+.B \-a\fP, \fB--all
+Select all maps.
+.TP
+.B \-s\fP, \fB--select \fImap\fP
+Only use specified map.
+.TP
+.B \-u\fP, \fB--umount
+Umount maps (mount if the flag is not specified).
+.TP
+.B \-v\fP, \fB--verbose
 Show version of program.
 
 
@@ -60,10 +69,13 @@ Show version of program.
 
 .TP
 $XDG_CONFIG_HOME/sshfs-mapper/config
-blabla FIXME
+
+Global settings file.
+
 .TP
 $XDG_CONFIG_HOME/sshfs-mapper/*.map
-bliblibli FIXME
+
+Per-host configuration and mappings.
 
 
 .SH CONFIGURATION
