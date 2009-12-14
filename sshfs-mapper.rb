@@ -7,20 +7,20 @@ require 'map'
 module SshfsMapper
 	class SshfsMapper 
 		def initialize()
-			@maps = nil
+			@active_maps = nil
 			puts "-- sshfs-mapper --"
 			conf = Config.new
 			conf.parseCmd ARGV
-			@maps = conf.parseFile
+			@active_maps = conf.parseFile
 			puts conf
 		end
 
 
 		def run()
-			if @maps.nil? then
+			if @active_maps.nil? then
 				return
 			end
-			@maps.each do |map|
+			@active_maps.each do |map|
 				map.connect()
 			end
 			puts "--run"
