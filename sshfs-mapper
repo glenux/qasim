@@ -40,6 +40,8 @@ do_mount() {
     -o reconnect \
     -o workaround=all \
     -o cache_timeout=240 \
+		-o ServerAliveInterval 15 \
+		-o no_readahead \
     -o Ciphers=arcfour \
     -o Port=$remoteport \
     $remotedir \
