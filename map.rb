@@ -7,29 +7,34 @@ module SshfsMapper
 			@host = nil
 			@port = 22
 			@user = nil
-			@map = {}
+			@engine = :arcfour
+			@maps = {}
 		end
 
 		def parse()
 			puts "Parsing map #{@path}"
-			File.open( @path ) do |f|
-				f.each do |line|
-					case line 
-					when /^MAP\s*=\s*(\S+)\s*(\S+)\s*$/ then
-						@map[$1] = $2
-					when /^REMOTE_HOST\s*=\s*(\S+)\s*$/ then
+			f = File.open( @path )
+			f.each do |line|
+				case line
+				when /^\s*REMOTE_USER\s*=\s*(.*)\s*$/
+					@user = $1
+				when /^\s*REMOTE_PORT\s*=\s*(.*)\s*$/
+					@port = $1.to_i
+				when /^\s*REMOTE_HOST\s*=\s*(.*)\s*$/
+					@host = $1
+				when /^\s*REMOTE_CYPHER\s*=\s*(.*)\s*$/
+					idx = ["arcfour", "aes-256-cbc"].index( $1 )
+					if not idx.nil? then
 						@host = $1
-					when /^REMOTE_PORT\s*=\s*(\S+)\s*$/ then
-						@port = $1
-					when /^REMOTE_USER\s*=\s*(\S+)\s*$/ then
-						@user = $1
-					when /^\s*$/ then
-						# skip
-					else
-						puts "unexpectd line '#{line}'"
 					end
+				when /^\s*MAP\s*=\s*(.*)\s+(.*)\s*$/
+					@maps[$1] = $2
+				else
+					puts "dropping #{line}"
 				end
 			end
+			f.close
+			#
 		end
 
 		def is_alive?
@@ -41,7 +46,9 @@ module SshfsMapper
 		end
 
 		def connect() 
-			puts "Connecting map #{@path}"
+			puts "[#{File.basename @path}] Connecting..."
+			puts "  #{@user}@#{@host}:#{@port}"
+			puts "  maps = #{@maps}"
 			# do something
 			# test server connection
 			# mount
