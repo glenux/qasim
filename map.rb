@@ -64,7 +64,7 @@ module SshfsMapper
 		def connect() 
 			puts "[#{File.basename @path}] Connecting..."
 			puts "  #{@user}@#{@host}:#{@port}"
-			puts "  maps = #{@maps}"
+			puts "  maps = %s" % @maps.map{ |k,v| "%s => %s" % [ k, v ] }.join(', ')
 			# do something
 			# test server connection
 			# mount
