@@ -31,6 +31,7 @@ module SshfsMapper
 					  end
 
 			@config_dir = xdg_dir + '/sshfs-mapper'
+			@config_file = nil
 			@maps = []
 			@initialize_enable = false
 			@umount_enable = false
