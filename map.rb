@@ -1,6 +1,11 @@
 module SshfsMapper
+
 	class Map 
 		attr_reader :path, :host, :port, :user, :map
+		@@debug = false
+
+		class MapParseError < RuntimeError
+		end
 
 		def initialize( map_path )
 			@path = map_path
@@ -11,26 +16,37 @@ module SshfsMapper
 			@maps = {}
 		end
 
-		def parse()
+		def parse
 			puts "Parsing map #{@path}"
 			f = File.open( @path )
+			linect = 0
 			f.each do |line|
+				line = line.strip
+				linect += 1
+
+				#puts "  [#{line}]"
 				case line
-				when /^\s*REMOTE_USER\s*=\s*(.*)\s*$/
+				when /^\s*REMOTE_USER\s*=\s*(.*)\s*$/ then
 					@user = $1
-				when /^\s*REMOTE_PORT\s*=\s*(.*)\s*$/
+					puts "d: remote_user => #{$1}" if @@debug
+				when /^\s*REMOTE_PORT\s*=\s*(.*)\s*$/ then
 					@port = $1.to_i
-				when /^\s*REMOTE_HOST\s*=\s*(.*)\s*$/
+					puts "d: remote_port => #{$1}" if @@debug
+				when /^\s*REMOTE_HOST\s*=\s*(.*)\s*$/ then
 					@host = $1
-				when /^\s*REMOTE_CYPHER\s*=\s*(.*)\s*$/
-					idx = ["arcfour", "aes-256-cbc"].index( $1 )
-					if not idx.nil? then
+					puts "d: remote_host => #{$1}" if @@debug
+				when /^\s*REMOTE_CYPHER\s*=\s*(.*)\s*$/ then
+					cyphers = ["arcfour", "aes-256-cbc"]
+					if cyphers.include? $1 then
 						@host = $1
 					end
-				when /^\s*MAP\s*=\s*(.*)\s+(.*)\s*$/
+				when /^\s*MAP\s*=\s*(.*)\s+(.*)\s*$/ then
 					@maps[$1] = $2
+					puts "d: map #{$1} => #{$2}" if @@debug
+				when /^\s*$/ then
+					puts "d: dropping empty line" if @@debug
 				else
-					puts "dropping #{line}"
+					raise MapParseError, "parse error at #{@path}:#{linect}"
 				end
 			end
 			f.close
