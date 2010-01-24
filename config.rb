@@ -39,13 +39,12 @@ module SshfsMapper
 		end
 
 		def parseFile( &blk )
-			puts "Parsing config #{@config_dir}/config"
+			puts "Config: #{@config_dir}/config"
 
 			maps = []
 			Find.find( @config_dir ) do |path|
 				if File.file?( path )
 					if File.basename( path ) =~ /.map$/
-						puts "* #{File.basename( path )}"
 						begin
 							map = Map.new( path )
 							map.parse()
