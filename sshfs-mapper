@@ -32,6 +32,7 @@ do_mount() {
   local localdir=$2
   local remoteport=$3
 
+	set -x
   sshfs \
     -o allow_root \
     -o idmap=user \
@@ -46,6 +47,7 @@ do_mount() {
     -o Port=$remoteport \
     $remotedir \
     $localdir
+	set +x
 
   #-o compression=yes
 }
@@ -65,6 +67,7 @@ Usage: `basename $0` [options]
 -a, --all             Use all maps.
 -s, --select <map>    Only use specified map.
 -u, --umount          Umount user maps (mount if not specified).
+-v, --verbose         Be verbose.
 EOF
 exit 1
 }
@@ -109,6 +112,7 @@ SSHFS_HOST_PATTERN=" "
 SSHFS_HOST_LIMIT=0
 SSHFS_HOST_LIST=0
 SSHFS_HOST_AUTO=0
+SSHFS_VERBOSE=0
 OPTFOUND=0
 while true
 do
@@ -117,39 +121,42 @@ do
   shift
   OPTARG=${1:-}
   #echo "$OPT?"
-  case "$OPT" in
-    --all|-a)  # mount all
-    SSHFS_HOST_AUTO=1
-    OPTFOUND=1
-    ;;
-    --init|-i)  # init (copy config files in user HOME)
-    do_initialize
-    OPTFOUND=1
-    ;;
-    --umount|-u)  # umount
-    echo "Umounting..."
-    SSHFS_MOUNT=0
-    OPTFOUND=1
-    ;;
-    --select|-s)  # only selected hosts
-    SSHFS_HOST_PATTERN="${SSHFS_HOST_PATTERN}${OPTARG} "
-    SSHFS_HOST_LIMIT=1
-    shift
-    OPTFOUND=1
-    ;;
-    --list|-l)
-    SSHFS_HOST_LIST=1
-    OPTFOUND=1
-    ;;
-    --help|-h)
-    do_usage
-    OPTFOUND=1
-    ;;
-    *) 
-    do_usage
-    OPTFOUND=1
-    ;;
-  esac
+	case "$OPT" in
+		--verbose|-v) #be verbose
+			SSHFS_VERBOSE=1
+			;;
+		--all|-a)  # mount all
+			SSHFS_HOST_AUTO=1
+			OPTFOUND=1
+			;;
+		--init|-i)  # init (copy config files in user HOME)
+			do_initialize
+			OPTFOUND=1
+			;;
+		--umount|-u)  # umount
+			echo "Umounting..."
+			SSHFS_MOUNT=0
+			OPTFOUND=1
+			;;
+		--select|-s)  # only selected hosts
+			SSHFS_HOST_PATTERN="${SSHFS_HOST_PATTERN}${OPTARG} "
+			SSHFS_HOST_LIMIT=1
+			shift
+			OPTFOUND=1
+			;;
+		--list|-l)
+			SSHFS_HOST_LIST=1
+			OPTFOUND=1
+			;;
+		--help|-h)
+			do_usage
+			OPTFOUND=1
+			;;
+		*) 
+			do_usage
+			OPTFOUND=1
+			;;
+	esac
 done
 if [ $OPTFOUND -eq 0 ]; then
   do_usage
