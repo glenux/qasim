@@ -1,3 +1,9 @@
+sshfs-mapper (0.5) unstable; urgency=low
+
+  * r1623 - Added verbosity option.
+
+ -- Glenn Y. Rolland <glenux@glenux.net> Sat, 22 May 2010 19:54:03 +0200
+
 sshfs-mapper (0.4-3) unstable; urgency=low
 
   * r1435 - fix 'shift : can't shift that many' error with old dash.
