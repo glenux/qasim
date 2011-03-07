@@ -6,6 +6,9 @@ require 'ostruct'
 require 'pp'
 require 'find'
 
+require 'rubygems'
+require 'rdebug/base'
+
 module SshfsMapper
 	class Config
 		attr_reader :maps_active
@@ -37,10 +40,11 @@ module SshfsMapper
 			@umount_enable = false
 			@target = nil
 			@verbose_enable = false
+			@debug = false
 		end
 
 		def parse_file &blk
-			puts "Config: #{@config_dir}/config"
+			rdebug "Config: #{@config_dir}/config"
 
 			maps = []
 			Find.find( @config_dir ) do |path|
@@ -48,12 +52,8 @@ module SshfsMapper
 					if File.basename( path ) =~ /.map$/
 						begin
 							map = Map.new path
-							map.parse()
-							if blk then 
-								yield map 
-							else 
-								maps.push map
-							end
+							yield map if block_given?
+							maps.push map
 						rescue
 							# error while parsing map
 						end
@@ -96,7 +96,7 @@ module SshfsMapper
 			end
 
 			begin
-				opts.parse!( args )
+				opts.parse! args
 			rescue OptionParser::ParseError => e
 				puts opts.to_s
 				puts ""
@@ -109,7 +109,7 @@ module SshfsMapper
 			s = []
 			s << "config_file = #{@config_file}"
 			s << "verbose_enable = #{@verbose_enable}"
-			s.join("\n")
+			s.join "\n"
 		end
 	end
 end
