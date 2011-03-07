@@ -4,6 +4,7 @@
 $DEBUG = true
 $VERBOSE = true
 
+require 'pp'
 require 'sshfs-mapper/config'
 require 'sshfs-mapper/map'
 
@@ -24,7 +25,8 @@ module SshfsMapper
 				return
 			end
 			@active_maps.each do |map|
-				map.connect()
+				pp map
+				#map.connect()
 			end
 			puts "--run"
 		end
