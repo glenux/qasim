@@ -1,33 +1,47 @@
 
+require 'rubygems'
 require 'rdebug/base'
 
 module SshfsMapper
 
 	class Map 
-		attr_reader :path, :host, :port, :user, :map
+		attr_reader :path,
+		   	:host, 
+			:port, 
+			:enable, 
+			:user, 
+			:map
 
 		class MapParseError < RuntimeError
 		end
 
-		def initialize( map_path )
+		CYPHER_ARCFOUR = :arcfour
+		CYPHER_AES256CBC = :"aes-256-cbc"
+		CYPHERS = [ CYPHER_ARCFOUR, CYPHER_AES256CBC ]
+
+
+		def initialize map_path
 			@path = map_path
 			@host = nil
 			@port = 22
+			@enable = false
 			@user = nil
-			@engine = :arcfour
+			@cypher = :arcfour
 			@maps = {}
 			@debug = false
+
+			self.load @path
 		end
 
-		def parse
-			puts "Parsing map #{@path}"
-			f = File.open( @path )
+		def load path=nil
+			@path=path unless path.nil?
+			rdebug "Parsing map #{@path}"
+			f = File.open @path
 			linect = 0
 			f.each do |line|
 				line = line.strip
 				linect += 1
 
-				#puts "  [#{line}]"
 				case line
 				when /^\s*REMOTE_USER\s*=\s*(.*)\s*$/ then
 					@user = $1
@@ -39,28 +53,37 @@ module SshfsMapper
 					@host = $1
 					rdebug "d: remote_host => #{$1}"
 				when /^\s*REMOTE_CYPHER\s*=\s*(.*)\s*$/ then
-					cyphers = ["arcfour", "aes-256-cbc"]
-					if cyphers.include? $1 then
-						@host = $1
+					if CYPHERS.map{|x| x.to_s}.include? $1 then
+						@host = $1.to_sym
 					end
 				when /^\s*MAP\s*=\s*(.*)\s+(.*)\s*$/ then
 					@maps[$1] = $2
 					rdebug "d: map #{$1} => #{$2}"
-				when /^\s*$/ then
+				when /^\s*$/,/^\s*#/ then
 					rdebug "d: dropping empty line"
 				else
 					raise MapParseError, "parse error at #{@path}:#{linect}"
 				end
 			end
 			f.close
-			#
+		end
+
+		def write path=nil
+			@path=path unless path.nil?
+
+			File.open @path, "w" do |f|
+				f.puts "REMOTE_USER=%s" % @user
+				f.puts "REMOTE_PORT=%s" % @port
+				f.puts "REMOTE_HOST=%s" % @host
+				f.puts "REMOTE_CYPHER=%s" % @cypher
+			end
 		end
 
 		def alive?
 			#FIXME: test liveness
 		end
 
-		def is_connected? 
+		def connected? 
 			#FIXME test if connected / mounted
 		end
 
