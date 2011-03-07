@@ -1,8 +1,10 @@
+
+require 'rdebug/base'
+
 module SshfsMapper
 
 	class Map 
 		attr_reader :path, :host, :port, :user, :map
-		@@debug = false
 
 		class MapParseError < RuntimeError
 		end
@@ -14,6 +16,7 @@ module SshfsMapper
 			@user = nil
 			@engine = :arcfour
 			@maps = {}
+			@debug = false
 		end
 
 		def parse
@@ -28,13 +31,13 @@ module SshfsMapper
 				case line
 				when /^\s*REMOTE_USER\s*=\s*(.*)\s*$/ then
 					@user = $1
-					puts "d: remote_user => #{$1}" if @@debug
+					rdebug "d: remote_user => #{$1}"
 				when /^\s*REMOTE_PORT\s*=\s*(.*)\s*$/ then
 					@port = $1.to_i
-					puts "d: remote_port => #{$1}" if @@debug
+					rdebug "d: remote_port => #{$1}"
 				when /^\s*REMOTE_HOST\s*=\s*(.*)\s*$/ then
 					@host = $1
-					puts "d: remote_host => #{$1}" if @@debug
+					rdebug "d: remote_host => #{$1}"
 				when /^\s*REMOTE_CYPHER\s*=\s*(.*)\s*$/ then
 					cyphers = ["arcfour", "aes-256-cbc"]
 					if cyphers.include? $1 then
@@ -42,9 +45,9 @@ module SshfsMapper
 					end
 				when /^\s*MAP\s*=\s*(.*)\s+(.*)\s*$/ then
 					@maps[$1] = $2
-					puts "d: map #{$1} => #{$2}" if @@debug
+					rdebug "d: map #{$1} => #{$2}"
 				when /^\s*$/ then
-					puts "d: dropping empty line" if @@debug
+					rdebug "d: dropping empty line"
 				else
 					raise MapParseError, "parse error at #{@path}:#{linect}"
 				end
@@ -53,7 +56,7 @@ module SshfsMapper
 			#
 		end
 
-		def is_alive?
+		def alive?
 			#FIXME: test liveness
 		end
 
@@ -61,7 +64,7 @@ module SshfsMapper
 			#FIXME test if connected / mounted
 		end
 
-		def connect() 
+		def connect
 			puts "[#{File.basename @path}] Connecting..."
 			puts "  #{@user}@#{@host}:#{@port}"
 			puts "  maps = %s" % @maps.map{ |k,v| "%s => %s" % [ k, v ] }.join(', ')
@@ -70,7 +73,7 @@ module SshfsMapper
 			# mount
 		end
 
-		def disconnect()
+		def disconnect
 			puts "Disconnecting map #{@path}"
 			# umount	
 		end
