@@ -4,22 +4,22 @@
 $DEBUG = true
 $VERBOSE = true
 
-require 'config'
-require 'map'
+require 'sshfs-mapper/config'
+require 'sshfs-mapper/map'
 
 module SshfsMapper
 	class SshfsMapper 
-		def initialize()
+		def initialize
 			@active_maps = nil
 			puts "-- sshfs-mapper --"
 			conf = Config.new
-			conf.parseCmd ARGV
-			@active_maps = conf.parseFile
+			conf.parse_cmd_line ARGV
+			@active_maps = conf.parse_file
 			puts conf
 		end
 
 
-		def run()
+		def run
 			if @active_maps.nil? then
 				return
 			end
@@ -34,4 +34,5 @@ end
 
 app = SshfsMapper::SshfsMapper.new
 app.run
+
 
