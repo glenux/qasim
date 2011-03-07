@@ -11,7 +11,7 @@ module SshfsMapper
 		attr_reader :maps_active
 		attr_reader :maps
 
-		def initialize()
+		def initialize
 			user = if ENV['USER'] then
 					   ENV['USER']
 				   else
@@ -39,20 +39,20 @@ module SshfsMapper
 			@verbose_enable = false
 		end
 
-		def parseFile( &blk )
+		def parse_file &blk
 			puts "Config: #{@config_dir}/config"
 
 			maps = []
 			Find.find( @config_dir ) do |path|
-				if File.file?( path )
+				if File.file? path
 					if File.basename( path ) =~ /.map$/
 						begin
-							map = Map.new( path )
+							map = Map.new path
 							map.parse()
 							if blk then 
 								yield map 
 							else 
-								maps.push( map )
+								maps.push map
 							end
 						rescue
 							# error while parsing map
@@ -64,7 +64,7 @@ module SshfsMapper
 			return maps
 		end
 
-		def parseCmd( args )
+		def parse_cmd_line args
 			opts = OptionParser.new do |opts|
 
 				opts.banner = "Usage: #{$0} [options]"
