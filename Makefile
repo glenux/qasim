@@ -5,11 +5,10 @@ MANDIR=$(DESTDIR)/usr/share/man
 DOCDIR=$(DESTDIR)/usr/share/doc/sshfs-mapper
 
 all:
-	racc -v -o mapparser.rb mapparser.y
-	cat mapparser.output
+	$(MAKE) -C sshfs-mapper
 
 clean:
-	rm -f mapparser.rb
+	$(MAKE) -C sshfs-mapper clean
 
 install:
 	mkdir -p $(BINDIR)
