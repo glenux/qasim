@@ -16,7 +16,7 @@ module SshfsMapper
 		end
 
 		CYPHER_ARCFOUR = :arcfour
-		CYPHER_AES256CBC = :"aes-256-cbc"
+		CYPHER_AES256CBC = "aes-256-cbc".to_sym
 		CYPHERS = [ CYPHER_ARCFOUR, CYPHER_AES256CBC ]
 
 

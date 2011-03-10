@@ -11,10 +11,17 @@ require 'rdebug/base'
 
 module SshfsMapper
 	class Config
+
 		attr_reader :maps_active
 		attr_reader :maps
 
+		ACTION_UMOUNT = :umount
+		ACTION_MOUNT = :mount
+		ACTION_INIT = :init
+
 		def initialize
+			@action = ACTION_MOUNT
+
 			user = if ENV['USER'] then
 					   ENV['USER']
 				   else
@@ -67,28 +74,29 @@ module SshfsMapper
 		def parse_cmd_line args
 			opts = OptionParser.new do |opts|
 
-				opts.banner = "Usage: #{$0} [options]"
+				opts.banner = "Usage: #{$0} [action] [options]"
 
 				opts.separator ""
+				opts.separator "Action (mount by default):"
+
+				opts.on('-u', '--umount', 'Umount') do |umount|
+					@action = ACTION_UMOUNT
+				end
+
+				opts.on('-i', '--initialize', 'Populate with default configuration' ) do |init|
+					@action = ACTION_INIT
+				end
+
 				opts.separator "Specific options:"
 
-				opts.on('-a', '--all', 'Mount all targets (disables -s)') do |all|
-					@all_enable = all
+				opts.on('-a', '--all', 'Targets all enabled maps (disables -s)') do |all|
+					@targets_all = all
 				end
 
 				#FIXME: use target list there
-				opts.on('-s', '--select TARGET', 'Mount only specified target') do |target|
+				opts.on('-s', '--select TARGET', 'Target selected map (even disabled)') do |target|
 					@targets << target
 				end
-
-				opts.on('-u', '--umount', 'Umount') do |umount|
-					@umount_enable = umount
-				end
-
-				opts.on('-i', '--initialize',
-						'Populate default configuration and example map' )  do |init|
-					@initialize_enable = init
-						end
 
 				opts.on('-v', '--[no-]verbose', 'Run verbosely' )  do |verbose|
 					@verbose_enable = verbose
