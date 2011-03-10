@@ -4,11 +4,36 @@ BINDIR=$(DESTDIR)/usr/bin
 MANDIR=$(DESTDIR)/usr/share/man
 DOCDIR=$(DESTDIR)/usr/share/doc/sshfs-mapper
 
+RUBYVERSION=1.8
+RDOC=rdoc$(RUBYVERSION)
+
 all:
 	$(MAKE) -C sshfs-mapper
 
 clean:
 	$(MAKE) -C sshfs-mapper clean
+
+doc: build-doc
+
+.PHONY: build-doc
+
+build-doc:
+	rm -fr doc
+	$(RDOC) \
+		--promiscuous \
+		--inline-source \
+		--line-numbers \
+		-o doc sshfs-mapper/ \
+		sshfs-mapper.rb
+	# --diagram
+	#
+
+install-doc:
+	#          # install documentation
+	rm -fr $(DOCDIR)
+	mkdir -p $(DOCDIR)
+	cp -a doc $(DOCDIR)
+
 
 install:
 	mkdir -p $(BINDIR)
