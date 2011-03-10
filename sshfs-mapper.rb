@@ -9,25 +9,58 @@ require 'sshfs-mapper/config'
 require 'sshfs-mapper/map'
 
 module SshfsMapper
+
 	class SshfsMapper 
+		#
+		#
+		#
 		def initialize
+			@all_maps = nil
 			@active_maps = nil
+
 			puts "-- sshfs-mapper --"
 			conf = Config.new
 			conf.parse_cmd_line ARGV
-			@active_maps = conf.parse_file
+			@all_maps = conf.parse_file
 			puts conf
 		end
 
 
-		def run
-			if @active_maps.nil? then
-				return
-			end
-			@active_maps.each do |map|
+		# create default map for each selected map
+		# or default.map if none selected
+		def run_init
+		end
+
+		def run_mount
+
+			selected_maps = if @config.all_maps @all_maps
+
+			@all_maps.each do |map|
 				pp map
-				#map.connect()
+				# if map.available? then
+				#  map.connect!
+				# end
 			end
+		end
+
+		def run_umount
+		end
+
+		#
+		#
+		#
+		def run
+			case @config.action 
+			when Config::ACTION_INIT
+				run_init
+			when Config::ACTION_MOUNT
+				run_mount
+			when Config::ACTION_UMOUNT
+				run_umount
+			else 
+				raise RuntimeError, "Unknown action"
+			end
+
 			puts "--run"
 		end
 
