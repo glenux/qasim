@@ -1,5 +1,4 @@
 #!/usr/bin/ruby
-# vim: set ts=2 sw=2 :
 
 $DEBUG = true
 $VERBOSE = true
@@ -19,10 +18,12 @@ module SshfsMapper
 			@active_maps = nil
 
 			puts "-- sshfs-mapper --"
-			conf = Config.new
-			conf.parse_cmd_line ARGV
-			@all_maps = conf.parse_file
-			puts conf
+			@config = Config.new
+			@config.parse_cmd_line ARGV
+			@config.parse_file
+
+			@all_maps = {}
+			pp @config
 		end
 
 
@@ -33,14 +34,15 @@ module SshfsMapper
 
 		def run_mount
 
-			selected_maps = if @config.all_maps @all_maps
-
-			@all_maps.each do |map|
+			# asynchronous mount
+			selected_maps = @config.maps.select do |map|
 				pp map
+				map.online?
 				# if map.available? then
 				#  map.connect!
 				# end
 			end
+
 		end
 
 		def run_umount
