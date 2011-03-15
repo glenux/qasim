@@ -14,13 +14,13 @@ module SshfsMapper
 
 		attr_reader :maps_active
 		attr_reader :maps
+		attr_reader :action
 
 		ACTION_UMOUNT = :umount
 		ACTION_MOUNT = :mount
 		ACTION_INIT = :init
 
 		def initialize
-			@action = ACTION_MOUNT
 
 			user = if ENV['USER'] then
 					   ENV['USER']
@@ -40,6 +40,7 @@ module SshfsMapper
 						  home_dir + '/.config'
 					  end
 
+			@action = ACTION_MOUNT
 			@config_dir = xdg_dir + '/sshfs-mapper'
 			@config_file = nil
 			@maps = []
@@ -53,7 +54,7 @@ module SshfsMapper
 		def parse_file &blk
 			rdebug "Config: #{@config_dir}/config"
 
-			maps = []
+			@maps = []
 			Find.find( @config_dir ) do |path|
 				if File.file? path
 					if File.basename( path ) =~ /.map$/
@@ -68,7 +69,6 @@ module SshfsMapper
 					#total_size += FileTest.size(path)
 				end
 			end
-			return maps
 		end
 
 		def parse_cmd_line args
