@@ -28,7 +28,7 @@ module SshfsMapper
 			@user = nil
 			@cypher = :arcfour
 			@maps = {}
-			@debug = false
+			@debug = true
 
 			self.load @path
 		end
@@ -38,9 +38,17 @@ module SshfsMapper
 			rdebug "Parsing map #{@path}"
 			f = File.open @path
 			linect = 0
+			local_env = ENV.clone
 			f.each do |line|
 				line = line.strip
 				linect += 1
+
+				while line =~ /\$(.*)/ do
+					pattern = $1
+					puts "FOUND PATTERN %s => %s" % [$1, local_env[$1]]
+					line.gsub!(/\$#{pattern}/,local_env[$1])
+					line.gsub!(/\$\{#{pattern}\}/,local_env[$1])
+				end
 
 				case line
 				when /^\s*REMOTE_USER\s*=\s*(.*)\s*$/ then
@@ -71,7 +79,7 @@ module SshfsMapper
 		def write path=nil
 			@path=path unless path.nil?
 
-			File.open @path, "w" do |f|
+			File.open(@path, "w") do |f|
 				f.puts "REMOTE_USER=%s" % @user
 				f.puts "REMOTE_PORT=%s" % @port
 				f.puts "REMOTE_HOST=%s" % @host
@@ -79,7 +87,8 @@ module SshfsMapper
 			end
 		end
 
-		def alive?
+		def online?
+			rdebug  "testing online? %s " % self.inspect
 			#FIXME: test liveness
 		end
 
