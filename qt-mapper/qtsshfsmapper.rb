@@ -2,6 +2,10 @@
 
 require 'Qt4'
  
+def _ str
+	Qt::Object.tr(str)
+end
+
 app = Qt::Application.new(ARGV)
 si  = Qt::SystemTrayIcon.new
  
@@ -22,7 +26,7 @@ end
 menu = Qt::Menu.new
  
 ['Diades', 'Daneel', 'Dolos'].each do |name|
-	itemx = Qt::Action.new('Diades', menu)
+	itemx = Qt::Action.new(name, menu)
 	itemx.setCheckable true;
 	itemx.connect(SIGNAL(:triggered)) { puts itemx.checked }
 	menu.addAction itemx;
@@ -30,15 +34,21 @@ end
 
 menu.addSeparator
 
-act_pref = Qt::Action.new '&Preferences', menu
+act_pref = Qt::Action.new _('&Preferences'), menu
+act_pref.setIcon(  Qt::Icon::fromTheme("configure") )
+act_pref.setIconVisibleInMenu true
 menu.addAction act_pref;
 
 act_about = Qt::Action.new '&About', menu
+act_about.setIcon( Qt::Icon::fromTheme("help-about") )
+act_about.setIconVisibleInMenu true
 menu.addAction act_about;
 
 menu.addSeparator
 
-act_quit = Qt::Action.new '&Quit', menu
+act_quit = Qt::Action.new _('Quit'), menu
+act_quit.setIcon(  Qt::Icon::fromTheme("application-exit") )
+act_quit.setIconVisibleInMenu true
 act_quit.connect(SIGNAL(:triggered)) { app.quit }
 menu.addAction act_quit
  
