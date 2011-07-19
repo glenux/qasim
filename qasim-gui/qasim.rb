@@ -16,7 +16,7 @@ def build_app
 	app = Qt::Application.new(ARGV)
 	si  = Qt::SystemTrayIcon.new
 
-	std_icon = Qt::Icon.new('qtsshfsmapper.svg')
+	std_icon = Qt::Icon.new('qasim.svg')
 	alt_icon = Qt::Icon.new
 	blinking = false
 
