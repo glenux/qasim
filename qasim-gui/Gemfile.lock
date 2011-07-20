@@ -1,0 +1,11 @@
+GEM
+  specs:
+    ffi (1.0.9)
+    libnotify (0.5.7)
+      ffi (= 1.0.9)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  libnotify
