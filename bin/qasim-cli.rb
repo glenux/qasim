@@ -4,12 +4,12 @@ $DEBUG = true
 $VERBOSE = true
 
 require 'pp'
-require 'sshfs-mapper/config'
-require 'sshfs-mapper/map'
+require 'qasim/config'
+require 'qasim/map'
 
-module SshfsMapper
+module Qasim
 
-	class SshfsMapper 
+	class QasimCli
 		#
 		#
 		#
@@ -69,7 +69,7 @@ module SshfsMapper
 	end
 end
 
-app = SshfsMapper::SshfsMapper.new
+app = Qasim::Qasim.new
 app.run
 
 
