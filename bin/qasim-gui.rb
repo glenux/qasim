@@ -2,6 +2,14 @@
 
 require 'Qt4'
 
+$DEBUG = true
+$VERBOSE = true
+
+require 'pp'
+require 'qasim/constants'
+require 'qasim/config'
+require 'qasim/map'
+
 # QaSiM // Qt Sshfs Mapper 
 
 def _ str
@@ -40,7 +48,7 @@ module Qasim
 		app = Qt::Application.new(ARGV)
 		si  = Qt::SystemTrayIcon.new
 
-		std_icon = Qt::Icon.new('icons/qasim.svg')
+		std_icon = Qt::Icon.new( File.join ICON_PATH, "qasim.svg" )
 		alt_icon = Qt::Icon.new
 		blinking = false
 
