@@ -11,7 +11,29 @@ end
 
 module Qasim
 
+	NAME="Qasim"
 	VERSION="0.1"
+
+	def dbus_notify title, body, icon
+		bus = Qt::DBusConnection.sessionBus
+		if !bus.connected?
+			$stderr.puts("Cannot connect to the D-BUS session bus.\n" \
+						 "To start it, run:\n" \
+						 "\teval `dbus-launch --auto-syntax`\n")
+			exit 1
+		end
+		msg = Qt::DBusMessage.create_method_call( 'org.freedesktop.Notifications',
+												 '/org/freedesktop/Notifications',
+												 'org.freedesktop.Notifications',
+												 'Notify' )
+		msg.arguments = [ NAME, Qt::Variant.from_value( 0, "unsigned int" ),
+			icon, title, body, [], {}, -1  ]
+		rep = bus.call( msg )
+		#	if rep.type == Qt::DBusMessage
+
+		#		si.showMessage("Qasim", 
+		#					   "Sorry dude", 2, 5000 )
+	end
 
 	def build_app
 
@@ -24,25 +46,8 @@ module Qasim
 
 		si.icon  = std_icon
 		si.show
+		dbus_notify "Hello", "World", 'dialog-information'
 
-		bus = Qt::DBusConnection.sessionBus
-		if !bus.connected?
-			$stderr.puts("Cannot connect to the D-BUS session bus.\n" \
-						 "To start it, run:\n" \
-						 "\teval `dbus-launch --auto-syntax`\n")
-			exit 1
-		end
-		msg = Qt::DBusMessage.create_method_call( 'org.freedesktop.Notifications',
-												 '/org/freedesktop/Notifications',
-												 'org.freedesktop.Notifications',
-												 'Notify' )
-		msg.arguments = [ 'Coucou', Qt::Variant.from_value( 0, "unsigned int" ),
-			'dialog-information', 'Title', 'blah', [], {}, -1  ]
-		rep = bus.call( msg )
-	#	if rep.type == Qt::DBusMessage
-
-#		si.showMessage("Qasim", 
-#					   "Sorry dude", 2, 5000 )
 
 		si.setToolTip("Qasim %s" % VERSION);
 
