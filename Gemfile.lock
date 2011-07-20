@@ -1,0 +1,10 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    rdebug (0.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rdebug
