@@ -40,7 +40,7 @@ module Qasim
 		app = Qt::Application.new(ARGV)
 		si  = Qt::SystemTrayIcon.new
 
-		std_icon = Qt::Icon.new('qasim.svg')
+		std_icon = Qt::Icon.new('icons/qasim.svg')
 		alt_icon = Qt::Icon.new
 		blinking = false
 
