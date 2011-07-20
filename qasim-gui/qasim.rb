@@ -25,8 +25,24 @@ module Qasim
 		si.icon  = std_icon
 		si.show
 
-		si.showMessage("Qasim",
-					   "funky funky notification", 2, 5000)
+		bus = Qt::DBusConnection.sessionBus
+		if !bus.connected?
+			$stderr.puts("Cannot connect to the D-BUS session bus.\n" \
+						 "To start it, run:\n" \
+						 "\teval `dbus-launch --auto-syntax`\n")
+			exit 1
+		end
+		msg = Qt::DBusMessage.create_method_call( 'org.freedesktop.Notifications',
+												 '/org/freedesktop/Notifications',
+												 'org.freedesktop.Notifications',
+												 'Notify' )
+		msg.arguments = [ 'Coucou', Qt::Variant.from_value( 0, "unsigned int" ),
+			'dialog-information', 'Title', 'blah', [], {}, -1  ]
+		rep = bus.call( msg )
+	#	if rep.type == Qt::DBusMessage
+
+#		si.showMessage("Qasim", 
+#					   "Sorry dude", 2, 5000 )
 
 		si.setToolTip("Qasim %s" % VERSION);
 
