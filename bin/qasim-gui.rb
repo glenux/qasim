@@ -79,6 +79,7 @@ module Qasim
 				itemx.setCheckable true;
 				itemx.connect(SIGNAL(:triggered)) do 
 					puts "%s => %s" % [name, itemx.checked ] 
+					map.connect
 				end
 				menu.addAction itemx;
 			end
