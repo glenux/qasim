@@ -12,13 +12,12 @@ module Qasim
 			:user, 
 			:map
 
-		class MapParseError < RuntimeError
-		end
+		class MapParseError < RuntimeError ; end
+		class ConnectError < RuntimeError ;	end
 
 		CYPHER_ARCFOUR = :arcfour
 		CYPHER_AES256CBC = "aes-256-cbc".to_sym
 		CYPHERS = [ CYPHER_ARCFOUR, CYPHER_AES256CBC ]
-
 
 		def initialize map_path
 			@path = map_path
@@ -99,10 +98,36 @@ module Qasim
 		def connect
 			puts "[#{File.basename @path}] Connecting..."
 			puts "  #{@user}@#{@host}:#{@port}"
-			puts "  maps = %s" % @maps.map{ |k,v| "%s => %s" % [ k, v ] }.join(', ')
+			#puts "  maps = %s" % @maps.map{ |k,v| "%s => %s" % [ k, v ] }.join(', ')
 			# do something
 			# test server connection
 			# mount
+			#
+			# FIXME: test connexion with Net::SSH + timeout or ask password
+			@maps.each do |name, remotepath|
+				pp map
+				cmd = [ "sshfs" ,
+					"-o allow_root" ,
+					"-o idmap=user" ,
+					"-o uid=%s" % Process.uid,
+					"-o gid=%s" % Process.gid,
+					"-o reconnect",
+					"-o workaround=all",
+					"-o cache_timeout=240",
+					"-o ServerAliveInterval 15",
+					"-o no_readahead",
+					"-o Ciphers=arcfour",
+					"-o Port=%s" % @port,
+					"%s@%s:%s:%s" % [@user,@host,@port,remotepath],
+					"$localdir" ].join(' ')
+				rdebug "command: %s" % cmd
+=begin
+				system cmd
+				if $?.exitstatus != 0 then
+					raise ConnectError, self
+				end
+=end
+			end
 		end
 
 		def disconnect
