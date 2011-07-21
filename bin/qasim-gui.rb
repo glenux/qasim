@@ -36,7 +36,7 @@ module Qasim
 													 '/org/freedesktop/Notifications',
 													 'org.freedesktop.Notifications',
 													 'Notify' )
-			msg.arguments = [ NAME, Qt::Variant.from_value( 0, "unsigned int" ),
+			msg.arguments = [ APP_NAME, Qt::Variant.from_value( 0, "unsigned int" ),
 				icon, title, body, [], {}, -1  ]
 			rep = bus.call( msg )
 			#	if rep.type == Qt::DBusMessage
@@ -45,9 +45,9 @@ module Qasim
 			#					   "Sorry dude", 2, 5000 )
 		end
 
-		def self.build_app
+		def build_interface
 
-			app = Qt::Application.new(ARGV)
+			@app = Qt::Application.new(ARGV)
 			si  = Qt::SystemTrayIcon.new
 
 			std_icon = Qt::Icon.new( File.join APP_ICON_PATH, "qasim.svg" )
@@ -61,7 +61,7 @@ module Qasim
 
 			si.setToolTip("Qasim %s" % VERSION);
 
-			Qt::Timer.new(app) do |timer|
+			Qt::Timer.new(@app) do |timer|
 				timer.connect(SIGNAL('timeout()')) do
 					si.icon = (si.icon.isNull ? std_icon : alt_icon) if blinking
 				end
@@ -96,7 +96,7 @@ module Qasim
 			act_quit = Qt::Action.new _('Quit'), menu
 			act_quit.setIcon(  Qt::Icon::fromTheme("application-exit") )
 			act_quit.setIconVisibleInMenu true
-			act_quit.connect(SIGNAL(:triggered)) { app.quit }
+			act_quit.connect(SIGNAL(:triggered)) { @app.quit }
 			menu.addAction act_quit
 
 			si.contextMenu = menu
@@ -111,13 +111,21 @@ module Qasim
 				when Qt::SystemTrayIcon::DoubleClick:   puts 'Double Click'
 				end
 			end
+		end
 
-			app.exec
+		def run
+			@app.exec
+		end
+
+		def self.main
+			qasim = QasimGui.new
+			qasim.build_interface
+			qasim.run
 		end
 
 	end
 
 end
 
-Qasim::QasimGui::build_app
+Qasim::QasimGui::main
 
