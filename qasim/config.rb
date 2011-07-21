@@ -9,7 +9,7 @@ require 'find'
 require 'rubygems'
 require 'rdebug/base'
 
-module SshfsMapper
+module Qasim
 	class Config
 
 		attr_reader :maps_active
