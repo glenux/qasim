@@ -2,7 +2,7 @@
 require 'rubygems'
 require 'rdebug/base'
 
-module SshfsMapper
+module Qasim
 
 	class Map 
 		attr_reader :path,

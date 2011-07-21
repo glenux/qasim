@@ -22,6 +22,9 @@ module Qasim
 
 
 		def initialize
+			@config = Config.new
+			@config.parse_cmd_line ARGV
+			@config.parse_file
 		end
 
 		def dbus_notify title, body, icon
@@ -70,7 +73,8 @@ module Qasim
 
 			menu = Qt::Menu.new
 
-			['Diades', 'Daneel', 'Dolos'].each do |name|
+			@config.maps.each do |map|
+				name = (File.basename map.path).gsub(/\.map$/,'')
 				itemx = Qt::Action.new(name, menu)
 				itemx.setCheckable true;
 				itemx.connect(SIGNAL(:triggered)) do 
