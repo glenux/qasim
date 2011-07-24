@@ -14,11 +14,7 @@ module Qasim
 
 		attr_reader :maps_active
 		attr_reader :maps
-		attr_reader :action
-
-		ACTION_UMOUNT = :umount
-		ACTION_MOUNT = :mount
-		ACTION_INIT = :init
+		attr_reader :mnt_dir
 
 		def initialize
 
@@ -40,7 +36,8 @@ module Qasim
 						  home_dir + '/.config'
 					  end
 
-			@action = ACTION_MOUNT
+			mnt_dir = File.join home_dir, "mnt"
+
 			@config_dir = xdg_dir + '/sshfs-mapper'
 			@config_file = nil
 			@maps = []
@@ -51,7 +48,7 @@ module Qasim
 			@debug = false
 		end
 
-		def parse_file &blk
+		def parse_maps &blk
 			rdebug "Config: #{@config_dir}/config"
 
 			@maps = []
@@ -71,53 +68,5 @@ module Qasim
 			end
 		end
 
-		def parse_cmd_line args
-			opts = OptionParser.new do |opts|
-
-				opts.banner = "Usage: #{$0} [action] [options]"
-
-				opts.separator ""
-				opts.separator "Action (mount by default):"
-
-				opts.on('-u', '--umount', 'Umount') do |umount|
-					@action = ACTION_UMOUNT
-				end
-
-				opts.on('-i', '--initialize', 'Populate with default configuration' ) do |init|
-					@action = ACTION_INIT
-				end
-
-				opts.separator "Specific options:"
-
-				opts.on('-a', '--all', 'Targets all enabled maps (disables -s)') do |all|
-					@targets_all = all
-				end
-
-				#FIXME: use target list there
-				opts.on('-s', '--select TARGET', 'Target selected map (even disabled)') do |target|
-					@targets << target
-				end
-
-				opts.on('-v', '--[no-]verbose', 'Run verbosely' )  do |verbose|
-					@verbose_enable = verbose
-				end
-			end
-
-			begin
-				opts.parse! args
-			rescue OptionParser::ParseError => e
-				puts opts.to_s
-				puts ""
-				puts e.message
-				exit 1
-			end
-		end
-
-		def to_s
-			s = []
-			s << "config_file = #{@config_file}"
-			s << "verbose_enable = #{@verbose_enable}"
-			s.join "\n"
-		end
 	end
 end
