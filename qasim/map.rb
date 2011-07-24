@@ -10,7 +10,8 @@ module Qasim
 			:port, 
 			:enable, 
 			:user, 
-			:map
+			:map,
+			:name
 
 		class MapParseError < RuntimeError ; end
 		class ConnectError < RuntimeError ;	end
@@ -28,6 +29,7 @@ module Qasim
 			@cypher = :arcfour
 			@maps = {}
 			@debug = true
+			@name = (File.basename map_path).gsub(/\.map$/,'')
 
 			self.load @path
 		end
