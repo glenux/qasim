@@ -43,10 +43,15 @@ module Qasim
 				linect += 1
 
 				while line =~ /\$(.*)/ do
-					pattern = $1
 					puts "FOUND PATTERN %s => %s" % [$1, local_env[$1]]
-					line.gsub!(/\$#{pattern}/,local_env[$1])
-					line.gsub!(/\$\{#{pattern}\}/,local_env[$1])
+					case line
+					when /\$\{(.+?)\}/ then
+						pattern = $1
+						line.gsub!(/\$\{#{attern}\}/,local_env[pattern])
+					when /\$(\w+)/ then
+						pattern = $1
+						line.gsub!(/\$#{pattern}/,local_env[pattern])
+					end
 				end
 
 				case line
@@ -95,7 +100,7 @@ module Qasim
 			#FIXME test if connected / mounted
 		end
 
-		def connect
+		def connect &block
 			puts "[#{File.basename @path}] Connecting..."
 			puts "  #{@user}@#{@host}:#{@port}"
 			#puts "  maps = %s" % @maps.map{ |k,v| "%s => %s" % [ k, v ] }.join(', ')
@@ -106,31 +111,35 @@ module Qasim
 			# FIXME: test connexion with Net::SSH + timeout or ask password
 			@maps.each do |name, remotepath|
 				pp map
-				cmd = [ "sshfs" ,
-					"-o allow_root" ,
-					"-o idmap=user" ,
-					"-o uid=%s" % Process.uid,
-					"-o gid=%s" % Process.gid,
-					"-o reconnect",
-					"-o workaround=all",
-					"-o cache_timeout=240",
-					"-o ServerAliveInterval 15",
-					"-o no_readahead",
-					"-o Ciphers=arcfour",
-					"-o Port=%s" % @port,
-					"%s@%s:%s:%s" % [@user,@host,@port,remotepath],
-					"$localdir" ].join(' ')
-				rdebug "command: %s" % cmd
-=begin
-				system cmd
-				if $?.exitstatus != 0 then
-					raise ConnectError, self
+				localpath = File.join ENV['HOME'], "mnt", name
+				cmd = "sshfs"
+				cmd_args = [
+					"-o","allow_root" ,
+					"-o","idmap=user" ,
+					"-o","uid=%s" % Process.uid,
+					"-o","gid=%s" % Process.gid,
+					"-o","reconnect",
+					"-o","workaround=all",
+					"-o","cache_timeout=240",
+					"-o","ServerAliveInterval=15",
+					"-o","no_readahead",
+					"-o","Ciphers=arcfour",
+					"-o","Port=%s" % @port,
+					"%s@%s:%s" % [@user,@host,remotepath],
+					localpath ]
+				rdebug "command: %s" % [ cmd, cmd_args ].flatten.join(' ')
+				if block_given? then
+					yield cmd, cmd_args
+				else
+					system cmd, cmd_args
+					if $?.exitstatus != 0 then
+						raise ConnectError, self
+					end
 				end
-=end
 			end
 		end
 
-		def disconnect
+		def disconnect &block
 			puts "Disconnecting map #{@path}"
 			# umount	
 		end

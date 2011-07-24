@@ -23,8 +23,10 @@ module Qasim
 
 		def initialize
 			@config = Config.new
-			@config.parse_cmd_line ARGV
-			@config.parse_file
+			#@config.parse_cmd_line ARGV
+
+			@map_menu = nil
+			@context_menu = nil
 		end
 
 		def dbus_notify title, body, icon
@@ -48,6 +50,98 @@ module Qasim
 			#					   "Sorry dude", 2, 5000 )
 		end
 
+
+		#
+		# Rebuild map menu
+		#
+		def build_map_menu
+			# reload maps dynamically
+			@config.parse_maps
+			if @map_menu.nil? then
+				@map_menu = Qt::Menu.new
+			else 
+				@map_menu.clear
+			end
+
+			previous_host = nil
+			@config.maps.sort do |mx,my|
+				mx.host <=> my.host
+			end.each do |map|
+				if map.host != previous_host and not previous_host.nil? then
+					@map_menu.addSeparator
+				end
+				name = (File.basename map.path).gsub(/\.map$/,'')
+				itemx = Qt::Action.new(name, @map_menu)
+				itemx.setCheckable true;
+				itemx.connect(SIGNAL(:triggered)) do 
+					action_trigger_map_item map, itemx
+				end
+				@map_menu.addAction itemx;
+				previous_host = map.host
+			end
+		end
+
+		#
+		# Action when map item triggered
+		#
+		def action_trigger_map_item map, item
+			puts "%s => %s" % [map.path, item.checked ] 
+			if map.connected? then
+				puts "disconnect !"
+			else 
+				puts "connect !"
+				begin
+					success = true
+					map.connect do |cmd,cmd_args|
+						process = Qt::Process.new
+						process.connect(SIGNAL('finished(int, QProcess::ExitStatus)')) do |exitcode,exitstatus|
+							puts "exitcode = %s, exitstatus = %s" % [exitcode, exitstatus]
+							if exitcode != 0 then
+								success = false
+								item.setChecked success
+							end
+						end
+						process.start cmd, cmd_args
+					end
+				rescue Map::ConnectError => e
+					puts e.inspect
+				end
+				#FIXME: on error, setChecked false
+
+			end
+		end
+
+		#
+		#
+		#
+		def build_context_menu
+			@context_menu = Qt::Menu.new
+
+			act_pref = Qt::Action.new _('&Preferences'), @context_menu
+			act_pref.setIcon(  Qt::Icon::fromTheme("configure") )
+			act_pref.setIconVisibleInMenu true
+			act_pref.setEnabled false
+			@context_menu.addAction act_pref;
+
+			act_about = Qt::Action.new '&About', @context_menu
+			act_about.setIcon( Qt::Icon::fromTheme("help-about") )
+			act_about.setIconVisibleInMenu true
+			act_about.setEnabled false
+			@context_menu.addAction act_about;
+
+			@context_menu.addSeparator
+
+			act_quit = Qt::Action.new _('Quit'), @context_menu
+			act_quit.setIcon(  Qt::Icon::fromTheme("application-exit") )
+			act_quit.setIconVisibleInMenu true
+			act_quit.connect(SIGNAL(:triggered)) { @app.quit }
+			@context_menu.addAction act_quit
+		end
+
+
+		#
+		#
+		#
 		def build_interface
 
 			@app = Qt::Application.new(ARGV)
@@ -62,55 +156,29 @@ module Qasim
 			dbus_notify "Hello", "World", 'dialog-information'
 
 
-			si.setToolTip("Qasim %s" % VERSION);
+			si.setToolTip("Qasim %s" % APP_VERSION);
 
+=begin
 			Qt::Timer.new(@app) do |timer|
 				timer.connect(SIGNAL('timeout()')) do
 					si.icon = (si.icon.isNull ? std_icon : alt_icon) if blinking
 				end
 				timer.start(500)
 			end
+=end
 
-			menu = Qt::Menu.new
+			build_map_menu
+			build_context_menu
 
-			@config.maps.each do |map|
-				name = (File.basename map.path).gsub(/\.map$/,'')
-				itemx = Qt::Action.new(name, menu)
-				itemx.setCheckable true;
-				itemx.connect(SIGNAL(:triggered)) do 
-					puts "%s => %s" % [name, itemx.checked ] 
-					map.connect
-				end
-				menu.addAction itemx;
-			end
-
-			menu.addSeparator
-
-			act_pref = Qt::Action.new _('&Preferences'), menu
-			act_pref.setIcon(  Qt::Icon::fromTheme("configure") )
-			act_pref.setIconVisibleInMenu true
-			menu.addAction act_pref;
-
-			act_about = Qt::Action.new '&About', menu
-			act_about.setIcon( Qt::Icon::fromTheme("help-about") )
-			act_about.setIconVisibleInMenu true
-			menu.addAction act_about;
-
-			menu.addSeparator
-
-			act_quit = Qt::Action.new _('Quit'), menu
-			act_quit.setIcon(  Qt::Icon::fromTheme("application-exit") )
-			act_quit.setIconVisibleInMenu true
-			act_quit.connect(SIGNAL(:triggered)) { @app.quit }
-			menu.addAction act_quit
-
-			si.contextMenu = menu
+			si.contextMenu = @context_menu
 
 			si.connect(SIGNAL('activated(QSystemTrayIcon::ActivationReason)')) do |reason|
 				case reason
 				when Qt::SystemTrayIcon::Trigger
-					blinking = !blinking
-					si.icon  = blinking ? alt_icon : std_icon
+					build_map_menu
+					@map_menu.popup(Qt::Cursor::pos())
+					#blinking = !blinking
+					#si.icon  = blinking ? alt_icon : std_icon
 				when Qt::SystemTrayIcon::MiddleClick:   puts 'Middle Click'
 				when Qt::SystemTrayIcon::Context:       puts 'Right Click'
 				when Qt::SystemTrayIcon::DoubleClick:   puts 'Double Click'
@@ -118,10 +186,18 @@ module Qasim
 			end
 		end
 
+
+		#
+		#
+		#
 		def run
 			@app.exec
 		end
 
+
+		#
+		#
+		#
 		def self.main
 			qasim = QasimGui.new
 			qasim.build_interface
