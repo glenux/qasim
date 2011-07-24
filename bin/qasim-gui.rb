@@ -70,8 +70,7 @@ module Qasim
 				if map.host != previous_host and not previous_host.nil? then
 					@map_menu.addSeparator
 				end
-				name = (File.basename map.path).gsub(/\.map$/,'')
-				itemx = Qt::Action.new(name, @map_menu)
+				itemx = Qt::Action.new(map.name, @map_menu)
 				itemx.setCheckable true;
 				itemx.connect(SIGNAL(:triggered)) do 
 					action_trigger_map_item map, itemx
@@ -103,6 +102,8 @@ module Qasim
 						end
 						process.start cmd, cmd_args
 					end
+
+					dbus_notify map.name, "Map connected successfully", 'dialog-information'
 				rescue Map::ConnectError => e
 					puts e.inspect
 				end
@@ -153,19 +154,9 @@ module Qasim
 
 			si.icon  = std_icon
 			si.show
-			dbus_notify "Hello", "World", 'dialog-information'
 
 
 			si.setToolTip("Qasim %s" % APP_VERSION);
-
-=begin
-			Qt::Timer.new(@app) do |timer|
-				timer.connect(SIGNAL('timeout()')) do
-					si.icon = (si.icon.isNull ? std_icon : alt_icon) if blinking
-				end
-				timer.start(500)
-			end
-=end
 
 			build_map_menu
 			build_context_menu
