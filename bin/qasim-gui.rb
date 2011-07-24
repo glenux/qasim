@@ -72,6 +72,9 @@ module Qasim
 				end
 				itemx = Qt::Action.new(map.name, @map_menu)
 				itemx.setCheckable true;
+				if map.connected? then
+					itemx.setChecked true
+				end
 				itemx.connect(SIGNAL(:triggered)) do 
 					action_trigger_map_item map, itemx
 				end

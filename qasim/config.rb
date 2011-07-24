@@ -8,6 +8,7 @@ require 'find'
 
 require 'rubygems'
 require 'rdebug/base'
+require 'qasim/map'
 
 module Qasim
 	class Config
@@ -36,7 +37,7 @@ module Qasim
 						  home_dir + '/.config'
 					  end
 
-			mnt_dir = File.join home_dir, "mnt"
+			@mnt_dir = File.join home_dir, "mnt"
 
 			@config_dir = xdg_dir + '/sshfs-mapper'
 			@config_file = nil
@@ -56,7 +57,7 @@ module Qasim
 				if File.file? path
 					if File.basename( path ) =~ /.map$/
 						begin
-							map = Map.new path
+							map = Map.new self, path
 							yield map if block_given?
 							maps.push map
 						rescue

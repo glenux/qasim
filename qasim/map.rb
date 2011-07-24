@@ -1,6 +1,7 @@
 
 require 'rubygems'
 require 'rdebug/base'
+require 'qasim/config'
 
 module Qasim
 
@@ -20,7 +21,8 @@ module Qasim
 		CYPHER_AES256CBC = "aes-256-cbc".to_sym
 		CYPHERS = [ CYPHER_ARCFOUR, CYPHER_AES256CBC ]
 
-		def initialize map_path
+		def initialize config, map_path
+			@config = config
 			@path = map_path
 			@host = nil
 			@port = 22
@@ -44,15 +46,18 @@ module Qasim
 				line = line.strip
 				linect += 1
 
-				while line =~ /\$(.*)/ do
+				while line =~ /\$(\w+)/ do
 					puts "FOUND PATTERN %s => %s" % [$1, local_env[$1]]
 					case line
-					when /\$\{(.+?)\}/ then
+					when /\$\{(.+)\}/ then
 						pattern = $1
-						line.gsub!(/\$\{#{attern}\}/,local_env[pattern])
+						puts pattern
+						line.gsub!(/\$\{#{pattern}\}/,local_env[pattern])
 					when /\$(\w+)/ then
 						pattern = $1
 						line.gsub!(/\$#{pattern}/,local_env[pattern])
+					else 
+						puts "unknown pattern: %s"  % line
 					end
 				end
 
@@ -100,6 +105,27 @@ module Qasim
 
 		def connected? 
 			#FIXME test if connected / mounted
+			f = File.open("/proc/mounts")
+			sshfs_mounted = (f.readlines.select do |line|
+				line =~ /\s+fuse.sshfs\s+/
+			end).map do |line| 
+					line.split(/\s+/)[1]
+			end
+			f.close
+
+			score = 0
+			@maps.each do |name, remotepath|
+				score += 1
+				local_path = File.join @config.mnt_dir, name
+
+				if sshfs_mounted.include? local_path then
+					score -= 1
+				end
+			end
+			if score == 0 then return true
+			else return false
+				# FIXME: explain why ?
+			end
 		end
 
 		def connect &block
