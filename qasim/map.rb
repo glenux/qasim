@@ -174,7 +174,24 @@ module Qasim
 
 		def disconnect &block
 			puts "Disconnecting map #{@path}"
-			# umount	
+			@links.each do |name, remotepath|
+				pp map
+				localpath = File.join ENV['HOME'], "mnt", name
+				cmd = "fusermount"
+				cmd_args = [
+					"-u", #umount
+					"-z" ,#lazy
+					localpath ]
+				rdebug "command: %s" % [ cmd, cmd_args ].flatten.join(' ')
+				if block_given? then
+					yield name, cmd, cmd_args
+				else
+					system cmd, cmd_args
+					if $?.exitstatus != 0 then
+						raise ConnectError, self
+					end
+				end
+			end
 		end
 	end
 end

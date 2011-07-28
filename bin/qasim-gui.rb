@@ -92,50 +92,49 @@ module Qasim
 		#
 		def action_trigger_map_item map, item
 			puts "%s => %s" % [map.path, item.checked ] 
+			@connect_error[map.path] = Set.new
+			@connect_running[map.path] = 0
 			if map.connected? then
 				puts "disconnect !"
-			else 
+				method = :disconnect
+			else
 				puts "connect !"
-				begin
-					success = true
+				method = :connect
+			end
+			begin
+				map.send(method) do |linkname,cmd,cmd_args|
+					process = Qt::Process.new
+					process.connect(SIGNAL('finished(int, QProcess::ExitStatus)')) do |exitcode,exitstatus|
+						puts "exitcode = %s, exitstatus = %s" % [exitcode, exitstatus]
+						@connect_running[map.path] -= 1 
+						if exitcode != 0 then
+							@connect_error[map.path].add linkname
+						else
+						end
+						if @connect_running[map.path] == 0 then
+							# display someting
+							if @connect_error[map.path].empty? then
 
-					@connect_error[map.path] = Set.new
-					@connect_running[map.path] = 0
-					map.connect do |linkname,cmd,cmd_args|
-						process = Qt::Process.new
-						process.connect(SIGNAL('finished(int, QProcess::ExitStatus)')) do |exitcode,exitstatus|
-							puts "exitcode = %s, exitstatus = %s" % [exitcode, exitstatus]
-							@connect_running[map.path] -= 1 
-							if exitcode != 0 then
-								@connect_error[map.path].add linkname
+								dbus_notify "%s (%s)" % [APP_NAME, map.name], 
+									("<b>Map %sed successfully<b>" % method.to_s), 
+									'dialog-information'
 							else
-							end
-							if @connect_running[map.path] == 0 then
-								# display someting
-								if @connect_error[map.path] == 0 then
-
-									dbus_notify "%s (%s)" % [APP_NAME, map.name], 
-										"<b>Map connected successfully<b>", 
-										'dialog-information'
-								else
-									erroneous = @connect_error[map.path].to_a.join(', ')
-									dbus_notify "%s (%s)" % [APP_NAME, map.name], 
-										("<b>Unable to connect map</b><br>" +
-										 "Broken link(s): %s" % erroneous), 
-										 'dialog-error'
-								end
+								erroneous = @connect_error[map.path].to_a.join(', ')
+								dbus_notify "%s (%s)" % [APP_NAME, map.name], 
+									("<b>Unable to %s map</b><br>" % method.to_s) +
+									("Broken link(s): %s" % erroneous), 
+									'dialog-error'
 							end
 						end
-						@connect_running[map.path] += 1
-						process.start cmd, cmd_args
 					end
-
-				rescue Map::ConnectError => e
-					puts e.inspect
+					@connect_running[map.path] += 1
+					process.start cmd, cmd_args
 				end
-				#FIXME: on error, setChecked false
 
+			rescue Map::ConnectError => e
+				puts e.inspect
 			end
+			#FIXME: on error, setChecked false
 		end
 
 		#
