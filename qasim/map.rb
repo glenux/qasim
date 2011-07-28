@@ -29,7 +29,7 @@ module Qasim
 			@enable = false
 			@user = nil
 			@cypher = :arcfour
-			@maps = {}
+			@links = {}
 			@debug = true
 			@name = (File.basename map_path).gsub(/\.map$/,'')
 
@@ -76,8 +76,8 @@ module Qasim
 						@host = $1.to_sym
 					end
 				when /^\s*MAP\s*=\s*(.*)\s+(.*)\s*$/ then
-					@maps[$1] = $2
-					rdebug "d: map #{$1} => #{$2}"
+					@links[$1] = $2
+					rdebug "d: link #{$1} => #{$2}"
 				when /^\s*$/,/^\s*#/ then
 					rdebug "d: dropping empty line"
 				else
@@ -103,8 +103,10 @@ module Qasim
 			#FIXME: test liveness
 		end
 
+		#
+		# test if map is connected / mounted
+		#
 		def connected? 
-			#FIXME test if connected / mounted
 			f = File.open("/proc/mounts")
 			sshfs_mounted = (f.readlines.select do |line|
 				line =~ /\s+fuse.sshfs\s+/
@@ -114,7 +116,7 @@ module Qasim
 			f.close
 
 			score = 0
-			@maps.each do |name, remotepath|
+			@links.each do |name, remotepath|
 				score += 1
 				local_path = File.join @config.mnt_dir, name
 
@@ -128,16 +130,19 @@ module Qasim
 			end
 		end
 
+		#
+		# connect given map
+		#
 		def connect &block
 			puts "[#{File.basename @path}] Connecting..."
 			puts "  #{@user}@#{@host}:#{@port}"
-			#puts "  maps = %s" % @maps.map{ |k,v| "%s => %s" % [ k, v ] }.join(', ')
+			#puts "  links = %s" % @links.map{ |k,v| "%s => %s" % [ k, v ] }.join(', ')
 			# do something
 			# test server connection
 			# mount
 			#
 			# FIXME: test connexion with Net::SSH + timeout or ask password
-			@maps.each do |name, remotepath|
+			@links.each do |name, remotepath|
 				pp map
 				localpath = File.join ENV['HOME'], "mnt", name
 				cmd = "sshfs"
@@ -157,7 +162,7 @@ module Qasim
 					localpath ]
 				rdebug "command: %s" % [ cmd, cmd_args ].flatten.join(' ')
 				if block_given? then
-					yield cmd, cmd_args
+					yield name, cmd, cmd_args
 				else
 					system cmd, cmd_args
 					if $?.exitstatus != 0 then
