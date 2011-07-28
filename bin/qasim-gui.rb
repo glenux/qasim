@@ -6,6 +6,8 @@ $DEBUG = true
 $VERBOSE = true
 
 require 'pp'
+require 'set'
+
 require 'qasim/constants'
 require 'qasim/config'
 require 'qasim/map'
@@ -27,6 +29,8 @@ module Qasim
 
 			@map_menu = nil
 			@context_menu = nil
+			@connect_error = {}
+			@connect_running = {}
 		end
 
 		def dbus_notify title, body, icon
@@ -94,19 +98,38 @@ module Qasim
 				puts "connect !"
 				begin
 					success = true
-					map.connect do |cmd,cmd_args|
+
+					@connect_error[map.path] = Set.new
+					@connect_running[map.path] = 0
+					map.connect do |linkname,cmd,cmd_args|
 						process = Qt::Process.new
 						process.connect(SIGNAL('finished(int, QProcess::ExitStatus)')) do |exitcode,exitstatus|
 							puts "exitcode = %s, exitstatus = %s" % [exitcode, exitstatus]
+							@connect_running[map.path] -= 1 
 							if exitcode != 0 then
-								success = false
-								item.setChecked success
+								@connect_error[map.path].add linkname
+							else
+							end
+							if @connect_running[map.path] == 0 then
+								# display someting
+								if @connect_error[map.path] == 0 then
+
+									dbus_notify "%s (%s)" % [APP_NAME, map.name], 
+										"<b>Map connected successfully<b>", 
+										'dialog-information'
+								else
+									erroneous = @connect_error[map.path].to_a.join(', ')
+									dbus_notify "%s (%s)" % [APP_NAME, map.name], 
+										("<b>Unable to connect map</b><br>" +
+										 "Broken link(s): %s" % erroneous), 
+										 'dialog-error'
+								end
 							end
 						end
+						@connect_running[map.path] += 1
 						process.start cmd, cmd_args
 					end
 
-					dbus_notify map.name, "Map connected successfully", 'dialog-information'
 				rescue Map::ConnectError => e
 					puts e.inspect
 				end
