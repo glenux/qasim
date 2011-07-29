@@ -27,7 +27,7 @@ build-stamp: configure-stamp
 
 	# Add here commands to compile the package.
 	$(MAKE)
-	#docbook-to-man debian/sshfs-mapper.sgml > sshfs-mapper.1
+	#docbook-to-man debian/qasim.sgml > qasim.1
 
 	touch $@
 
@@ -47,8 +47,8 @@ install: build
 	dh_clean -k 
 	dh_installdirs
 
-	# Add here commands to install the package into debian/sshfs-mapper.
-	$(MAKE) DESTDIR=$(CURDIR)/debian/sshfs-mapper install
+	# Add here commands to install the package into debian/qasim.
+	$(MAKE) DESTDIR=$(CURDIR)/debian/qasim install
 
 
 # Build architecture-independent files here.
