@@ -30,7 +30,7 @@ module Qasim
 			@user = nil
 			@cypher = :arcfour
 			@links = {}
-			@debug = true
+			@debug = false
 			@name = (File.basename map_path).gsub(/\.map$/,'')
 
 			self.load @path
@@ -47,7 +47,7 @@ module Qasim
 				linect += 1
 
 				while line =~ /\$(\w+)/ do
-					puts "FOUND PATTERN %s => %s" % [$1, local_env[$1]]
+					#puts "FOUND PATTERN %s => %s" % [$1, local_env[$1]]
 					case line
 					when /\$\{(.+)\}/ then
 						pattern = $1
@@ -57,7 +57,7 @@ module Qasim
 						pattern = $1
 						line.gsub!(/\$#{pattern}/,local_env[pattern])
 					else 
-						puts "unknown pattern: %s"  % line
+						puts "w: unknown pattern: %s"  % line
 					end
 				end
 
@@ -143,7 +143,6 @@ module Qasim
 			#
 			# FIXME: test connexion with Net::SSH + timeout or ask password
 			@links.each do |name, remotepath|
-				pp map
 				localpath = File.join ENV['HOME'], "mnt", name
 				cmd = "sshfs"
 				cmd_args = [
@@ -175,7 +174,6 @@ module Qasim
 		def disconnect &block
 			puts "Disconnecting map #{@path}"
 			@links.each do |name, remotepath|
-				pp map
 				localpath = File.join ENV['HOME'], "mnt", name
 				cmd = "fusermount"
 				cmd_args = [

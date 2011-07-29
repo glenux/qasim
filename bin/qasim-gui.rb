@@ -91,21 +91,18 @@ module Qasim
 		# Action when map item triggered
 		#
 		def action_trigger_map_item map, item
-			puts "%s => %s" % [map.path, item.checked ] 
 			@connect_error[map.path] = Set.new
 			@connect_running[map.path] = 0
 			if map.connected? then
-				puts "disconnect !"
 				method = :disconnect
 			else
-				puts "connect !"
 				method = :connect
 			end
 			begin
 				map.send(method) do |linkname,cmd,cmd_args|
 					process = Qt::Process.new
 					process.connect(SIGNAL('finished(int, QProcess::ExitStatus)')) do |exitcode,exitstatus|
-						puts "exitcode = %s, exitstatus = %s" % [exitcode, exitstatus]
+						#puts "exitcode = %s, exitstatus = %s" % [exitcode, exitstatus]
 						@connect_running[map.path] -= 1 
 						if exitcode != 0 then
 							@connect_error[map.path].add linkname
@@ -134,7 +131,6 @@ module Qasim
 			rescue Map::ConnectError => e
 				puts e.inspect
 			end
-			#FIXME: on error, setChecked false
 		end
 
 		#
@@ -190,14 +186,17 @@ module Qasim
 
 			si.connect(SIGNAL('activated(QSystemTrayIcon::ActivationReason)')) do |reason|
 				case reason
-				when Qt::SystemTrayIcon::Trigger
+				when Qt::SystemTrayIcon::Trigger then
 					build_map_menu
 					@map_menu.popup(Qt::Cursor::pos())
 					#blinking = !blinking
 					#si.icon  = blinking ? alt_icon : std_icon
-				when Qt::SystemTrayIcon::MiddleClick:   puts 'Middle Click'
-				when Qt::SystemTrayIcon::Context:       puts 'Right Click'
-				when Qt::SystemTrayIcon::DoubleClick:   puts 'Double Click'
+				when Qt::SystemTrayIcon::MiddleClick then
+					#
+				when Qt::SystemTrayIcon::Context then
+					#
+				when Qt::SystemTrayIcon::DoubleClick then
+					#
 				end
 			end
 		end
