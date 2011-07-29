@@ -40,7 +40,7 @@ install:
 	mkdir -p $(BINDIR)
 	mkdir -p $(MANDIR)/man1
 	install -D -o root -g root -m 755 $(CURDIR)/bin/$(NAME)-gui.rb $(BINDIR)/$(NAME)-gui
-	cat $(NAME).1 | gzip > $(MANDIR)/man1/$(NAME).1.gz
+	#cat $(NAME).1 | gzip > $(MANDIR)/man1/$(NAME).1.gz
 	## Install completion file
 	# install -D -o root -g root -m 644 $(CURDIR)/$(NAME).completion $(DESTDIR)/etc/bash_completion.d/$(NAME)
 	#
