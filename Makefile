@@ -1,17 +1,18 @@
 
-CONFDIR=$(DESTDIR)/etc/sshfs-mapper
+NAME=qasim
+CONFDIR=$(DESTDIR)/etc/$(NAME)
 BINDIR=$(DESTDIR)/usr/bin
 MANDIR=$(DESTDIR)/usr/share/man
-DOCDIR=$(DESTDIR)/usr/share/doc/sshfs-mapper
+DOCDIR=$(DESTDIR)/usr/share/doc/$(NAME)
 
 RUBYVERSION=1.8
 RDOC=rdoc$(RUBYVERSION)
 
 all:
-	$(MAKE) -C sshfs-mapper
+	$(MAKE) -C $(NAME)
 
 clean:
-	$(MAKE) -C sshfs-mapper clean
+	$(MAKE) -C $(NAME) clean
 
 doc: build-doc
 
@@ -23,8 +24,8 @@ build-doc:
 		--promiscuous \
 		--inline-source \
 		--line-numbers \
-		-o doc sshfs-mapper/ \
-		sshfs-mapper.rb
+		-o doc $(NAME)/ \
+		bin/
 	# --diagram
 	#
 
@@ -38,9 +39,10 @@ install-doc:
 install:
 	mkdir -p $(BINDIR)
 	mkdir -p $(MANDIR)/man1
-	install -D -o root -g root -m 755 $(CURDIR)/sshfs-mapper.sh $(BINDIR)/sshfs-mapper
-	cat sshfs-mapper.1 | gzip > $(MANDIR)/man1/sshfs-mapper.1.gz
-	install -D -o root -g root -m 644 $(CURDIR)/sshfs-mapper.completion $(DESTDIR)/etc/bash_completion.d/sshfs-mapper
+	install -D -o root -g root -m 755 $(CURDIR)/bin/$(NAME)-gui.rb $(BINDIR)/$(NAME)-gui
+	cat $(NAME).1 | gzip > $(MANDIR)/man1/$(NAME).1.gz
+	## Install completion file
+	# install -D -o root -g root -m 644 $(CURDIR)/$(NAME).completion $(DESTDIR)/etc/bash_completion.d/$(NAME)
 	#
 	mkdir -p $(CONFDIR)
 	for f in `ls conf`; do \
@@ -51,3 +53,9 @@ install:
 	for f in `ls examples`; do \
 	  cat examples/$$f | gzip -f9 > $(DOCDIR)/examples/$$f.gz ; \
 	done
+
+.PHONY: destdir
+destdir:
+	rm -fr destdir
+	fakeroot $(MAKE) install DESTDIR=destdir
+
