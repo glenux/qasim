@@ -1,7 +1,9 @@
 build-stamp
 configure-stamp
 debian/files
-debian/sshfs-mapper.debhelper.log
-debian/sshfs-mapper.substvars
-debian/sshfs-mapper/
-sshfs-mapper/map_view_ui.rb
+debian/qasim.debhelper.log
+debian/qasim.substvars
+debian/qasim/
+qasim/map_view_ui.rb
+destdir/
+debian/qasim/
