@@ -1,6 +1,6 @@
 
 NAME=qasim
-CONFDIR=$(DESTDIR)/etc/$(NAME)
+CONFDIR=$(DESTDIR)/etc
 BINDIR=$(DESTDIR)/usr/bin
 MANDIR=$(DESTDIR)/usr/share/man
 DOCDIR=$(DESTDIR)/usr/share/doc/$(NAME)
@@ -44,10 +44,16 @@ install:
 	## Install completion file
 	# install -D -o root -g root -m 644 $(CURDIR)/$(NAME).completion $(DESTDIR)/etc/bash_completion.d/$(NAME)
 	#
-	mkdir -p $(CONFDIR)
-	for f in `ls conf`; do \
-	  cp conf/$$f $(CONFDIR)/$$f ;  \
-	done
+	#
+	# Install configuration files
+	mkdir -p $(CONFDIR)/xdg/autostart
+	install -D -o root -g root -m 644 $(CURDIR)/conf/autostart/$(NAME).desktop \
+		$(CONFDIR)/xdg/autostart/$(NAME).desktop
+	mkdir -p $(CONFDIR)/$(NAME)
+	install -D -o root -g root -m 644 $(CURDIR)/conf/config \
+		$(CONFDIR)/$(NAME)/config
+	install -D -o root -g root -m 644 $(CURDIR)/conf/default.map \
+		$(CONFDIR)/$(NAME)/default.map
 	#
 	mkdir -p $(DOCDIR)/examples
 	for f in `ls examples`; do \
