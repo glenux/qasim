@@ -4,7 +4,7 @@ CONFDIR=$(DESTDIR)/etc
 BINDIR=$(DESTDIR)/usr/bin
 MANDIR=$(DESTDIR)/usr/share/man
 DOCDIR=$(DESTDIR)/usr/share/doc/$(NAME)
-LIBDIR=$(DESTDIR)/usr/share/$(NAME)/
+SHAREDIR=$(DESTDIR)/usr/share/$(NAME)
 
 RUBYVERSION=1.8
 RDOC=rdoc$(RUBYVERSION)
@@ -50,17 +50,23 @@ install-bin:
 
 install-lib:
 	for libfile in $(NAME)/*.rb ; do \
-		install -D -o root -g root -m 644 $$libfile $(LIBDIR)/$$libfile; \
+		install -D -o root -g root -m 644 $$libfile $(SHAREDIR)/$$libfile; \
 	done
 
 install-data:
-	mkdir -p $(MANDIR)/man1
-	#cat $(NAME).1 | gzip > $(MANDIR)/man1/$(NAME).1.gz
+	## Install man pages
+	# mkdir -p $(MANDIR)/man1
+	# cat $(NAME).1 | gzip > $(MANDIR)/man1/$(NAME).1.gz
+	#
+	## Install icons
+	mkdir -p $(SHAREDIR)/icons
+	install -D -o root -g root -m 644 $(CURDIR)/icons/$(NAME).svg \
+		$(SHAREDIR)/icons/$(NAME).svg
+	#
 	## Install completion file
 	# install -D -o root -g root -m 644 $(CURDIR)/$(NAME).completion $(DESTDIR)/etc/bash_completion.d/$(NAME)
 	#
-	#
-	# Install configuration files
+	## Install configuration files
 	mkdir -p $(CONFDIR)/xdg/autostart
 	install -D -o root -g root -m 644 $(CURDIR)/conf/autostart/$(NAME).desktop \
 		$(CONFDIR)/xdg/autostart/$(NAME).desktop
@@ -69,7 +75,8 @@ install-data:
 		$(CONFDIR)/$(NAME)/config
 	install -D -o root -g root -m 644 $(CURDIR)/conf/default.map \
 		$(CONFDIR)/$(NAME)/default.map
-	#
+	# 
+	# Install examples
 	mkdir -p $(DOCDIR)/examples
 	for f in `ls examples`; do \
 	  cat examples/$$f | gzip -f9 > $(DOCDIR)/examples/$$f.gz ; \
