@@ -8,6 +8,7 @@ require 'find'
 
 require 'rubygems'
 require 'rdebug/base'
+require 'qasim/constants'
 require 'qasim/map'
 
 module Qasim
@@ -53,7 +54,7 @@ module Qasim
 			rdebug "Config: #{@config_dir}/config"
 
 			@maps = []
-			Find.find( @config_dir ) do |path|
+			Find.find( @config_dir, APP_SYSCONFIG_DIR ) do |path|
 				if File.file? path
 					if File.basename( path ) =~ /.map$/
 						begin
