@@ -4,6 +4,7 @@ CONFDIR=$(DESTDIR)/etc
 BINDIR=$(DESTDIR)/usr/bin
 MANDIR=$(DESTDIR)/usr/share/man
 DOCDIR=$(DESTDIR)/usr/share/doc/$(NAME)
+LIBDIR=$(DESTDIR)/usr/share/$(NAME)/
 
 RUBYVERSION=1.8
 RDOC=rdoc$(RUBYVERSION)
@@ -36,10 +37,24 @@ install-doc:
 	cp -a doc $(DOCDIR)
 
 
-install:
+install: install-bin install-lib install-data
+
+install-bin: 
 	mkdir -p $(BINDIR)
+	for binfile in bin/*.rb ; do \
+		BINFILE=`basename $$binfile |sed -e 's/.rb$$//'`; \
+		install -D -o root -g root -m 755 $$binfile $(BINDIR)/$$BINFILE; \
+		sed -i -e 's|^QASIM_INCLUDE_DIR.*|QASIM_INCLUDE_DIR = "/usr/share/$(NAME)"|' $(BINDIR)/$$BINFILE; \
+	done
+	#install -D -o root -g root -m 755 $(CURDIR)/bin/$(NAME)-gui.rb $(BINDIR)/$(NAME)-gui
+
+install-lib:
+	for libfile in $(NAME)/*.rb ; do \
+		install -D -o root -g root -m 644 $$libfile $(LIBDIR)/$$libfile; \
+	done
+
+install-data:
 	mkdir -p $(MANDIR)/man1
-	install -D -o root -g root -m 755 $(CURDIR)/bin/$(NAME)-gui.rb $(BINDIR)/$(NAME)-gui
 	#cat $(NAME).1 | gzip > $(MANDIR)/man1/$(NAME).1.gz
 	## Install completion file
 	# install -D -o root -g root -m 644 $(CURDIR)/$(NAME).completion $(DESTDIR)/etc/bash_completion.d/$(NAME)
