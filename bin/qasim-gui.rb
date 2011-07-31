@@ -8,6 +8,9 @@ $VERBOSE = true
 require 'pp'
 require 'set'
 
+QASIM_INCLUDE_DIR = "."
+$:.push QASIM_INCLUDE_DIR
+
 require 'qasim/constants'
 require 'qasim/config'
 require 'qasim/map'
