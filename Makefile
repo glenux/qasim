@@ -68,8 +68,10 @@ install-data:
 	#
 	## Install configuration files
 	mkdir -p $(CONFDIR)/xdg/autostart
-	install -D -o root -g root -m 644 $(CURDIR)/conf/autostart/$(NAME).desktop \
+	install -D -o root -g root -m 644 $(CURDIR)/conf/$(NAME).desktop \
 		$(CONFDIR)/xdg/autostart/$(NAME).desktop
+	install -D -o root -g root -m 644 $(CURDIR)/conf/$(NAME).desktop \
+		$(SHAREDIR)/applications/$(NAME).desktop
 	mkdir -p $(CONFDIR)/$(NAME)
 	install -D -o root -g root -m 644 $(CURDIR)/conf/config \
 		$(CONFDIR)/$(NAME)/config
