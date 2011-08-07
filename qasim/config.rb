@@ -7,7 +7,7 @@ require 'pp'
 require 'find'
 
 require 'rubygems'
-require 'rdebug/base'
+#require 'rdebug/base'
 require 'qasim/constants'
 require 'qasim/map'
 
@@ -51,7 +51,7 @@ module Qasim
 		end
 
 		def parse_maps &blk
-			rdebug "Config: #{@config_dir}/config"
+			#rdebug "Config: #{@config_dir}/config"
 
 			@maps = []
 			Find.find( @config_dir, APP_SYSCONFIG_DIR ) do |path|
