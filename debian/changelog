@@ -1,3 +1,9 @@
+qasim (0.1.1) unstable; urgency=low
+
+  * Added missing dependencies (libqt4-ruby & ruby)
+
+ -- Glenn Y. Rolland <glenux@glenux.net>  Sun, 07 Aug 2011 16:53:20 +0200
+
 qasim (0.1) unstable; urgency=low
 
   * Initial version.
