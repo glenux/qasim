@@ -1,4 +1,5 @@
 
+require 'fileutils'
 require 'rubygems'
 #require 'rdebug/base'
 require 'qasim/config'
