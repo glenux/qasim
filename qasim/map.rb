@@ -143,8 +143,8 @@ module Qasim
 			#
 			# FIXME: test connexion with Net::SSH + timeout or ask password
 			@links.each do |name, remotepath|
-				FileUtils.mkdir_p localpath
 				localpath = File.join ENV['HOME'], "mnt", name
+				FileUtils.mkdir_p localpath
 				cmd = "sshfs"
 				cmd_args = [
 					"-o","allow_root" ,
