@@ -3,8 +3,8 @@ NAME=qasim
 CONFDIR=$(DESTDIR)/etc
 BINDIR=$(DESTDIR)/usr/bin
 MANDIR=$(DESTDIR)/usr/share/man
-DOCDIR=$(DESTDIR)/usr/share/doc/$(NAME)
-SHAREDIR=$(DESTDIR)/usr/share/$(NAME)
+DOCDIR=$(DESTDIR)/usr/share/doc
+SHAREDIR=$(DESTDIR)/usr/share
 
 RUBYVERSION=1.8
 RDOC=rdoc$(RUBYVERSION)
@@ -32,9 +32,9 @@ build-doc:
 
 install-doc:
 	#          # install documentation
-	rm -fr $(DOCDIR)
-	mkdir -p $(DOCDIR)
-	cp -a doc $(DOCDIR)
+	rm -fr $(DOCDIR)/$(NAME)
+	mkdir -p $(DOCDIR)/$(NAME)
+	cp -a doc $(DOCDIR)/$(NAME)
 
 
 install: install-bin install-lib install-data
@@ -50,7 +50,7 @@ install-bin:
 
 install-lib:
 	for libfile in $(NAME)/*.rb ; do \
-		install -D -o root -g root -m 644 $$libfile $(SHAREDIR)/$$libfile; \
+		install -D -o root -g root -m 644 $$libfile $(SHAREDIR)/$(NAME)/$$libfile; \
 	done
 
 install-data:
@@ -59,17 +59,19 @@ install-data:
 	# cat $(NAME).1 | gzip > $(MANDIR)/man1/$(NAME).1.gz
 	#
 	## Install icons
-	mkdir -p $(SHAREDIR)/icons
+	mkdir -p $(SHAREDIR)/$(NAME)/icons
 	install -D -o root -g root -m 644 $(CURDIR)/icons/$(NAME).svg \
-		$(SHAREDIR)/icons/$(NAME).svg
+		$(SHAREDIR)/$(NAME)/icons/$(NAME).svg
 	#
 	## Install completion file
 	# install -D -o root -g root -m 644 $(CURDIR)/$(NAME).completion $(DESTDIR)/etc/bash_completion.d/$(NAME)
 	#
 	## Install configuration files
 	mkdir -p $(CONFDIR)/xdg/autostart
-	install -D -o root -g root -m 644 $(CURDIR)/conf/autostart/$(NAME).desktop \
+	install -D -o root -g root -m 644 $(CURDIR)/conf/$(NAME).desktop \
 		$(CONFDIR)/xdg/autostart/$(NAME).desktop
+	install -D -o root -g root -m 644 $(CURDIR)/conf/$(NAME).desktop \
+		$(SHAREDIR)/applications/$(NAME).desktop
 	mkdir -p $(CONFDIR)/$(NAME)
 	install -D -o root -g root -m 644 $(CURDIR)/conf/config \
 		$(CONFDIR)/$(NAME)/config
@@ -77,9 +79,9 @@ install-data:
 		$(CONFDIR)/$(NAME)/default.map
 	# 
 	# Install examples
-	mkdir -p $(DOCDIR)/examples
+	mkdir -p $(DOCDIR)/$(NAME)/examples
 	for f in `ls examples`; do \
-	  cat examples/$$f | gzip -f9 > $(DOCDIR)/examples/$$f.gz ; \
+	  cat examples/$$f | gzip -f9 > $(DOCDIR)/$(NAME)/examples/$$f.gz ; \
 	done
 
 .PHONY: destdir
