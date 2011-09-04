@@ -1,6 +1,7 @@
 
+require 'fileutils'
 require 'rubygems'
-require 'rdebug/base'
+#require 'rdebug/base'
 require 'qasim/config'
 
 module Qasim
@@ -38,7 +39,7 @@ module Qasim
 
 		def load path=nil
 			@path=path unless path.nil?
-			rdebug "Parsing map #{@path}"
+			#rdebug "Parsing map #{@path}"
 			f = File.open @path
 			linect = 0
 			local_env = ENV.clone
@@ -64,22 +65,22 @@ module Qasim
 				case line
 				when /^\s*REMOTE_USER\s*=\s*(.*)\s*$/ then
 					@user = $1
-					rdebug "d: remote_user => #{$1}"
+					#rdebug "d: remote_user => #{$1}"
 				when /^\s*REMOTE_PORT\s*=\s*(.*)\s*$/ then
 					@port = $1.to_i
-					rdebug "d: remote_port => #{$1}"
+					#rdebug "d: remote_port => #{$1}"
 				when /^\s*REMOTE_HOST\s*=\s*(.*)\s*$/ then
 					@host = $1
-					rdebug "d: remote_host => #{$1}"
+					#rdebug "d: remote_host => #{$1}"
 				when /^\s*REMOTE_CYPHER\s*=\s*(.*)\s*$/ then
 					if CYPHERS.map{|x| x.to_s}.include? $1 then
 						@host = $1.to_sym
 					end
 				when /^\s*MAP\s*=\s*(.*)\s+(.*)\s*$/ then
 					@links[$1] = $2
-					rdebug "d: link #{$1} => #{$2}"
+					#rdebug "d: link #{$1} => #{$2}"
 				when /^\s*$/,/^\s*#/ then
-					rdebug "d: dropping empty line"
+					#rdebug "d: dropping empty line"
 				else
 					raise MapParseError, "parse error at #{@path}:#{linect}"
 				end
@@ -99,7 +100,7 @@ module Qasim
 		end
 
 		def online?
-			rdebug  "testing online? %s " % self.inspect
+			#rdebug  "testing online? %s " % self.inspect
 			#FIXME: test liveness
 		end
 
@@ -144,6 +145,7 @@ module Qasim
 			# FIXME: test connexion with Net::SSH + timeout or ask password
 			@links.each do |name, remotepath|
 				localpath = File.join ENV['HOME'], "mnt", name
+				FileUtils.mkdir_p localpath
 				cmd = "sshfs"
 				cmd_args = [
 					"-o","allow_root" ,
@@ -159,7 +161,7 @@ module Qasim
 					"-o","Port=%s" % @port,
 					"%s@%s:%s" % [@user,@host,remotepath],
 					localpath ]
-				rdebug "command: %s" % [ cmd, cmd_args ].flatten.join(' ')
+				#rdebug "command: %s" % [ cmd, cmd_args ].flatten.join(' ')
 				if block_given? then
 					yield name, cmd, cmd_args
 				else
@@ -180,7 +182,7 @@ module Qasim
 					"-u", #umount
 					"-z" ,#lazy
 					localpath ]
-				rdebug "command: %s" % [ cmd, cmd_args ].flatten.join(' ')
+				#rdebug "command: %s" % [ cmd, cmd_args ].flatten.join(' ')
 				if block_given? then
 					yield name, cmd, cmd_args
 				else
