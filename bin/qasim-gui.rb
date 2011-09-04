@@ -7,6 +7,7 @@ $VERBOSE = true
 
 require 'pp'
 require 'set'
+require 'fcntl'
 
 QASIM_INCLUDE_DIR = "."
 $:.push QASIM_INCLUDE_DIR
@@ -209,7 +210,27 @@ module Qasim
 		#
 		#
 		def run
+			# create lock
+			have_lock = true
+
+			lockfname = APP_CONFIG_DIR, "lock"
+			File.open lockfname, "w" do
+				unless f.flock File::LOCK_EX | File::LOCK_NB
+				    warn "Another instance of %s is already running." % APP_NAME
+					exit 1
+				end
+				f.flock File::LOCK_EX 
+			end
+
+			fd = IO::sysopen('/tmp/tempfile',
+							 Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT)
+			f = IO.open(fd)
+			f.syswrite("TEMP DATA")
+			f.close
+			masterpid = fh.gets
 			@app.exec
+		ensure
+			fh.close
 		end
 
 
