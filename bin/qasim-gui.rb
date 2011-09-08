@@ -222,7 +222,7 @@ module Qasim
 			f.close
 			@app.exec
 		rescue Errno::EEXIST => e
-			warn "error: Another instance of %s is already running."
+			warn "error: Another instance of %s is already running." % APP_NAME
 			exit 1
 		ensure
 			masterpid = File.read(lockfname).strip
