@@ -218,15 +218,23 @@ module Qasim
 			fd = IO::sysopen( lockfname,
 							 Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT)
 			f = IO.open(fd)
-			f.syswrite( "Process.pid\n" )
+			f.syswrite( "#{Process.pid}\n" )
 			f.close
 			@app.exec
 		rescue Errno::EEXIST => e
+			# test if the other process still exist
+			masterpid = File.read(lockfname).strip
+			Process.kill(0, masterpid.to_i)
 			warn "error: Another instance of %s is already running." % APP_NAME
 			exit 1
+		rescue Errno::ESRCH => e
+			f = IO.open(fd)
+			f.syswrite( "#{Process.pid}\n" )
+			f.close
+			@app.exec
 		ensure
 			masterpid = File.read(lockfname).strip
-			if masterpid == Process.pid then
+			if masterpid.to_i == Process.pid then
 				FileUtils.rm lockfname
 			end
 		end
