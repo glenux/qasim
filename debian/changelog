@@ -1,3 +1,9 @@
+qasim (0.1.7) testing; urgency=low
+
+  * qasim-gui: test locker process liveness
+
+ -- Glenn Y. Rolland <glenux@glenux.net>  Sat, 10 Sep 2011 13:58:21 +0200
+
 qasim (0.1.6) unstable; urgency=low
 
   * qasim-gui: handle QIcon::fromTheme NoMethodError exception when needed.
