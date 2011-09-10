@@ -20,27 +20,10 @@ module Qasim
 
 		def initialize
 
-			user = if ENV['USER'] then
-					   ENV['USER']
-				   else
-					   raise "Environment variable 'USER' is missing!"
-				   end
 
-			home_dir = if ENV['HOME'] then 
-						   ENV['HOME']
-					   else
-						   "/home/" + user
-					   end
+			@mnt_dir = File.join ENV['HOME'], "mnt"
 
-			xdg_dir = if ENV['XDG_CONFIG_HOME'] then
-						  ENV['XDG_CONFIG_HOME']
-					  else
-						  home_dir + '/.config'
-					  end
-
-			@mnt_dir = File.join home_dir, "mnt"
-
-			@config_dir = xdg_dir + '/sshfs-mapper'
+			@config_dir = APP_CONFIG_DIR
 			@config_file = nil
 			@maps = []
 			@initialize_enable = false
