@@ -1,4 +1,4 @@
-qasim (0.1.7) testing; urgency=low
+qasim (0.1.7) unstable; urgency=low
 
   * qasim-gui: test locker process liveness
 
