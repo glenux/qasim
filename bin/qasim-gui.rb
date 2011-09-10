@@ -7,6 +7,7 @@ $VERBOSE = true
 
 require 'pp'
 require 'set'
+require 'fcntl'
 
 QASIM_INCLUDE_DIR = "."
 $:.push QASIM_INCLUDE_DIR
@@ -143,13 +144,13 @@ module Qasim
 			@context_menu = Qt::Menu.new
 
 			act_pref = Qt::Action.new _('&Preferences'), @context_menu
-			act_pref.setIcon(  Qt::Icon::fromTheme("configure") )
+			act_pref.setIcon(  Qt::Icon::fromTheme("configure") ) rescue nil
 			act_pref.setIconVisibleInMenu true
 			act_pref.setEnabled false
 			@context_menu.addAction act_pref;
 
 			act_about = Qt::Action.new '&About', @context_menu
-			act_about.setIcon( Qt::Icon::fromTheme("help-about") )
+			act_about.setIcon( Qt::Icon::fromTheme("help-about") ) rescue nil
 			act_about.setIconVisibleInMenu true
 			act_about.setEnabled false
 			@context_menu.addAction act_about;
@@ -157,7 +158,7 @@ module Qasim
 			@context_menu.addSeparator
 
 			act_quit = Qt::Action.new _('Quit'), @context_menu
-			act_quit.setIcon(  Qt::Icon::fromTheme("application-exit") )
+			act_quit.setIcon(  Qt::Icon::fromTheme("application-exit") ) rescue nil
 			act_quit.setIconVisibleInMenu true
 			act_quit.connect(SIGNAL(:triggered)) { @app.quit }
 			@context_menu.addAction act_quit
@@ -209,7 +210,25 @@ module Qasim
 		#
 		#
 		def run
+			# create lock
+			have_lock = true
+
+			FileUtils.mkdir_p APP_CONFIG_DIR unless File.exist? APP_CONFIG_DIR
+			lockfname = File.join APP_CONFIG_DIR, "lock"
+			fd = IO::sysopen( lockfname,
+							 Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT)
+			f = IO.open(fd)
+			f.syswrite( "Process.pid\n" )
+			f.close
 			@app.exec
+		rescue Errno::EEXIST => e
+			warn "error: Another instance of %s is already running." % APP_NAME
+			exit 1
+		ensure
+			masterpid = File.read(lockfname).strip
+			if masterpid == Process.pid then
+				FileUtils.rm lockfname
+			end
 		end
 
 
