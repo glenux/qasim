@@ -1,3 +1,9 @@
+qasim (0.1.9) unstable; urgency=low
+
+  * qasim-gui: Use /proc/ instead of kill to detect other processes. 
+
+ -- Glenn Y. Rolland <glenux@glenux.net>  Tue, 18 Oct 2011 16:45:31 +0200
+
 qasim (0.1.8) unstable; urgency=low
 
   * qasim-gui: Another fix in locker process liveness testing 
