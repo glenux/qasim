@@ -225,10 +225,15 @@ module Qasim
 			# test if the other process still exist
 			masterpid = File.read(lockfname).strip
 			begin
-				Process.kill(0, masterpid.to_i)
-				warn "error: Another instance of %s is already running." % APP_NAME
-				exit 1
-			rescue Errno::ESRCH => e
+				# FIXME: test if the other process exists
+				other_path = "/proc/#{masterpid.to_i}"
+				if File.exists? other_path then
+					cmdline = File.read( File.join( other_path, 'cmdline' ) )
+					if cmdline =~ /qasim/ then
+						warn "error: Another instance of %s is already running." % APP_NAME
+						exit 1
+					end
+				end
 				fd = IO::sysopen( lockfname,
 								 Fcntl::O_WRONLY | Fcntl::O_EXCL )
 				f = IO.open(fd)
