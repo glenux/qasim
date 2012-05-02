@@ -22,6 +22,10 @@ module Qasim
 		CYPHER_AES256CBC = "aes-256-cbc".to_sym
 		CYPHERS = [ CYPHER_ARCFOUR, CYPHER_AES256CBC ]
 
+
+		#
+		# Set defaults properties for maps
+		#
 		def initialize config, map_path
 			@config = config
 			@path = map_path
@@ -37,6 +41,10 @@ module Qasim
 			self.load @path
 		end
 
+
+		#
+		# Load map description from file
+		#
 		def load path=nil
 			@path=path unless path.nil?
 			#rdebug "Parsing map #{@path}"
@@ -88,6 +96,10 @@ module Qasim
 			f.close
 		end
 
+
+		#
+		# Write map description to file
+		#
 		def write path=nil
 			@path=path unless path.nil?
 
@@ -99,13 +111,19 @@ module Qasim
 			end
 		end
 
+
+		#
+		# Test map liveness (how ?)
+		# FIXME: not implemented
+		#
 		def online?
 			#rdebug  "testing online? %s " % self.inspect
 			#FIXME: test liveness
 		end
 
+
 		#
-		# test if map is connected / mounted
+		# Test if map is connected / mounted
 		#
 		def connected? 
 			f = File.open("/proc/mounts")
@@ -131,8 +149,9 @@ module Qasim
 			end
 		end
 
+
 		#
-		# connect given map
+		# Connect map
 		#
 		def connect &block
 			puts "[#{File.basename @path}] Connecting..."
@@ -173,6 +192,10 @@ module Qasim
 			end
 		end
 
+
+		#
+		# Disconnect map
+		#
 		def disconnect &block
 			puts "Disconnecting map #{@path}"
 			@links.each do |name, remotepath|
