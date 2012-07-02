@@ -97,11 +97,10 @@ module Qasim
 		def action_trigger_map_item map, item
 			@connect_error[map.path] = Set.new
 			@connect_running[map.path] = 0
-			if map.connected? then
-				method = :disconnect
-			else
-				method = :connect
-			end
+			method = if map.connected? then :disconnect
+					 else :connect
+					 end
+
 			begin
 				map.send(method) do |linkname,cmd,cmd_args|
 					process = Qt::Process.new
