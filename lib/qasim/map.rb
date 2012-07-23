@@ -1,8 +1,8 @@
 
 require 'fileutils'
-require 'rubygems'
+
 #require 'rdebug/base'
-require 'qasim/config'
+require 'qasim'
 
 module Qasim
 

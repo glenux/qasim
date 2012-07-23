@@ -6,10 +6,8 @@ require 'ostruct'
 require 'pp'
 require 'find'
 
-require 'rubygems'
 #require 'rdebug/base'
-require 'qasim/constants'
-require 'qasim/map'
+require 'qasim'
 
 module Qasim
 	class Config
