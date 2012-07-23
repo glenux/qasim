@@ -44,7 +44,8 @@ install-bin:
 	for binfile in bin/*.rb ; do \
 		BINFILE=`basename $$binfile |sed -e 's/.rb$$//'`; \
 		install -D -o root -g root -m 755 $$binfile $(BINDIR)/$$BINFILE; \
-		sed -i -e 's|^QASIM_INCLUDE_DIR.*|QASIM_INCLUDE_DIR = "/usr/share/$(NAME)"|' $(BINDIR)/$$BINFILE; \
+		sed -i -e 's|^QASIM_INCLUDE_DIR.*|QASIM_INCLUDE_DIR = "/usr/share/$(NAME)/lib"|' $(BINDIR)/$$BINFILE; \
+		sed -i -e 's|^QASIM_DATA_DIR.*|QASIM_DATA_DIR = "/usr/share/$(NAME)"|' $(BINDIR)/$$BINFILE; \
 	done
 	#install -D -o root -g root -m 755 $(CURDIR)/bin/$(NAME)-gui.rb $(BINDIR)/$(NAME)-gui
 

@@ -9,7 +9,9 @@ require 'pp'
 require 'set'
 require 'fcntl'
 
-QASIM_INCLUDE_DIR = "."
+QASIM_INCLUDE_DIR = "lib"
+QASIM_DATA_DIR = "."
+
 $:.push QASIM_INCLUDE_DIR
 
 require 'qasim/constants'
