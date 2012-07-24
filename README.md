@@ -6,6 +6,7 @@ Requirements
 
 Install the following gems
 
+
   * qtbindings
 
 Those could also be provided by your linux distribution and installable
