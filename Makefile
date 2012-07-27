@@ -10,10 +10,6 @@ RUBYVERSION=1.8
 RDOC=rdoc$(RUBYVERSION)
 
 all:
-	$(MAKE) -C $(NAME)
-
-clean:
-	$(MAKE) -C $(NAME) clean
 
 doc: build-doc
 
@@ -50,7 +46,7 @@ install-bin:
 	#install -D -o root -g root -m 755 $(CURDIR)/bin/$(NAME)-gui.rb $(BINDIR)/$(NAME)-gui
 
 install-lib:
-	for libfile in $(NAME)/*.rb ; do \
+	for libfile in lib/*.rb lib/**/*.rb ; do \
 		install -D -o root -g root -m 644 $$libfile $(SHAREDIR)/$(NAME)/$$libfile; \
 	done
 
