@@ -11,6 +11,8 @@ RDOC=rdoc$(RUBYVERSION)
 
 all:
 
+clean:
+
 doc: build-doc
 
 .PHONY: build-doc
