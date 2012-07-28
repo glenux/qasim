@@ -7,3 +7,5 @@ debian/qasim/
 qasim/map_view_ui.rb
 destdir/
 debian/qasim/
+*_ui.rb
+*_qrc.rb
