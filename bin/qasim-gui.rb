@@ -26,7 +26,12 @@ end
 
 
 module Qasim
-	class QasimGui
+	class QasimApp
+		def initialize
+		end
+	end
+
+	class QasimGui < QasimApp
 
 
 		def initialize
@@ -207,32 +212,27 @@ module Qasim
 		end
 
 
-		#
-		#
-		#
-		def run
-			# create lock
-			have_lock = true
-
-			FileUtils.mkdir_p APP_CONFIG_DIR unless File.exist? APP_CONFIG_DIR
-			lockfname = File.join APP_CONFIG_DIR, "lock"
-			fd = IO::sysopen( lockfname,
-							 Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT)
-			f = IO.open(fd)
-			f.syswrite( "#{Process.pid}\n" )
-			f.close
-			@app.exec
-		rescue Errno::EEXIST => e
-			# test if the other process still exist
-			masterpid = File.read(lockfname).strip
+		def lock_set
 			begin
+				# create lock
+				have_lock = true
+
+				FileUtils.mkdir_p APP_CONFIG_DIR unless File.exist? APP_CONFIG_DIR
+				lockfname = File.join APP_CONFIG_DIR, "lock"
+				fd = IO::sysopen( lockfname,
+								 Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT)
+				f = IO.open(fd)
+				f.syswrite( "#{Process.pid}\n" )
+				f.close
+			rescue Errno::EEXIST => e
+				# test if the other process still exist
+				masterpid = File.read(lockfname).strip
 				# FIXME: test if the other process exists
 				other_path = "/proc/#{masterpid.to_i}"
 				if File.exists? other_path then
 					cmdline = File.read( File.join( other_path, 'cmdline' ) )
 					if cmdline =~ /qasim/ then
-						warn "error: Another instance of %s is already running." % APP_NAME
-						exit 1
+						raise LockError, "Another instance of %s is already running." % APP_NAME
 					end
 				end
 				fd = IO::sysopen( lockfname,
@@ -240,13 +240,24 @@ module Qasim
 				f = IO.open(fd)
 				f.syswrite( "#{Process.pid}\n" )
 				f.close
-				@app.exec
 			end
-		ensure
+		end
+
+		def lock_unset
 			masterpid = File.read(lockfname).strip
 			if masterpid.to_i == Process.pid then
 				FileUtils.rm lockfname
 			end
+		end
+
+		#
+		#
+		#
+		def run
+			lock_set
+			@app.exec
+		ensure
+			lock_unset
 		end
 
 

@@ -119,7 +119,7 @@ clean-lib:
 build-lib:
 
 install-lib:
-	for libfile in $(NAME)/*.rb ; do \
+	for libfile in lib/*.rb lib/**/*.rb ; do \
 		install -D -o root -g root -m 644 $$libfile $(SHAREDIR)/$(NAME)/$$libfile; \
 	done
 
