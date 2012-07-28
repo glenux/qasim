@@ -100,6 +100,8 @@ install-ui: $(RBUI_FILES)
 clean-bin:
 	# make no sense in ruby
 
+build-bin:
+
 install-bin: 
 	mkdir -p $(BINDIR)
 	for binfile in bin/*.rb ; do \
@@ -113,7 +115,8 @@ install-bin:
 ## LIB SECTION
 
 clean-lib:
-	# make no sense in ruby
+
+build-lib:
 
 install-lib:
 	for libfile in $(NAME)/*.rb ; do \
@@ -124,6 +127,8 @@ install-lib:
 ## DATA SECTION
 
 clean-data:
+
+build-data:
 
 install-data:
 	## Install man pages
