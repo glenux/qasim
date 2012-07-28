@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
 require 'Qt4'
 
 $DEBUG = true
@@ -33,6 +34,7 @@ module Qasim
 
 	class QasimGui < QasimApp
 
+		class LockError < RuntimeError ; end
 
 		def initialize
 			@config = Config.new
@@ -227,7 +229,6 @@ module Qasim
 			rescue Errno::EEXIST => e
 				# test if the other process still exist
 				masterpid = File.read(lockfname).strip
-				# FIXME: test if the other process exists
 				other_path = "/proc/#{masterpid.to_i}"
 				if File.exists? other_path then
 					cmdline = File.read( File.join( other_path, 'cmdline' ) )
@@ -244,6 +245,9 @@ module Qasim
 		end
 
 		def lock_unset
+			# remove lock if it exists
+			lockfname = File.join APP_CONFIG_DIR, "lock"
+			return unless File.exist? lockfname
 			masterpid = File.read(lockfname).strip
 			if masterpid.to_i == Process.pid then
 				FileUtils.rm lockfname
@@ -256,6 +260,9 @@ module Qasim
 		def run
 			lock_set
 			@app.exec
+			exit 0
+		rescue LockError
+			exit 1
 		ensure
 			lock_unset
 		end
