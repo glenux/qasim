@@ -9,26 +9,49 @@ SHAREDIR=$(DESTDIR)/usr/share
 RUBYVERSION=1.8
 RDOC=rdoc$(RUBYVERSION)
 
-all:
-	$(MAKE) -C $(NAME)
+all: \
+	build \
+	install
 
-clean:
-	$(MAKE) -C $(NAME) clean
+clean: \
+	clean-ui \
+	clean-qrc \
+	clean-bin \
+	clean-lib \
+	clean-data \
+	clean-doc
 
+build: \
+	build-ui \
+	build-qrc \
+	build-bin \
+	build-lib \
+	build-data
+	
 doc: build-doc
+
+install: \
+	install-ui \
+	install-qrc \
+	install-bin \
+	install-lib \
+	install-data
+
+## DOC SECTION
 
 .PHONY: build-doc
 
-build-doc:
+clean-doc: 
 	rm -fr doc
+
+build-doc: clean-doc
 	$(RDOC) \
 		--promiscuous \
 		--inline-source \
 		--line-numbers \
-		-o doc $(NAME)/ \
+		-o doc lib/$(NAME)/ \
 		bin/
 	# --diagram
-	#
 
 install-doc:
 	#          # install documentation
@@ -37,7 +60,45 @@ install-doc:
 	cp -a doc $(DOCDIR)/$(NAME)
 
 
-install: install-bin install-lib install-data
+## QRC -> QRC_RB SECTION
+
+QRC_FILES=$(wildcard lib/$(NAME)/*.qrc)
+RBQRC_FILES=$(patsubst %.qrc,%_qrc.rb,$(QRC_FILES))
+
+clean-qrc:
+	rm -f $(RBQRC_FILES)
+
+build-qrc: $(RBQRC_FILES)
+	echo $(RBQRC_FILES)
+
+install-qrc: $(RBQRC_FILES)
+	# FIXME install qrc
+	
+%_qrc.rb: %.qrc
+	rbrcc $< -o $@
+
+## UI -> UI_RB SECTION
+
+UI_FILES=$(wildcard lib/$(NAME)/ui/*.ui)
+RBUI_FILES=$(patsubst %.ui,%_ui.rb,$(UI_FILES))
+
+clean-ui: 
+	rm -f $(RBUI_FILES)
+
+build-ui: $(RBUI_FILES)
+	echo $(RBUI_FILES)
+
+install-ui: $(RBUI_FILES)
+	# FIXME install
+
+%_ui.rb: %.ui
+	rbuic4 -x $< -o $@
+
+
+## BINARY SECTION
+
+clean-bin:
+	# make no sense in ruby
 
 install-bin: 
 	mkdir -p $(BINDIR)
@@ -49,10 +110,20 @@ install-bin:
 	done
 	#install -D -o root -g root -m 755 $(CURDIR)/bin/$(NAME)-gui.rb $(BINDIR)/$(NAME)-gui
 
+## LIB SECTION
+
+clean-lib:
+	# make no sense in ruby
+
 install-lib:
 	for libfile in $(NAME)/*.rb ; do \
 		install -D -o root -g root -m 644 $$libfile $(SHAREDIR)/$(NAME)/$$libfile; \
 	done
+
+
+## DATA SECTION
+
+clean-data:
 
 install-data:
 	## Install man pages
@@ -84,6 +155,9 @@ install-data:
 	for f in `ls examples`; do \
 	  cat examples/$$f | gzip -f9 > $(DOCDIR)/$(NAME)/examples/$$f.gz ; \
 	done
+
+
+## OTHER
 
 .PHONY: destdir
 destdir:
