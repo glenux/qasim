@@ -18,6 +18,7 @@ $:.push QASIM_INCLUDE_DIR
 require 'qasim/constants'
 require 'qasim/config'
 require 'qasim/map'
+require 'qasim/about'
 
 require 'qasim/qasim_qrc'
 
@@ -162,7 +163,10 @@ module Qasim
 			act_about = Qt::Action.new '&About', @context_menu
 			act_about.setIcon( Qt::Icon::fromTheme("help-about") ) rescue nil
 			act_about.setIconVisibleInMenu true
-			act_about.setEnabled false
+			act_about.setEnabled true
+			act_about.connect(SIGNAL(:triggered)) do 
+				puts "Show about dialog!"
+			end
 			@context_menu.addAction act_about;
 
 			@context_menu.addSeparator
@@ -183,7 +187,9 @@ module Qasim
 			@app = Qt::Application.new(ARGV)
 			si  = Qt::SystemTrayIcon.new
 
-			std_icon = Qt::Icon.new( ":/qasim/qasim-icon" ) #File.join APP_ICON_PATH, "qasim.svg" )
+			std_icon = Qt::Icon.new( ":/qasim/qasim-icon" )
+			#std_icon = Qt::Icon.new( File.join APP_ICON_PATH, "qasim.svg" )
+			#std_icon = Qt::Icon.new
 			alt_icon = Qt::Icon.new
 			blinking = false
 
