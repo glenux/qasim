@@ -1,0 +1,7 @@
+# Jekyll
+safe: true
+permalink: /:year/:title/
+paginate: 10 
+exclude: 
+name: Qasim
+baseurl: /qasim/
