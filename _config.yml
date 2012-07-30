@@ -1,7 +1,9 @@
 # Jekyll
 safe: true
+server_port: 9393
 permalink: /:year/:title/
-paginate: 10 
+paginate: 10
 exclude: 
 name: Qasim
-baseurl: /qasim/
+baseurl: /qasim
+url: http://localhost:9393
