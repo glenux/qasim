@@ -93,6 +93,9 @@ install-ui: $(RBUI_FILES)
 
 %_ui.rb: %.ui
 	rbuic4 -x $< -o $@
+	sed -e 's/^module Ui/module Qasim ; module Ui/' \
+		-e 's/^end  # module Ui/end ; end  # module Qasim and Ui/' \
+		-i $@
 
 
 ## BINARY SECTION
