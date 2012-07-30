@@ -15,10 +15,7 @@ QASIM_DATA_DIR = "."
 
 $:.push QASIM_INCLUDE_DIR
 
-require 'qasim/constants'
-require 'qasim/config'
-require 'qasim/map'
-require 'qasim/about'
+require 'qasim'
 
 require 'qasim/qasim_qrc'
 
@@ -166,6 +163,8 @@ module Qasim
 			act_about.setEnabled true
 			act_about.connect(SIGNAL(:triggered)) do 
 				puts "Show about dialog!"
+				dialog = Qasim::Ui::About.new
+				dialog.show
 			end
 			@context_menu.addAction act_about;
 
