@@ -92,7 +92,7 @@ install-ui: $(RBUI_FILES)
 	# FIXME install
 
 %_ui.rb: %.ui
-	rbuic4 -x $< -o $@
+	rbuic4 $< -o $@
 	sed -e 's/^module Ui/module Qasim ; module Ui/' \
 		-e 's/^end  # module Ui/end ; end  # module Qasim and Ui/' \
 		-i $@
