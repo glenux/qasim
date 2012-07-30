@@ -1,5 +1,6 @@
 # Jekyll
 safe: true
+auto: true
 server_port: 9393
 permalink: /:year/:title/
 paginate: 10
