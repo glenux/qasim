@@ -2,9 +2,10 @@
 require 'qasim/ui/about_ui'
 
 module Qasim ; module Ui
-	class About
+	class About < Qt::Dialog
 		def initialize
-			setup_ui(self)
+			u = Ui_About.new                                                                                                    
+			u.setup_ui(self)
 		end
 	end
 
