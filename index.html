@@ -4,29 +4,89 @@ layout: nil
 
 {% include header.html %}
 
-<div class="hero-unit">
-	<div class="row">
-		<div class="span5">
-		<h1>Qasim (القاسم)</h1>
-		<h2>The quick SSHFS mapper</h2>
-			<p style="margin-top: 2em; margin-bottom: 2em;">
-			It is a front-end to SSHFS, helping average users to access remote filesystems through <em>ssh</em>.
-			</p>
+<section id="about">
+	<div class="hero-unit">
+		<div class="row">
+			<div class="span5">
+				<h1>
+					<img class="logo" src="img/qasim.128.png" />
+					<img class="logo" src="img/qasim.256.png" />
+					Qasim (القاسم)
+				</h1>
+				<h2>The quick SSHFS mapper</h2>
+				<p style="margin-top: 2em; margin-bottom: 2em;">
+					It is a front-end to SSHFS, helping average users to access remote filesystems through <em>ssh</em>.
+				</p>
+			</div>
 		</div>
-		<div class="span5">
-			<p style="text-align: right;">
-				<img  style="max-width: 80%;" src="img/qasim-0.1beta-pic002.png" />
-			</p>
+		<div class="row">
+			<div class="span5">
+				<p>
+					<a class="btn btn-primary btn-large">Get Qasim &raquo;</a>
+					<a class="btn btn-large">Learn more &raquo;</a>
+				</p>
+			</div>
 		</div>
 	</div>
+
 	<div class="row">
-		<div class="span5">
+		<div class="span12">
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="span4">
+			<h3><i class="icon-play-circle"></i>Simple</h3>
+			<p>Qasim makes your remote shares available simply from the system tray on your favorite desktop  !</p>
+			<p style="text-align: center;">
+				<img  style="max-width: 100%;" src="img/qasim-0.1beta-pic002.png" />
+			</p>
+		</div>
+
+		<div class="span4">
+			<h3>Compatible and well-integrated</h3>
 			<p>
-				<a class="btn btn-primary btn-large">Get Qasim &raquo;</a>
-				<a class="btn btn-large">Learn more &raquo;</a>
+				It uses <em>FUSE</em>, thus everything is accessible even under command-line shell.
 			</p>
 		</div>
+
+		<div class="span4">
+			<h3>Data Secure</h3>
+			<p>
+				Access to your data is safe. All transfer is encrypted with the best tools.
+			</p>
+		</div>
+
 	</div>
-</div>
-	
-{% include footer.html %}
+</section>
+
+<section id="getting">
+	<div class="page-header">
+		<h2>Getting Qasim</h2>
+	</div>
+
+	<div class="row">
+		<div class="span6">
+			<h3 class="callout">
+				<a href="http://www.debian.org">
+					<img class="logo" src="img/debian.png">
+				</a>
+				Debian GNU/Linux
+				<small>and Ubuntu, Mint, etc.</small>
+			</h3>
+			<p></p>
+			<pre>
+$ echo "deb http://repository.glenux.net/debian unstable main" \
+  | sudo tee /etc/apt/sources.list.d/glenuxnet.list</pre>
+			<p></p>
+		</div>
+
+		<div class="span6">
+			<h3>From Git</h3>
+
+		</div>
+
+	</div>
+</section>
+
+	{% include footer.html %}
