@@ -7,21 +7,22 @@ layout: nil
 <section id="about">
 	<div class="hero-unit">
 		<div class="row">
-			<div class="span5">
+			<div class="span3">
+				<img class="logo hidden-phone" src="img/qasim.256.png" style="position: relative; top:-1.25em;"/>
+				<img class="logo visible-phone" src="img/qasim.256.png" style="margin: auto;"/>
+			</div>
+			<div class="span7">
 				<h1>
-					<img class="logo" src="img/qasim.128.png" />
-					<img class="logo" src="img/qasim.256.png" />
 					Qasim (القاسم)
 				</h1>
+
 				<h2>The quick SSHFS mapper</h2>
-				<p style="margin-top: 2em; margin-bottom: 2em;">
+
+				<p>
 					It is a front-end to SSHFS, helping average users to access remote filesystems through <em>ssh</em>.
 				</p>
-			</div>
-		</div>
-		<div class="row">
-			<div class="span5">
-				<p>
+
+				<p style="margin-top: 1em;">
 					<a class="btn btn-primary btn-large">Get Qasim &raquo;</a>
 					<a class="btn btn-large">Learn more &raquo;</a>
 				</p>
@@ -30,13 +31,11 @@ layout: nil
 	</div>
 
 	<div class="row">
-		<div class="span12">
-		</div>
-	</div>
-
-	<div class="row">
 		<div class="span4">
-			<h3><i class="icon-play-circle"></i>Simple</h3>
+			<h3>
+				<i class="icon-play-circle" style="position:relative; top:0.25em;"></i>
+				Simple
+			</h3>
 			<p>Qasim makes your remote shares available simply from the system tray on your favorite desktop  !</p>
 			<p style="text-align: center;">
 				<img  style="max-width: 100%;" src="img/qasim-0.1beta-pic002.png" />
@@ -44,14 +43,20 @@ layout: nil
 		</div>
 
 		<div class="span4">
-			<h3>Compatible and well-integrated</h3>
+			<h3>
+				<i class="icon-ok" style="position:relative; top:0.25em;"></i>
+				Compatible and well-integrated
+			</h3>
 			<p>
 				It uses <em>FUSE</em>, thus everything is accessible even under command-line shell.
 			</p>
 		</div>
 
 		<div class="span4">
-			<h3>Data Secure</h3>
+			<h3>
+				<i class="icon-lock" style="position:relative; top:0.25em;"></i>
+				Secure for your data
+			</h3>
 			<p>
 				Access to your data is safe. All transfer is encrypted with the best tools.
 			</p>
@@ -87,6 +92,28 @@ $ echo "deb http://repository.glenux.net/debian unstable main" \
 		</div>
 
 	</div>
+</section>
+
+<section id="usage">
+	<div class="page-header">
+		<h2>Using Qasim</h2>
+	</div>
+
+	<div class="row">
+		<div class="span6">
+			<h3 class="callout">
+				Graphic mode
+				<small>in KDE, Gnome, etc.</small>
+			</h3>
+			<p></p>
+		</div>
+
+		<div class="span6">
+			<h3>Command-line
+				<small>in your favorite Terminal</small>
+			</h3>
+
+		</div>
 </section>
 
 	{% include footer.html %}
