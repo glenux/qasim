@@ -18,21 +18,21 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QVBoxLayout" name="vertical_layout">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QHBoxLayout" name="horizontal_layout">
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="icon_label">
          <property name="text">
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="../../../qasim.qrc">:/qasim/icons/qasim.svg</pixmap>
+          <pixmap resource="../qasim.qrc">:/qasim/qasim-icon</pixmap>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="titleLabel">
+        <widget class="QLabel" name="title_label">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -61,7 +61,7 @@
         <string notr="true"/>
        </property>
        <property name="currentIndex">
-        <number>3</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="about_tab">
         <attribute name="title">
@@ -69,7 +69,7 @@
         </attribute>
         <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="0">
-          <widget class="QLabel" name="label_3">
+          <widget class="QLabel" name="about_label">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -83,7 +83,7 @@
             </size>
            </property>
            <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;A cross playform SSHFS Mapping tool.&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Copyright © 2011-2012 The Qasim Team&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://github.com/Glenux/Qasim&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;http://github.com/Glenux/Qasim&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;A cross platform SSHFS Mapping tool.&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Copyright © 2011-2012 The Qasim Team&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://github.com/Glenux/Qasim&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;http://github.com/Glenux/Qasim&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="scaledContents">
             <bool>false</bool>
@@ -101,7 +101,7 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
-          <widget class="QTextEdit" name="textEdit">
+          <widget class="QTextEdit" name="author_textedit">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -127,17 +127,17 @@ p, li { white-space: pre-wrap; }
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
-          <widget class="QTextEdit" name="textEdit_2"/>
+          <widget class="QTextEdit" name="thanks_textedit"/>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tab">
+       <widget class="QWidget" name="license_tab">
         <attribute name="title">
          <string>License</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
-          <widget class="QTextEdit" name="textEdit_3">
+          <widget class="QTextEdit" name="license_textedit">
            <property name="minimumSize">
             <size>
              <width>300</width>
@@ -162,7 +162,7 @@ p, li { white-space: pre-wrap; }
     </layout>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox">
+    <widget class="QDialogButtonBox" name="button_box">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -174,11 +174,12 @@ p, li { white-space: pre-wrap; }
   </layout>
  </widget>
  <resources>
+  <include location="../qasim.qrc"/>
   <include location="../../../qasim.qrc"/>
  </resources>
  <connections>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>button_box</sender>
    <signal>accepted()</signal>
    <receiver>About</receiver>
    <slot>close()</slot>

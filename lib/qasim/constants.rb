@@ -2,6 +2,7 @@ module Qasim
 	APP_ICON_PATH = File.join QASIM_DATA_DIR, "icons"
 	APP_NAME = "Qasim"
 	APP_VERSION = "0.1"
+	APP_DATE = "2012-08-02"
 
 	APP_SYSCONFIG_DIR = "/etc/qasim/maps.d"
 
