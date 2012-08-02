@@ -154,13 +154,16 @@ module Qasim
 			act_pref = Qt::Action.new _('&Preferences'), @context_menu
 			act_pref.setIcon(  Qt::Icon::fromTheme("configure") ) rescue nil
 			act_pref.setIconVisibleInMenu true
-			act_pref.setEnabled false
+			#act_pref.setEnabled true
+			act_pref.connect(SIGNAL(:triggered)) do 
+				res = @pref_dialog.show
+			end
 			@context_menu.addAction act_pref;
 
 			act_about = Qt::Action.new '&About', @context_menu
 			act_about.setIcon( Qt::Icon::fromTheme("help-about") ) rescue nil
 			act_about.setIconVisibleInMenu true
-			act_about.setEnabled true
+			#act_about.setEnabled true
 			act_about.connect(SIGNAL(:triggered)) do 
 				res = @about_dialog.show
 			end
@@ -189,6 +192,7 @@ module Qasim
 			@main_win = Qt::MainWindow.new
 			@systray  = Qt::SystemTrayIcon.new @main_win
 			@about_dialog = Qasim::Ui::About.new @main_win
+			@pref_dialog = Qasim::Ui::Preferences.new @main_win
 
 			std_icon = Qt::Icon.new( ":/qasim/qasim-icon" )
 			alt_icon = Qt::Icon.new
