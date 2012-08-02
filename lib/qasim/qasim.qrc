@@ -1,6 +1,6 @@
 <RCC>
   <qresource prefix="qasim">
-    <file alias="licence-gpl3">../../LICENSE-GPL-3</file>
-    <file alias="qasim-icon">../../icons/qasim.svg</file>
+    <file alias="licence-gpl3">../../data/text/gpl-3.0-standalone.html</file>
+    <file alias="qasim-icon">../../data/icons/qasim.svg</file>
   </qresource>
 </RCC>
