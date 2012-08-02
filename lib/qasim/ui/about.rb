@@ -50,7 +50,9 @@ module Qasim ; module Ui
 				# FIXME handle error on licence reading
 			end
 
-			#FIXME: set first tab
+			# set first tab
+			@ui.tab_widget.setCurrentIndex(0)
 		end
+
 	end
 end ; end

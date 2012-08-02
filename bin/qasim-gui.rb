@@ -162,9 +162,7 @@ module Qasim
 			act_about.setIconVisibleInMenu true
 			act_about.setEnabled true
 			act_about.connect(SIGNAL(:triggered)) do 
-				puts "Show about dialog!"
-				dialog = Qasim::Ui::About.new
-				dialog.show
+				res = @about_dialog.show
 			end
 			@context_menu.addAction act_about;
 
@@ -184,26 +182,30 @@ module Qasim
 		def build_interface
 
 			@app = Qt::Application.new(ARGV)
-			si  = Qt::SystemTrayIcon.new
+			#Qt.debug_level = Qt::DebugLevel::High
+			#Qt.debug_level = Qt::DebugLevel::Extensive
+			@app.setQuitOnLastWindowClosed false
+
+			@main_win = Qt::MainWindow.new
+			@systray  = Qt::SystemTrayIcon.new @main_win
+			@about_dialog = Qasim::Ui::About.new @main_win
 
 			std_icon = Qt::Icon.new( ":/qasim/qasim-icon" )
-			#std_icon = Qt::Icon.new( File.join APP_ICON_PATH, "qasim.svg" )
-			#std_icon = Qt::Icon.new
 			alt_icon = Qt::Icon.new
 			blinking = false
 
-			si.icon  = std_icon
-			si.show
+			@systray.icon  = std_icon
+			@systray.show
 
 
-			si.setToolTip("Qasim %s" % APP_VERSION);
+			@systray.setToolTip("Qasim %s" % APP_VERSION);
 
 			build_map_menu
 			build_context_menu
 
-			si.contextMenu = @context_menu
+			@systray.contextMenu = @context_menu
 
-			si.connect(SIGNAL('activated(QSystemTrayIcon::ActivationReason)')) do |reason|
+			@systray.connect(SIGNAL('activated(QSystemTrayIcon::ActivationReason)')) do |reason|
 				case reason
 				when Qt::SystemTrayIcon::Trigger then
 					build_map_menu

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>519</width>
-    <height>461</height>
+    <width>470</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,19 +53,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QTabWidget" name="tabWidget">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>400</width>
-         <height>300</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
+      <widget class="QTabWidget" name="tab_widget">
        <property name="currentIndex">
         <number>0</number>
        </property>
@@ -105,7 +93,7 @@
         <attribute name="title">
          <string>Authors</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <layout class="QVBoxLayout" name="_2">
          <item>
           <widget class="QTextEdit" name="authors_textedit">
            <property name="sizePolicy">
@@ -182,17 +170,17 @@ p, li { white-space: pre-wrap; }
  <connections>
   <connection>
    <sender>button_box</sender>
-   <signal>accepted()</signal>
+   <signal>clicked(QAbstractButton*)</signal>
    <receiver>About</receiver>
-   <slot>close()</slot>
+   <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>259</x>
-     <y>441</y>
+     <x>463</x>
+     <y>493</y>
     </hint>
     <hint type="destinationlabel">
-     <x>259</x>
-     <y>230</y>
+     <x>469</x>
+     <y>12</y>
     </hint>
    </hints>
   </connection>
