@@ -93,7 +93,7 @@ install-ui: $(RBUI_FILES)
 
 %_ui.rb: %.ui
 	rbuic4 $< -o $@
-	sed -e '/^module Ui/,/^end  # module Ui/d'
+	sed -e '/^module Ui/,/^end  # module Ui/d' \
 		-i $@
 
 
