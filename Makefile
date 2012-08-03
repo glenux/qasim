@@ -121,7 +121,7 @@ clean-lib:
 build-lib:
 
 install-lib:
-	for libfile in lib/*.rb lib/**/*.rb ; do \
+	IFS="" find lib -name '*.rb' | while read libfile ; do \
 		install -D -o root -g root -m 644 $$libfile $(SHAREDIR)/$(NAME)/$$libfile; \
 	done
 
@@ -139,7 +139,7 @@ install-data:
 	#
 	## Install icons
 	mkdir -p $(SHAREDIR)/$(NAME)/icons
-	install -D -o root -g root -m 644 $(CURDIR)/icons/$(NAME).svg \
+	install -D -o root -g root -m 644 $(CURDIR)/data/icons/$(NAME).svg \
 		$(SHAREDIR)/$(NAME)/icons/$(NAME).svg
 	#
 	## Install completion file
