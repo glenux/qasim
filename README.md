@@ -19,6 +19,11 @@ or
     apt-get install ruby-qt4
 
 
+Alternatives
+------------
+
+* [Mountoid](http://kde-apps.org/content/show.php/Mountoid?content=115943)
+
 
 Copyright & License
 -------------------
