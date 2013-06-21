@@ -1,10 +1,12 @@
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
+    qtbindings (4.8.3.0)
     rdebug (0.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  qtbindings
   rdebug
