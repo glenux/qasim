@@ -9,3 +9,5 @@ destdir/
 debian/qasim/
 *_ui.rb
 *_qrc.rb
+.bundle
+vendor/bundle
