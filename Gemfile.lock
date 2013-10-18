@@ -3,6 +3,7 @@ GEM
   specs:
     qtbindings (4.8.3.0)
     rdebug (0.1)
+    thor (0.18.1)
 
 PLATFORMS
   ruby
@@ -10,3 +11,4 @@ PLATFORMS
 DEPENDENCIES
   qtbindings
   rdebug
+  thor
