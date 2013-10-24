@@ -4,10 +4,14 @@ README
 Requirements
 ------------
 
+First, make sure your ruby was compiled with the --enable-shared options.
+If not, reinstall it (let's say version 1.9.3-p392) with with :
+
+    CONFIGURE_OPTS="--enable-shared" rbenv install 1.9.3-p392
+
 Install the following gems
 
-
-  * qtbindings
+    qtbindings
 
 Those could also be provided by your linux distribution and installable
 with 
