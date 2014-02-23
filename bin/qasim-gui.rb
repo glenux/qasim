@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
+#require 'rubygems'
+require 'bundler/setup'
 require 'Qt4'
 
 $DEBUG = true
