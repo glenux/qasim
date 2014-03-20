@@ -4,8 +4,7 @@ $DEBUG = true
 $VERBOSE = true
 
 require 'pp'
-require 'qasim/config'
-require 'qasim/map'
+require 'qasim'
 
 module Qasim
 
