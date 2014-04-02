@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Qasim is a front-end for sshfs, the filesystem
 	client based on fuse and ssh. It provides automating and global settings
     control for sshfs mounts.}
-  spec.homepage      = ""
+  spec.homepage      = "http://glenux.github.io/qasim"
   spec.license       = "GPL-3"
 
   spec.files         = `git ls-files`.split($/)
