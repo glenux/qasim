@@ -23,10 +23,36 @@ or
     apt-get install ruby-qt4
 
 
-Alternatives
+Installation
 ------------
 
-* [Mountoid](http://kde-apps.org/content/show.php/Mountoid?content=115943)
+Add this line to your application's Gemfile:
+
+    gem 'qasim'
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install qasim
+
+
+Usage
+-----
+
+TODO: Write usage instructions here
+
+
+Contributing
+------------
+
+1. Fork it ( http://github.com/glenux/qasim/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
 
 
 Copyright & License
@@ -46,4 +72,10 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+Alternatives
+------------
+
+* [Mountoid](http://kde-apps.org/content/show.php/Mountoid?content=115943)
 
