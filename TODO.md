@@ -21,3 +21,8 @@ Global SSHFS Options
 
 ssh_command='autossh -M 0'
 
+
+Fixes
+
+Use Rakefile
+ex: https://github.com/ryanmelt/qtbindings/blob/master/Rakefile
