@@ -155,7 +155,7 @@ module Qasim
 			act_pref = Qt::Action.new _('&Preferences'), @context_menu
 			act_pref.setIcon(  Qt::Icon::fromTheme("configure") ) rescue nil
 			act_pref.setIconVisibleInMenu true
-			#act_pref.setEnabled true
+			act_pref.setEnabled false
 			act_pref.connect(SIGNAL(:triggered)) do 
 				res = @pref_dialog.show
 			end
