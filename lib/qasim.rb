@@ -1,5 +1,6 @@
 
 
+require 'qasim/version'
 require 'qasim/constants'
 
 module Qasim
