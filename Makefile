@@ -1,5 +1,7 @@
 
 NAME=qasim
+DESTDIR=/usr/local
+DEV_DESTDIR=tmp
 CONFDIR=$(DESTDIR)/etc
 BINDIR=$(DESTDIR)/usr/bin
 MANDIR=$(DESTDIR)/usr/share/man
@@ -166,8 +168,8 @@ install-data:
 
 ## OTHER
 
-.PHONY: tmp/destdir
+.PHONY: destdir
 dev-install:
-	rm -fr tmp/destdir
-	fakeroot $(MAKE) install DESTDIR=tmp/destdir
+	rm -fr $(DEV_DESTDIR)
+	fakeroot $(MAKE) install DESTDIR=$(DEV_DESTDIR)
 

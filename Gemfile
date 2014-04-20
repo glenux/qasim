@@ -1,6 +1,9 @@
+source 'https://rubygems.org'
 
-source "https://rubygems.org"
+# Specify your gem's dependencies in qasim.gemspec
+gemspec
 
-gem "rdebug"
-gem "qtbindings"
-gem "thor"
+#gem "rdebug"
+#gem "qtbindings"
+#gem "qtbindings", "~> 4.8.3.0"
+#gem "thor"
