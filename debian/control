@@ -7,7 +7,7 @@ Standards-Version: 3.7.2
 
 Package: qasim
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, sshfs (>= 1.7), ruby, libqt4-ruby, rubygems
+Depends: ${shlibs:Depends}, ${misc:Depends}, sshfs (>= 1.7), ruby2.0, libqt4-ruby, rubygems
 Description: Easy mount solution for SSH filesystems.
  Qasim is a front-end for sshfs, the filesystem client based on fuse
  and ssh. It provides automating and global settings control for sshfs mounts.
