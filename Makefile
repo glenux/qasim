@@ -94,7 +94,7 @@ install-ui: $(RBUI_FILES)
 	# FIXME install
 
 %_ui.rb: %.ui
-	bundle exec rbuic4 $< -o $@
+	rbuic4 $< -o $@
 	sed -e '/^module Ui/,/^end  # module Ui/d' \
 		-i $@
 
