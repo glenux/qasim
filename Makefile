@@ -1,12 +1,12 @@
 
 NAME=qasim
-DESTDIR=/usr/local
+DESTDIR=
 DEV_DESTDIR=tmp
 CONFDIR=$(DESTDIR)/etc
-BINDIR=$(DESTDIR)/bin
-MANDIR=$(DESTDIR)/share/man
-DOCDIR=$(DESTDIR)/share/doc
-SHAREDIR=$(DESTDIR)/share
+BINDIR=$(DESTDIR)/usr/bin
+MANDIR=$(DESTDIR)/usr/share/man
+DOCDIR=$(DESTDIR)/usr/share/doc
+SHAREDIR=$(DESTDIR)/usr/share
 
 RUBYVERSION=2.0
 RDOC=rdoc$(RUBYVERSION)
@@ -107,7 +107,7 @@ clean-bin:
 build-bin:
 
 install-bin: 
-	set
+	env |sort
 	mkdir -p $(BINDIR)
 	for binfile in bin/*.rb ; do \
 		BINFILE=`basename $$binfile |sed -e 's/.rb$$//'`; \
