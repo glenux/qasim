@@ -10,9 +10,10 @@ $VERBOSE = true
 require 'pp'
 require 'set'
 require 'fcntl'
+require 'pathname'
 
-QASIM_INCLUDE_DIR = "lib"
-QASIM_DATA_DIR = "."
+QASIM_INCLUDE_DIR = Pathname.new(File.dirname(__FILE__)).parent + "lib"
+QASIM_DATA_DIR = Pathname.new(File.dirname(__FILE__)).parent
 
 $:.push QASIM_INCLUDE_DIR
 
