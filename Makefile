@@ -102,7 +102,8 @@ install-ui: $(RBUI_FILES)
 ## BINARY SECTION
 
 clean-bin:
-	# make no sense in ruby
+	# remove external packages
+	rm -fr vendor/bundle
 
 build-bin:
 
@@ -137,8 +138,11 @@ build-data:
 
 install-data:
 	## Install man pages
-	# mkdir -p $(MANDIR)/man1
-	# cat $(NAME).1 | gzip > $(MANDIR)/man1/$(NAME).1.gz
+	mkdir -p $(MANDIR)/man1
+	for binfile in bin/*.rb ; do \
+		BINFILE=`basename $$binfile |sed -e 's/.rb$$//'`; \
+		cat man/$${BINFILE}.1 | gzip > $(MANDIR)/man1/$${BINFILE}.1.gz ; \
+	done
 	#
 	## Install icons
 	mkdir -p $(SHAREDIR)/$(NAME)/icons
