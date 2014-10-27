@@ -34,7 +34,7 @@ module Qasim
 
 			@maps = []
 			map_dirs = [@config_dir, APP_SYSCONFIG_DIR].select{ |d|
-					File.exists? d and File.directory? d 
+					File.exist? d and File.directory? d 
 			}
 			Find.find( *map_dirs ) do |path|
 				if File.file? path
