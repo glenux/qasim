@@ -1,3 +1,16 @@
+qasim (0.1.10) unstable; urgency=medium
+
+  * qasim-gui: update project dependencies upon ruby & gems.
+  * Added base files for Gem packaging & distribution.
+  * Makefile: fix installation rules for icons & ui library.
+  * ui/preferences: Changed class name MapDialog -> Preferences.
+  * ui: Changed window icons.
+  * Added base for preferences dialog.
+  * Added about dialog.
+  * data: Move all UI text as resource files.
+
+ -- Glenn Y. Rolland <glenux@glenux.net>  Fri, 09 May 2014 07:31:16 +0200
+
 qasim (0.1.9) unstable; urgency=low
 
   * qasim-gui: Use /proc/ instead of kill to detect other processes. 

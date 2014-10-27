@@ -8,15 +8,15 @@ $VERBOSE = true
 require 'pp'
 require 'set'
 require 'fcntl'
+require 'pathname'
 
-QASIM_INCLUDE_DIR = "lib"
-QASIM_DATA_DIR = "."
+QASIM_INCLUDE_DIR = Pathname.new(File.dirname(__FILE__)).parent + "lib"
+QASIM_DATA_DIR = Pathname.new(File.dirname(__FILE__)).parent + "data"
 
 $:.push QASIM_INCLUDE_DIR
 
-require 'qasim/constants'
-require 'qasim/config'
-require 'qasim/map'
+require 'qasim'
+require 'qasim/qasim_qrc'
 
 # QaSiM // Qt Sshfs Mapper 
 
@@ -26,8 +26,14 @@ end
 
 
 module Qasim
-	class QasimGui
+	class QasimApp
+		def initialize
+		end
+	end
 
+	class QasimGui < QasimApp
+
+		class LockError < RuntimeError ; end
 
 		def initialize
 			@config = Config.new
@@ -148,12 +154,18 @@ module Qasim
 			act_pref.setIcon(  Qt::Icon::fromTheme("configure") ) rescue nil
 			act_pref.setIconVisibleInMenu true
 			act_pref.setEnabled false
+			act_pref.connect(SIGNAL(:triggered)) do 
+				res = @pref_dialog.show
+			end
 			@context_menu.addAction act_pref;
 
 			act_about = Qt::Action.new '&About', @context_menu
 			act_about.setIcon( Qt::Icon::fromTheme("help-about") ) rescue nil
 			act_about.setIconVisibleInMenu true
-			act_about.setEnabled false
+			#act_about.setEnabled true
+			act_about.connect(SIGNAL(:triggered)) do 
+				res = @about_dialog.show
+			end
 			@context_menu.addAction act_about;
 
 			@context_menu.addSeparator
@@ -172,24 +184,31 @@ module Qasim
 		def build_interface
 
 			@app = Qt::Application.new(ARGV)
-			si  = Qt::SystemTrayIcon.new
+			#Qt.debug_level = Qt::DebugLevel::High
+			#Qt.debug_level = Qt::DebugLevel::Extensive
+			@app.setQuitOnLastWindowClosed false
 
-			std_icon = Qt::Icon.new( File.join APP_ICON_PATH, "qasim.svg" )
+			@main_win = Qt::MainWindow.new
+			@systray  = Qt::SystemTrayIcon.new @main_win
+			@about_dialog = Qasim::Ui::About.new @main_win
+			@pref_dialog = Qasim::Ui::Preferences.new @main_win
+
+			std_icon = Qt::Icon.new( ":/qasim/qasim-icon" )
 			alt_icon = Qt::Icon.new
 			blinking = false
 
-			si.icon  = std_icon
-			si.show
+			@systray.icon  = std_icon
+			@systray.show
 
 
-			si.setToolTip("Qasim %s" % APP_VERSION);
+			@systray.setToolTip("Qasim %s" % APP_VERSION);
 
 			build_map_menu
 			build_context_menu
 
-			si.contextMenu = @context_menu
+			@systray.contextMenu = @context_menu
 
-			si.connect(SIGNAL('activated(QSystemTrayIcon::ActivationReason)')) do |reason|
+			@systray.connect(SIGNAL('activated(QSystemTrayIcon::ActivationReason)')) do |reason|
 				case reason
 				when Qt::SystemTrayIcon::Trigger then
 					build_map_menu
@@ -207,32 +226,26 @@ module Qasim
 		end
 
 
-		#
-		#
-		#
-		def run
-			# create lock
-			have_lock = true
-
-			FileUtils.mkdir_p APP_CONFIG_DIR unless File.exist? APP_CONFIG_DIR
-			lockfname = File.join APP_CONFIG_DIR, "lock"
-			fd = IO::sysopen( lockfname,
-							 Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT)
-			f = IO.open(fd)
-			f.syswrite( "#{Process.pid}\n" )
-			f.close
-			@app.exec
-		rescue Errno::EEXIST => e
-			# test if the other process still exist
-			masterpid = File.read(lockfname).strip
+		def lock_set
 			begin
-				# FIXME: test if the other process exists
+				# create lock
+				have_lock = true
+
+				FileUtils.mkdir_p APP_CONFIG_DIR unless File.exist? APP_CONFIG_DIR
+				lockfname = File.join APP_CONFIG_DIR, "lock"
+				fd = IO::sysopen( lockfname,
+								 Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT)
+				f = IO.open(fd)
+				f.syswrite( "#{Process.pid}\n" )
+				f.close
+			rescue Errno::EEXIST => e
+				# test if the other process still exist
+				masterpid = File.read(lockfname).strip
 				other_path = "/proc/#{masterpid.to_i}"
 				if File.exists? other_path then
 					cmdline = File.read( File.join( other_path, 'cmdline' ) )
 					if cmdline =~ /qasim/ then
-						warn "error: Another instance of %s is already running." % APP_NAME
-						exit 1
+						raise LockError, "Another instance of %s is already running." % APP_NAME
 					end
 				end
 				fd = IO::sysopen( lockfname,
@@ -240,13 +253,30 @@ module Qasim
 				f = IO.open(fd)
 				f.syswrite( "#{Process.pid}\n" )
 				f.close
-				@app.exec
 			end
-		ensure
+		end
+
+		def lock_unset
+			# remove lock if it exists
+			lockfname = File.join APP_CONFIG_DIR, "lock"
+			return unless File.exist? lockfname
 			masterpid = File.read(lockfname).strip
 			if masterpid.to_i == Process.pid then
 				FileUtils.rm lockfname
 			end
+		end
+
+		#
+		#
+		#
+		def run
+			lock_set
+			@app.exec
+			exit 0
+		rescue LockError
+			exit 1
+		ensure
+			lock_unset
 		end
 
 

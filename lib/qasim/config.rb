@@ -1,5 +1,3 @@
-#!/usr/bin/ruby
-# vim: set ts=4 sw=4:
 
 require 'optparse'
 require 'ostruct'
@@ -35,7 +33,10 @@ module Qasim
 			#rdebug "Config: #{@config_dir}/config"
 
 			@maps = []
-			Find.find( @config_dir, APP_SYSCONFIG_DIR ) do |path|
+			map_dirs = [@config_dir, APP_SYSCONFIG_DIR].select{ |d|
+					File.exist? d and File.directory? d 
+			}
+			Find.find( *map_dirs ) do |path|
 				if File.file? path
 					if File.basename( path ) =~ /.map$/
 						begin

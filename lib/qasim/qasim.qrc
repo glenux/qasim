@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="qasim">
+    <file alias="authors">../../data/text/authors.html</file>
+    <file alias="thanks">../../data/text/thanks.html</file>
+    <file alias="licence-gpl3">../../data/text/gpl-3.0-standalone.html</file>
+    <file alias="qasim-icon">../../data/icons/qasim.svg</file>
+  </qresource>
+</RCC>

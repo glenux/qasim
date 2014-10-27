@@ -3,9 +3,23 @@
 $DEBUG = true
 $VERBOSE = true
 
+QASIM_INCLUDE_DIR = "lib"
+QASIM_DATA_DIR = "."
+
+$:.push QASIM_INCLUDE_DIR
+p $:.inspect
+
+#
+# external libraries
+#
+require 'bundler/setup'
 require 'pp'
-require 'qasim/config'
-require 'qasim/map'
+#require 'thor'
+
+#
+# project libraries
+#
+require 'qasim'
 
 module Qasim
 

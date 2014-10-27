@@ -1,5 +1,3 @@
-#!/usr/bin/ruby
-# vim: set ts=4 sw=4:
 
 require 'optparse'
 require 'ostruct'
