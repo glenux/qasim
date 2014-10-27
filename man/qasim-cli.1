@@ -1,0 +1,98 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH QASIM-CLI 1 "august 12, 2014"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+
+
+.SH NAME
+
+sshfs-mapper \- A small utility for automatizing sshfs mounts.
+
+
+.SH SYNOPSIS
+
+.B sshfs-mapper
+.RI [ options ]
+
+
+.SH DESCRIPTION
+This manual page documents briefly the
+.B sshfs-mapper
+command.
+.PP
+.\" TeX users may be more comfortable with the \fB<whatever>\fP and
+.\" \fI<whatever>\fP escape sequences to invode bold face and italics, 
+.\" respectively.
+\fBsshfs-mapper\fP is a program that...
+
+
+
+.SH OPTIONS
+
+.TP
+.B \-h\fP, \fB--help
+Show summary of options.
+.TP
+.B \-i\fP, \fB--init
+Initialize sshfs-mapper configuration.
+.TP
+.B \-l\fP, \fB--list
+List available maps.
+.TP
+.B \-a\fP, \fB--all
+Select all maps.
+.TP
+.B \-s\fP, \fB--select \fImap\fP
+Only use specified map.
+.TP
+.B \-u\fP, \fB--umount
+Umount maps (mount if the flag is not specified).
+.TP
+.B \-v\fP, \fB--verbose
+Show version of program.
+
+
+.SH FILES
+
+.TP
+$XDG_CONFIG_HOME/sshfs-mapper/config
+
+Global settings file.
+
+.TP
+$XDG_CONFIG_HOME/sshfs-mapper/*.map
+
+Per-host configuration and mappings.
+
+
+.SH CONFIGURATION
+
+Configuration file is stored inside $XDG_CONFIG_HOME/sshfs-mapper/ .
+Global settings are storend in the \fBconfig\fP file a FIXME
+
+.SH SEE ALSO
+
+.BR sshfs (1),
+.BR ssh (1),
+.BR ssh-keygen (1).
+
+
+.SH AUTHOR
+
+sshfs-mapper was written by Glenn.Rolland <glenux@glenux.net>.
+.PP
+This manual page was written by Glenn ROLLAND <glenux@glenux.net>,
+for the Debian project (but may be used by others).
