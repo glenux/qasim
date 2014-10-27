@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-#require 'rubygems'
-#require 'bundler/setup'
 require 'Qt4'
 
 $DEBUG = true
@@ -13,12 +11,11 @@ require 'fcntl'
 require 'pathname'
 
 QASIM_INCLUDE_DIR = Pathname.new(File.dirname(__FILE__)).parent + "lib"
-QASIM_DATA_DIR = Pathname.new(File.dirname(__FILE__)).parent
+QASIM_DATA_DIR = Pathname.new(File.dirname(__FILE__)).parent + "data"
 
 $:.push QASIM_INCLUDE_DIR
 
 require 'qasim'
-
 require 'qasim/qasim_qrc'
 
 # QaSiM // Qt Sshfs Mapper 
