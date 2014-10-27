@@ -4,6 +4,4 @@ source 'https://rubygems.org'
 gemspec
 
 #gem "rdebug"
-#gem "qtbindings"
-#gem "qtbindings", "~> 4.8.3.0"
 #gem "thor"
