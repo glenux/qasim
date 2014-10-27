@@ -1,14 +1,17 @@
+PATH
+  remote: .
+  specs:
+    qasim (0.1.12)
+
 GEM
   remote: https://rubygems.org/
   specs:
-    qtbindings (4.8.3.0)
-    rdebug (0.1)
-    thor (0.18.1)
+    rake (10.3.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  qtbindings
-  rdebug
-  thor
+  bundler (~> 1.5)
+  qasim!
+  rake
