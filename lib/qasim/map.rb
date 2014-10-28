@@ -171,12 +171,17 @@ module Qasim
 					"-o","idmap=user" ,
 					"-o","uid=%s" % Process.uid,
 					"-o","gid=%s" % Process.gid,
-					"-o","reconnect",
+					"-o","reconnect", # auto-reconnection
 					"-o","workaround=all",
-					"-o","cache_timeout=240",
-					"-o","ServerAliveInterval=15",
+					"-o","cache_timeout=900", # 15 min cache for files
+					"-o","cache_stat_timeout=1800", # 30 min cache for directories
+					"-o","cache_link_timout=1800", # 30 min cache for links
+					"-o","attr_timeout=1800", # 30 min attr cache
+					"-o","entry_timeout=1800", # 30 min entry cache
+					"-o","ServerAliveInterval=15", # prevent I/O hang
+					"-o","ServerAliveCountMax=3", # prevent I/O hang
 					"-o","no_readahead",
-					"-o","Ciphers=arcfour",
+					#"-o","Ciphers=arcfour", # force cypher
 					"-o","Port=%s" % @port,
 					"%s@%s:%s" % [@user,@host,remotepath],
 					localpath ]
