@@ -228,7 +228,7 @@ module Qasim
 
 		def lock_set
 			begin
-				# create lock
+				# create an exclusive lock file
 				have_lock = true
 
 				FileUtils.mkdir_p APP_CONFIG_DIR unless File.exist? APP_CONFIG_DIR
@@ -242,6 +242,7 @@ module Qasim
 				# test if the other process still exist
 				masterpid = File.read(lockfname).strip
 				other_path = "/proc/#{masterpid.to_i}"
+				STDERR.puts "testing %s" % other_path
 				if File.exist? other_path then
 					cmdline = File.read( File.join( other_path, 'cmdline' ) )
 					if cmdline =~ /qasim/ then
@@ -270,11 +271,12 @@ module Qasim
 		#
 		#
 		def run
+			Process.daemon(true) #FIXME: add foreground mode too
 			lock_set
-			Process.daemon(true)
 			@app.exec
 			exit 0
 		rescue LockError
+			STDERR.puts "Error: %s is already running" % APP_NAME
 			exit 1
 		ensure
 			lock_unset
