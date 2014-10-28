@@ -6,7 +6,7 @@ require 'qasim/version'
 Gem::Specification.new do |spec|
   spec.name          = "qasim"
   spec.version       = if `git branch`.split($/).include?("* develop") then
-						   Qasim::APP_VERSION + '.dev-' + Time.now.utc.strftime('%Y%m%d%H')
+						   Qasim::APP_VERSION + '.dev.' + Time.now.utc.strftime('%Y%m%d%H')
 					   else
 						   Qasim::APP_VERSION
 					   end
