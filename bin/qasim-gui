@@ -242,7 +242,7 @@ module Qasim
 				# test if the other process still exist
 				masterpid = File.read(lockfname).strip
 				other_path = "/proc/#{masterpid.to_i}"
-				if File.exists? other_path then
+				if File.exist? other_path then
 					cmdline = File.read( File.join( other_path, 'cmdline' ) )
 					if cmdline =~ /qasim/ then
 						raise LockError, "Another instance of %s is already running." % APP_NAME
@@ -271,6 +271,7 @@ module Qasim
 		#
 		def run
 			lock_set
+			Process.daemon(true)
 			@app.exec
 			exit 0
 		rescue LockError
