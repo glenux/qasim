@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    qasim (0.1.10)
+    qasim (0.1.11)
       qtbindings (~> 4.8.6.0)
 
 GEM
