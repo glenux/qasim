@@ -5,7 +5,11 @@ require 'qasim/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "qasim"
-  spec.version       = Qasim::APP_VERSION
+  spec.version       = if `git branch`.split($/).include?("* develop") then
+						   Qasim::APP_VERSION + '.dev-' + Time.now.utc.strftime('%Y%m%d%H')
+					   else
+						   Qasim::APP_VERSION
+					   end
   spec.authors       = ["Glenn Y. Rolland"]
   spec.email         = ["glenux@glenux.net"]
   spec.summary       = %q{Easy mount solution for SSH filesystems.}
