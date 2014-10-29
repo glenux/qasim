@@ -1,14 +1,16 @@
 PATH
   remote: .
   specs:
-    qasim (0.1.11.dev.2014102921)
-      qtbindings (~> 4.8.6.0)
+    qasim (0.1.11.dev.2014102922)
+      qtbindings (~> 4.8.6)
+      thor (~> 0.19.1)
 
 GEM
   remote: https://rubygems.org/
   specs:
     qtbindings (4.8.6.0)
     rake (10.3.2)
+    thor (0.19.1)
 
 PLATFORMS
   ruby
