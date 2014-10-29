@@ -21,7 +21,7 @@ require 'qasim'
 
 module Qasim
 
-	class QasimCli < Thor
+	class Cli < Thor
 
 		desc "init", "initialize user configuration"
 		def init
@@ -99,8 +99,5 @@ module Qasim
 	end
 end
 
-#app = 
-Qasim::QasimCli.start(ARGV)
-#app.run
-
+Qasim::Cli.start(ARGV)
 
