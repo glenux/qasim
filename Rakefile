@@ -1,4 +1,3 @@
-require "bundler/gem_tasks"
 
 NAME="qasim"
 DESTDIR=""
@@ -12,31 +11,37 @@ SHAREDIR="#{DESTDIR}/usr/share"
 RUBYVERSION="2.0"
 RDOC="rdoc#{RUBYVERSION}"
 
-QRC_FILES=$(wildcard lib/$(NAME)/*.qrc)
-RBQRC_FILES=$(patsubst %.qrc,%_qrc.rb,$(QRC_FILES))
-UI_FILES=$(wildcard lib/$(NAME)/ui/*.ui)
-RBUI_FILES=$(patsubst %.ui,%_ui.rb,$(UI_FILES))
+QRC_FILES=Dir.glob("lib/#{NAME}/*.qrc")
+RBQRC_FILES=QRC_FILES.map{ |f| f.sub(/\.qrc$/,'_qrc.rb') }
 
+UI_FILES=Dir.glob("lib/#{NAME}/ui/*.ui")
+RBUI_FILES=UI_FILES.map{ |f| f.sub(/\.ui$/,'_ui.rb') }
+
+
+desc "Do everything"
 task :all => [:build, :install]
 
+desc "Clean everything"
 task :clean => [
 	:clean_ui, 
 	:clean_qrc, 
 	:clean_bin,
 	:clean_lib, 
-	:clean_data
+	:clean_data,
+	:"gem:clean"
 ]
 
+desc "Build everything"
 task :build => [
 	:build_ui, 
 	:build_qrc, 
 	:build_bin,
 	:build_lib, 
-	:build_data
+	:build_data,
+	:"gem:build"
 ]
 
-task :doc => [:build_doc]
-
+desc "Install everything"
 task :install => [
 	:install_ui, 
 	:install_qrc, 
@@ -45,12 +50,15 @@ task :install => [
 	:install_data
 ]
 
+desc "Build documentation"
+task :doc => [:build_doc]
+
 task :clean_doc do
 	rm_rf doc
 end
 
 task :build_doc => :clean_doc do
-	sh %q{$(RDOC)
+	sh %Q{#{RDOC}
 		--promiscuous 
 		--inline-source 
 		--line-numbers 
@@ -60,14 +68,22 @@ task :build_doc => :clean_doc do
 end
 
 task :clean_qrc do
-	rm_fr $(RBQRC_FILES)
+	rm_fr RBQRC_FILES
 end
 
-task :build_qrc => $(RBQRC_FILES) do
-	echo $(RBQRC_FILES)
+task :build_qrc => RBQRC_FILES do
+	puts RBQRC_FILES
 end
 
-task %_qrc.rb: %.qrc do
-	rbrcc $< -o $@
+rule "_qrc.rb" => ".qrc" do |t|
+	sh %Q{rbrcc #{t.source} -o #{t.name}}
 end
 
+namespace :gem do
+	require "bundler/gem_tasks"
+
+	desc "Clean stalling gem files from the pkg directory"
+	task :clean do
+		rm_rf Dir.glob('pkg/*.gem')
+	end
+end
