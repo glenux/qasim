@@ -1,40 +1,32 @@
-README
-======
+Qasim (القاسم)
+==============
+
+Qasim is a tool born to your remote shares available simply from the system
+tray on your favorite desktop !
+
+It uses FUSE filesystems, thus everything remains accessible even under
+command-line shell, under your favorite operating system (Linux, Windows,
+MacOsX).
+
 
 Requirements
 ------------
 
-First, make sure your ruby was compiled with the --enable-shared options.
-If not, reinstall it (let's say version 1.9.3-p392) with with :
+Qasim require the ``qtbindings`` gems. It installs automatically along qasim's
+installation, but is quite long to build a native gem package.
 
-    CONFIGURE_OPTS="--enable-shared" rbenv install 1.9.3-p392
+**N.B :** If you experience trouble with Qasim dues to Qt bindings, make sure
+your Ruby installation was compiled with the ``--enable-shared`` option. 
 
-Install the following gems
+If it was not, then reinstall it (let's say version 1.9.3-p392) with with :
 
-    qtbindings
-
-Those could also be provided by your linux distribution and installable
-with 
-
-    apt-get install libqt4-ruby 
-
-or 
-
-    apt-get install ruby-qt4
+    $ CONFIGURE_OPTS="--enable-shared" rbenv install 1.9.3-p392
 
 
 Installation
 ------------
 
-Add this line to your application's Gemfile:
-
-    gem 'qasim'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
+Simply run :
 
     $ gem install qasim
 
@@ -42,7 +34,13 @@ Or install it yourself as:
 Usage
 -----
 
-TODO: Write usage instructions here
+Qasim provide two tools the CLI and the GUI.
+
+To run the GUI :
+
+   $ qasim-gui
+
+Then click on the icon red-yellow-blue icon in the system tray.
 
 
 Contributing
@@ -58,7 +56,7 @@ Contributing
 Copyright & License
 -------------------
 
-Copyright (C) 2010-2012 Glenn Y. Rolland
+Copyright (C) 2010-2014 Glenn Y. Rolland
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
