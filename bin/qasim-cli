@@ -1,20 +1,18 @@
 #!/usr/bin/ruby
 
-$DEBUG = true
-$VERBOSE = true
+#$DEBUG = true
+#$VERBOSE = true
 
 QASIM_INCLUDE_DIR = "lib"
 QASIM_DATA_DIR = "."
 
-$:.push QASIM_INCLUDE_DIR
-p $:.inspect
 
 #
 # external libraries
 #
 require 'bundler/setup'
 require 'pp'
-#require 'thor'
+require 'thor'
 
 #
 # project libraries
@@ -23,11 +21,28 @@ require 'qasim'
 
 module Qasim
 
-	class QasimCli
+	class QasimCli < Thor
+
+		desc "init", "initialize user configuration"
+		def init
+			raise NotImplementedError
+		end
+
+		desc "list", "list"
+		def list
+			raise NotImplementedError
+		end
+
+		desc "mount MAPS", "mount selected maps"
+		def mount
+			raise NotImplementedError
+		end
+
+		private
 		#
 		#
 		#
-		def initialize
+		def initializez
 			@all_maps = nil
 			@active_maps = nil
 
@@ -39,6 +54,7 @@ module Qasim
 			@all_maps = {}
 			pp @config
 		end
+
 
 
 		# create default map for each selected map
@@ -83,7 +99,8 @@ module Qasim
 	end
 end
 
-app = Qasim::Qasim.new
-app.run
+#app = 
+Qasim::QasimCli.start(ARGV)
+#app.run
 
 
