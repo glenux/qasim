@@ -38,7 +38,7 @@ Qasim provide two tools the CLI and the GUI.
 
 To run the GUI :
 
-   $ qasim-gui
+    $ qasim-gui
 
 Then click on the icon red-yellow-blue icon in the system tray.
 
