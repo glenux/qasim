@@ -1,8 +1,8 @@
 Qasim (القاسم)
 ==============
 
-Qasim is a tool born to your remote shares available simply from the system
-tray on your favorite desktop !
+Qasim is a tool born to make your remote shares easily available from the system
+tray, on your desktop !
 
 It uses FUSE filesystems, thus everything remains accessible even under
 command-line shell, under your favorite operating system (Linux, Windows,
