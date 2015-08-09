@@ -10,10 +10,7 @@ require 'set'
 require 'fcntl'
 require 'pathname'
 
-QASIM_INCLUDE_DIR = Pathname.new(File.dirname(__FILE__)).parent + "lib"
-QASIM_DATA_DIR = Pathname.new(File.dirname(__FILE__)).parent + "data"
-
-$:.push QASIM_INCLUDE_DIR
+$:.push "lib"
 
 require 'qasim'
 require 'qasim/qasim_qrc'

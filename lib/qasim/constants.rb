@@ -1,4 +1,6 @@
 module Qasim
+  APP_DATA_DIR = Pathname.new(File.dirname(__FILE__)).parent.parent.parent + "data"
+
 	APP_ICON_PATH = File.join QASIM_DATA_DIR, "icons"
 
 	APP_SYSCONFIG_DIR = "/etc/qasim/maps.d"

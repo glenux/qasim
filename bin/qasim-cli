@@ -3,10 +3,6 @@
 #$DEBUG = true
 #$VERBOSE = true
 
-QASIM_INCLUDE_DIR = "lib"
-QASIM_DATA_DIR = "."
-
-
 #
 # external libraries
 #
