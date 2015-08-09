@@ -41,20 +41,6 @@ install: \
 
 ## DOC SECTION
 
-.PHONY: build-doc
-
-clean-doc: 
-	rm -fr doc
-
-build-doc: clean-doc
-	$(RDOC) \
-		--promiscuous \
-		--inline-source \
-		--line-numbers \
-		-o doc lib/$(NAME)/ \
-		bin/
-	# --diagram
-
 install-doc:
 	#          # install documentation
 	rm -fr $(DOCDIR)/$(NAME)
