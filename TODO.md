@@ -14,7 +14,7 @@ ex: https://github.com/ryanmelt/qtbindings/blob/master/Rakefile
 
 * Default local cache directory
 * Default mount point directory
-
+* Idle time umount
 
 ### SSHFS
 
@@ -36,6 +36,8 @@ ex: https://github.com/ryanmelt/qtbindings/blob/master/Rakefile
 * 
 
 ### WebDav
+
+* Detect fusedav presence on system
 
 ### Local sync
 
