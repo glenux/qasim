@@ -21,8 +21,6 @@ RBUI_FILES=UI_FILES.map{ |f| f.sub(/\.ui$/,'_ui.rb') }
 require 'rake'
 require 'rake/testtask'
 
-#Rake.application.options.trace_rules = true
-
 Rake::TaskManager.record_task_metadata = true
 
 
@@ -37,7 +35,7 @@ desc "Build everything"
 task :build => [
 	:"ui:build",
 	:"qrc:build",
-	:"doc:build",
+	#:"doc:build",
 	:"gem:build"
 ]
 
