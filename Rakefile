@@ -19,7 +19,6 @@ UI_FILES=Dir.glob("lib/#{NAME}/ui/*.ui")
 RBUI_FILES=UI_FILES.map{ |f| f.sub(/\.ui$/,'_ui.rb') }
 
 require 'rake'
-require "bundler/gem_tasks"
 require 'rake/testtask'
 
 #Rake.application.options.trace_rules = true
