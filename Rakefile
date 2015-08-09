@@ -19,11 +19,13 @@ UI_FILES=Dir.glob("lib/#{NAME}/ui/*.ui")
 RBUI_FILES=UI_FILES.map{ |f| f.sub(/\.ui$/,'_ui.rb') }
 
 require 'rake'
+require "bundler/gem_tasks"
+require 'rake/testtask'
+
 #Rake.application.options.trace_rules = true
 
+Rake::TaskManager.record_task_metadata = true
 
-desc "Default task (build)"
-task :all => :build
 
 desc "Clean everything"
 task :clean => [
@@ -41,29 +43,19 @@ task :build => [
 ]
 
 
-namespace :data do
-  task :build do
-  end
-
-  task :clean do
-  end
-end
-
-
 namespace :doc do
   task :clean do
 	  rm_rf "doc"
   end
 
   task :build => :clean do
-	  sh %Q{#{RDOC}
-		--promiscuous 
-		--inline-source 
-		--line-numbers 
-		-o doc 
-    lib/#{NAME}/
-		bin/
-	  }
+	  sh [RDOC, 
+       "--promiscuous",
+       "--inline-source", 
+       "--line-numbers",
+       "-o", "doc",
+       "lib/#{NAME}/", "bin/"
+    ].join(" ")
   end
 end
 
@@ -85,6 +77,7 @@ namespace :qrc do
 end
 
 
+desc "UI related tasks"
 namespace :ui do
 	desc "Clean UI files"
 	task :clean do
@@ -113,13 +106,20 @@ namespace :gem do
 end
 
 
-require "bundler/gem_tasks"
-require 'rake/testtask'
-
 Rake::TestTask.new do |t|
-    #t.warning = true
-    #t.verbose = true
-    t.libs << "spec"
-    t.test_files = FileList['spec/**/*_spec.rb']
+  #t.warning = true
+  #t.verbose = true
+  t.libs << "spec"
+  t.test_files = FileList['spec/**/*_spec.rb']
 end
 
+# Set default task to list all task
+desc "Default task (build)"
+task :default do
+  puts "Usage : rake <taskname>"
+  puts ""
+
+  Rake::application.options.show_tasks = :tasks  # this solves sidewaysmilk problem
+  Rake::application.options.show_task_pattern = //
+  Rake::application.display_tasks_and_comments
+end
