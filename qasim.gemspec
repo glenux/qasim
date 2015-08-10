@@ -1,7 +1,7 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'qasim/version'
+require 'qasim/constants'
 
 Gem::Specification.new do |spec|
   spec.name          = "qasim"
@@ -29,6 +29,9 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency "rake", "~> 10.4.2"
+  spec.add_development_dependency "minitest", "~> 5.7.0"
+  spec.add_development_dependency "pry", "~> 0.10.1"
+  spec.add_development_dependency "simplecov"
 
   spec.add_runtime_dependency "qtbindings", "~> 4.8.6"
   spec.add_runtime_dependency "thor", "~> 0.19.1"
