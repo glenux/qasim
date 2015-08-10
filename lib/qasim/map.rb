@@ -2,7 +2,7 @@
 require 'fileutils'
 
 #require 'rdebug/base'
-require 'qasim'
+#require 'qasim/map/generic'
 
 module Qasim ; module Map
 

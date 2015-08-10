@@ -5,7 +5,7 @@ require 'pp'
 require 'find'
 
 require 'qasim/map'
-require 'qasim/map_ssh'
+require 'qasim/map/ssh'
 
 module Qasim
 	class Config
