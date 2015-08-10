@@ -41,10 +41,11 @@ ex: https://github.com/ryanmelt/qtbindings/blob/master/Rakefile
 
 ### Local sync
 
-* Unison (disable if not installed)
-    * unison executable path
-    * use unison (default: yes)
-    * sync interval (0=none, ...) in hours
+* Unison (disable if not installed) :
+
+   * unison executable path
+   * use unison (default: yes)
+   * sync interval (0=none, ...) in hours
 
 
 ### Programs
@@ -56,4 +57,9 @@ ex: https://github.com/ryanmelt/qtbindings/blob/master/Rakefile
 * fusedav executable path (default: empty)
 * autossh executable path (default: empty)
 * unison executable path (default: empty)
+
+### Implement StatusNotifierItem
+
+Inspiration code : https://github.com/sandsmark/quassel-proxy/commit/b858144c9d38623bdd9afaa02c404d9515243ab7
+
 
