@@ -4,7 +4,8 @@ require 'ostruct'
 require 'pp'
 require 'find'
 
-require 'qasim'
+require 'qasim/map'
+require 'qasim/map_ssh'
 
 module Qasim
 	class Config
@@ -38,7 +39,7 @@ module Qasim
 				next unless File.basename( path ) =~ /.map$/
 
 				begin
-					map = Map.new self, path
+					map = Map::Ssh.new self, path
 					yield map if block_given?
 					maps.push map
 				rescue
