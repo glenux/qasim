@@ -1,8 +1,6 @@
 
 require 'fileutils'
-
-#require 'rdebug/base'
-#require 'qasim/map/generic'
+require 'qasim/map/generic'
 
 module Qasim ; module Map
 
@@ -56,6 +54,8 @@ module Qasim ; module Map
       line = env_substitute(line, linect)
 
 			case line
+      when /^\s*TYPE\s*=\s*(.*)\s*$/ then
+        config[:type] = $1
 			when /^\s*REMOTE_USER\s*=\s*(.*)\s*$/ then
         config[:user] = $1
 			when /^\s*REMOTE_PORT\s*=\s*(.*)\s*$/ then
@@ -95,3 +95,4 @@ module Qasim ; module Map
 	end
   module_function :from_file, :env_substitute
 end ; end
+

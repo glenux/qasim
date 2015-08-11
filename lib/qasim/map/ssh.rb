@@ -1,6 +1,5 @@
 
 require 'fileutils'
-require 'qasim/map'
 require 'qasim/map/generic'
 
 class Qasim::Map::Ssh < Qasim::Map::Generic
@@ -16,6 +15,9 @@ class Qasim::Map::Ssh < Qasim::Map::Generic
 	CYPHER_AES256CBC = "aes-256-cbc".to_sym
 	CYPHERS = [ CYPHER_ARCFOUR, CYPHER_AES256CBC ]
 
+  def self.parameters
+    super
+  end
 
 	#
 	# Set defaults properties for maps
@@ -34,8 +36,6 @@ class Qasim::Map::Ssh < Qasim::Map::Generic
 
 		self.load @path
 	end
-
-
 
 
 	#

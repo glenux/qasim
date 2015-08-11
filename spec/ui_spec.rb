@@ -2,6 +2,6 @@
 require_relative 'spec_helper'
 require 'qasim/ui'
 
-describe Qasim::Config do
+describe Qasim::Ui do
   # something
 end

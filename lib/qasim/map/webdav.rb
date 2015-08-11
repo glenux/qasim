@@ -1,11 +1,18 @@
 
 require 'fileutils'
-require 'qasim/map'
 require 'qasim/map/generic'
 
-class Qasim::Map::Webdav
-    # nothing
+class Qasim::Map::Webdav < Qasim::Map::Generic
     def initialize
+    end
+
+    def requirements
+      req = super
+      req << :webdav_user     # ex: foo
+      req << :webdav_password # ex: bar
+      req << :webdav_port     # ex: 80, 8080, ...
+      req << :webdav_protocol # ex: http, https
+      req
     end
 end
 

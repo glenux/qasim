@@ -10,6 +10,7 @@ require 'minitest/unit'
 require 'minitest/autorun'
 require 'minitest/spec'
 require 'minitest/pride'
+
 require 'pry'
 
 $LOAD_PATH.unshift('../lib')

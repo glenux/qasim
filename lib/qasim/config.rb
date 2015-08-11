@@ -39,7 +39,7 @@ module Qasim
 				next unless File.basename( path ) =~ /.map$/
 
 				begin
-					map = Map::Ssh.new self, path
+					map = Map.from_file self, path
 					yield map if block_given?
 					maps.push map
 				rescue
