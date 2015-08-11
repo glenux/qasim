@@ -1,7 +1,7 @@
 
 require_relative 'spec_helper'
-require 'qasim/map_ssh'
+require 'qasim/map/ssh'
 
-describe Qasim::Config do
+describe Qasim::Map::Ssh do
   # something
 end
