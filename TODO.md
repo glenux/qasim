@@ -3,10 +3,13 @@ TODO
 
 ## Use Rakefile instead of Makefile
 
-* Build .ui and .qrc files before .gem
+* Make sure .ui and .qrc files are build before .gem
 
 ex: https://github.com/ryanmelt/qtbindings/blob/master/Rakefile
 
+## Plugin support
+
+Rewrite maps as a factory for plugins
 
 ## Parameters
 
