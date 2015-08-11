@@ -1,6 +1,12 @@
 TODO
 ====
 
+## Normalize binaries
+
+qasim-cli    : A command line to manage maps & configure the thing
+qasim-gui    : A desktop interface
+qasim-daemon : A background process to handle map actions
+
 ## Use Rakefile instead of Makefile
 
 * Make sure .ui and .qrc files are build before .gem
