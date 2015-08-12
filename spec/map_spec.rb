@@ -1,9 +1,17 @@
 
 require_relative 'spec_helper'
+require 'minitest/spec'
 require 'qasim/map'
+require 'securerandom'
+
+class Qasim::Map::Fake < Qasim::Map::Generic
+  def self.handles
+    [:fake]
+  end
+end
 
 describe Qasim::Map do
-  describe 'env_substitute' do
+  describe 'env_substitute' do# {{{
     it "returns a normal string unchanged" do
       str = "5cb0c49325df2d526116ef7b49eb7329"
       assert_equal Qasim::Map.env_substitute(str), str
@@ -35,10 +43,27 @@ describe Qasim::Map do
       ref = "SOMETHING = OK"
       assert_equal ref, Qasim::Map.env_substitute(str)
     end
+  end# }}}
+
+  describe 'class_for' do
+    it 'must return a class for given type' do
+      expected = Qasim::Map::Fake
+      result = Qasim::Map.class_for 'fake'
+
+      assert_equal expected, result
+    end
+
+    it 'must return nil when no type found' do
+      random_string = SecureRandom.hex
+      expected = nil
+      result = Qasim::Map.class_for random_string
+
+      assert_equal expected, result
+    end
   end
 
-
   describe 'from_file' do
+
   end
 end
 

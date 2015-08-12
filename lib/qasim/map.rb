@@ -1,11 +1,23 @@
 
 require 'fileutils'
 require 'qasim/map/generic'
+require 'qasim/map/ssh'
+require 'qasim/map/webdav'
 
 module Qasim ; module Map
 
 	class ParseError < RuntimeError ; end
 	class ConnectError < RuntimeError ;	end
+
+  def class_for type
+    plugin = nil
+    ObjectSpace.each_object(Class) do |cls|
+      if cls < Qasim::Map::Generic then
+        plugin = cls if cls.handles.include? type.to_sym
+      end 
+    end
+    plugin
+  end
 
   #
   # replace magic values withing map lines
@@ -42,7 +54,9 @@ module Qasim ; module Map
 	# Load description from file and create a Map object
 	#
 	def from_file appcfg, filename
-    config = {}
+    config = {
+      type: :ssh  # for config V1, we assume SSHFS 
+    }
     map = nil
 
 		f = File.open filename
@@ -93,6 +107,8 @@ module Qasim ; module Map
 			f.puts "REMOTE_CYPHER=%s" % @cypher
 		end
 	end
-  module_function :from_file, :env_substitute
+  module_function :from_file,
+    :env_substitute,
+    :class_for
 end ; end
 

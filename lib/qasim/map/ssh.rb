@@ -12,11 +12,18 @@ class Qasim::Map::Ssh < Qasim::Map::Generic
 		:name
 
 	CYPHER_ARCFOUR = :arcfour
-	CYPHER_AES256CBC = "aes-256-cbc".to_sym
-	CYPHERS = [ CYPHER_ARCFOUR, CYPHER_AES256CBC ]
+	CYPHER_AES256CBC = :"aes-256-cbc"
+	CYPHERS = [ 
+    CYPHER_ARCFOUR, 
+    CYPHER_AES256CBC
+  ]
 
   def self.parameters
     super
+  end
+
+  def self.handles
+    [ :ssh, :sshfs ]
   end
 
 	#
@@ -37,21 +44,11 @@ class Qasim::Map::Ssh < Qasim::Map::Generic
 		self.load @path
 	end
 
-
 	#
-	# Test map liveness (how ?)
-	# FIXME: not implemented
-	#
-	def online?
-		#rdebug  "testing online? %s " % self.inspect
-		#FIXME: test liveness
-	end
-
-
 	#
 	# Test if map is connected / mounted
 	#
-	def connected? 
+	def mounted? 
 		f = File.open("/proc/mounts")
 		sshfs_mounted = (f.readlines.select do |line|
 			line =~ /\s+fuse.sshfs\s+/
@@ -79,14 +76,7 @@ class Qasim::Map::Ssh < Qasim::Map::Generic
 	#
 	# Connect map
 	#
-	def connect &block
-		puts "[#{File.basename @path}] Connecting..."
-		puts "  #{@user}@#{@host}:#{@port}"
-		#puts "  links = %s" % @links.map{ |k,v| "%s => %s" % [ k, v ] }.join(', ')
-		# do something
-		# test server connection
-		# mount
-		#
+	def mount &block
 		# FIXME: test connexion with Net::SSH + timeout or ask password
 		@links.each do |name, remotepath|
 			localpath = File.join ENV['HOME'], "mnt", name
@@ -111,7 +101,6 @@ class Qasim::Map::Ssh < Qasim::Map::Generic
 				"-o","Port=%s" % @port,
 				"%s@%s:%s" % [@user,@host,remotepath],
 				localpath ]
-			#rdebug "command: %s" % [ cmd, cmd_args ].flatten.join(' ')
 			if block_given? then
 				yield name, cmd, cmd_args
 			else
@@ -127,8 +116,7 @@ class Qasim::Map::Ssh < Qasim::Map::Generic
 	#
 	# Disconnect map
 	#
-	def disconnect &block
-		puts "Disconnecting map #{@path}"
+	def umount &block
 		@links.each do |name, remotepath|
 			localpath = File.join ENV['HOME'], "mnt", name
 			cmd = "fusermount"
@@ -148,3 +136,4 @@ class Qasim::Map::Ssh < Qasim::Map::Generic
 		end
 	end
 end
+

@@ -1,11 +1,10 @@
 require 'fileutils'
-require 'qasim/map'
 
 module Qasim ; module Map
 end ; end
 
 class Qasim::Map::Generic
-  def initialize config
+  def initialize params
   end
 
 
@@ -14,12 +13,37 @@ class Qasim::Map::Generic
   # Format :
   # Hash of (name:Symbol * [value:Object, optional:Boolean])
   
+
   def self.parameters
     {
       map_name:       [nil , true],
       map_enabled:    [true, false],
       map_mountpoint: [nil, true]
     }
+  end
+
+  #
+  # Test map liveness (connected & working)
+  #
+  def alive?
+  end
+
+  #
+  # Test map 
+  #
+  def mounted?
+  end
+
+  #
+  # Mount
+  #
+  def mount
+  end
+
+  # 
+  # Umount
+  #
+  def umount
   end
 
 end
