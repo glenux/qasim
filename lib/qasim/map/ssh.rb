@@ -19,7 +19,12 @@ class Qasim::Map::Ssh < Qasim::Map::Generic
   ]
 
   def self.parameters
-    super
+    super.merge({
+      ssh_user:     { required: true },           # ex : foo
+      ssh_password: { required: true },           # ex : bar
+      ssh_port:     { default: 80 },              # ex : 80, 8080, ...
+      ssh_cypher:   { default: CYPHER_AES256CBC } # ex : http, https
+    })
   end
 
   def self.handles
