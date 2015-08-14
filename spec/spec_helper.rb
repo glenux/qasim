@@ -10,8 +10,11 @@ require 'minitest/unit'
 require 'minitest/autorun'
 require 'minitest/spec'
 require 'minitest/pride'
+require 'minitest/reporters'
 
 require 'pry'
+
+Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
 
 $LOAD_PATH.unshift('../lib')
 
