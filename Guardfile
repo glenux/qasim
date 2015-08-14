@@ -15,7 +15,7 @@
 #
 # and, you'll have to watch "config/Guardfile" instead of "Guardfile"
             #
-guard :minitest, :spring => false do
+guard :minitest, spring: false do
   watch(%r{^lib/(.+)\.rb$}) do |m| 
     name = m[1].split('/')[1..-1].join('_')
     "spec/#{name}_spec.rb" 
