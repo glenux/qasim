@@ -35,6 +35,7 @@ class Qasim::Map::Ssh < Qasim::Map::Generic
 	# Set defaults properties for maps
 	#
 	def initialize config, map_path
+		super
 		@config = config
 		@path = map_path
 		@host = nil

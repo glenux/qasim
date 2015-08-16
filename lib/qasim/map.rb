@@ -65,7 +65,7 @@ module Qasim ; module Map
 			line = line.strip
 			linect += 1
 
-      line = env_substitute(line, linect)
+      line = env_substitute(line)
 
 			case line
       when /^\s*TYPE\s*=\s*(.*)\s*$/ then
