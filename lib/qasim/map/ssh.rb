@@ -34,20 +34,12 @@ class Qasim::Map::Ssh < Qasim::Map::Generic
 	#
 	# Set defaults properties for maps
 	#
-	def initialize config, map_path
+	def initialize *opts
 		super
-		@config = config
-		@path = map_path
-		@host = nil
-		@port = 22
-		@enable = false
-		@user = nil
-		@cypher = :arcfour
-		@links = {}
-		@debug = false
-		@name = (File.basename map_path).gsub(/\.map$/,'')
-
-		self.load @path
+	  #@host = nil
+		#@port = 22
+		#@user = nil
+		#@cypher = :arcfour
 	end
 
 	#

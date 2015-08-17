@@ -1,6 +1,10 @@
 
 require 'qasim/constants'
 
+def _ str
+	Qt::Object.tr(str)
+end
+
 module Qasim
 	autoload :Config, 'qasim/config'
 	autoload :Map,    'qasim/map'

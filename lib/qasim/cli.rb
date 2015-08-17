@@ -9,7 +9,11 @@ module Qasim
 
 		desc "list", "list"
 		def list
-			raise NotImplementedError
+			@config.maps.sort do |mx,my|
+				mx.host <=> my.host
+			end.each do |map|
+				puts map.name
+			end
 		end
 
 		desc "mount MAPS", "mount selected maps"
@@ -21,17 +25,17 @@ module Qasim
 		#
 		#
 		#
-		def initializez
+		def initialize *opts
+			super
+
 			@all_maps = nil
 			@active_maps = nil
 
-			puts "-- sshfs-mapper --"
 			@config = Config.new
-			@config.parse_cmd_line ARGV
-			@config.parse_file
+			@config.parse_maps
+			#@config.parse_cmd_line ARGV
 
 			@all_maps = {}
-			pp @config
 		end
 
 
@@ -43,7 +47,7 @@ module Qasim
 
 		def run_mount
 			# asynchronous mount
-			selected_maps = @config.maps.select do |map|
+			@config.maps.select do |map|
 				pp map
 				map.online?
 				# if map.available? then
@@ -69,8 +73,6 @@ module Qasim
 			else 
 				raise RuntimeError, "Unknown action"
 			end
-
-			puts "--run"
 		end
 
 	end

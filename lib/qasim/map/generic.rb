@@ -4,7 +4,17 @@ module Qasim ; module Map
 end ; end
 
 class Qasim::Map::Generic
-  def initialize params
+  def initialize app_config, params
+    @app_config = app_config
+    #@params = params # FIXME: ?
+
+    @links = params[:links]
+		params.delete :links
+
+		@filename = params[:filename] 
+		params.delete :filename
+
+		@name = File.basename @filename, '.map'
   end
 
 
@@ -17,7 +27,7 @@ class Qasim::Map::Generic
   def self.parameters
     {
       map_name:       [nil , true],
-      map_enabled:    [true, false],
+      map_enable:     [true, false],
       map_mountpoint: [nil, true]
     }
   end

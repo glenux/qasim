@@ -27,22 +27,23 @@ module Qasim
 			@debug = false
 		end
 
+    # FIXME: move out of config
 		def parse_maps &blk
 			@maps = []
 			map_dirs = [@config_dir, APP_SYSCONFIG_DIR].select{ |d|
 					File.exist? d and File.directory? d 
 			}
 
-			Find.find( *map_dirs ) do |path|
+			Find.find(*map_dirs) do |path|
 				# Skip unwanted files fast
 				next unless File.file? path
-				next unless File.basename( path ) =~ /.map$/
+				next unless File.basename(path) =~ /.map$/
 
 				begin
 					map = Map.from_file self, path
 					yield map if block_given?
 					maps.push map
-				rescue
+				rescue Map::ParseError
 					raise RuntimeError, "Error while parsing map file"
 				end
 			end

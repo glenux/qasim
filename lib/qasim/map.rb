@@ -54,8 +54,8 @@ module Qasim ; module Map
 	# Load description from file and create a Map object
 	#
 	def from_file appcfg, filename
-    config = {
-      type: :ssh  # for config V1, we assume SSHFS 
+    params = {
+      type: :ssh  # for params V1, we assume SSHFS by default
     }
     map = nil
 
@@ -66,30 +66,31 @@ module Qasim ; module Map
 			linect += 1
 
       line = env_substitute(line)
-
+      params[:filename] = filename
 			case line
       when /^\s*TYPE\s*=\s*(.*)\s*$/ then
-        config[:type] = $1
+        params[:type] = $1
 			when /^\s*REMOTE_USER\s*=\s*(.*)\s*$/ then
-        config[:user] = $1
+        params[:user] = $1
 			when /^\s*REMOTE_PORT\s*=\s*(.*)\s*$/ then
-        config[:port] = $1.to_i
+        params[:port] = $1.to_i
 			when /^\s*REMOTE_HOST\s*=\s*(.*)\s*$/ then
-				config[:host] = $1
+				params[:host] = $1
 			when /^\s*REMOTE_CYPHER\s*=\s*(.*)\s*$/ then
 				if CYPHERS.map(&:to_s).include? $1 then
-					config[:cypher] = $1.to_sym
+					params[:cypher] = $1.to_sym
 				end
 			when /^\s*MAP\s*=\s*(.*)\s+(.*)\s*$/ then
-        config[:links] ||= {}
-        config[:links][$1] = $2
+        params[:links] ||= {}
+        params[:links][$1] = $2
 			when /^\s*$/,/^\s*#/ then
 			else
 				raise MapParseError, "parse error at #{@filename}:#{linect}"
 			end
 		end
 		f.close
-    map = Ssh.new config, filename
+		map_class = class_for params[:type]
+    map = map_class.new appcfg, params
     return map
 	end
 
