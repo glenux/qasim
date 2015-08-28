@@ -76,4 +76,4 @@ Alternatives
 ------------
 
 * [Mountoid](http://kde-apps.org/content/show.php/Mountoid?content=115943)
-
+* [Xsshfs](http://david.mercereau.info/motclef/xsshfs/)
