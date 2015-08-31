@@ -1,3 +1,6 @@
+
+require 'pathname'
+
 module Qasim
 	APP_NAME = "Qasim"
 
