@@ -6,8 +6,10 @@
 #
 # external libraries
 #
-require 'bundler/setup'
+# require 'bundler/setup'
 require 'pp'
+
+$:.push "lib"
 
 #
 # project libraries
