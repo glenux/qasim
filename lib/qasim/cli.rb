@@ -66,6 +66,7 @@ module Qasim
 			super
 			@active_maps = nil
 			@config = Config.new
+      #@config.parse
 			@map_manager = MapManager.new @config
       @map_manager.parse_maps
 		end

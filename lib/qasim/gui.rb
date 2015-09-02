@@ -12,7 +12,7 @@ module Qasim
 
 		def initialize
 			@config = Config.new
-			#@config.parse_cmd_line ARGV
+      @map_manager = MapManager.new @config
 
 			@map_menu = nil
 			@context_menu = nil
@@ -38,7 +38,7 @@ module Qasim
       		)
 			msg.arguments = [ APP_NAME, Qt::Variant.from_value( 0, "unsigned int" ),
 				     icon, title, body, [], {}, -1  ]
-			rep = bus.call( msg )
+			_rep = bus.call( msg )
 			#	if rep.type == Qt::DBusMessage
 
 			#		si.showMessage("Qasim", 
@@ -51,12 +51,12 @@ module Qasim
 		#
 		def build_map_menu
 			# reload maps dynamically
-			@config.parse_maps
+			@map_manager.parse_maps
 			@map_menu ||= Qt::Menu.new
 			@map_menu.clear
 
 			previous_host = nil
-			@config.maps.sort do |mx,my|
+			@map_manager.sort do |mx,my|
 				mx.host <=> my.host
 			end.each do |map|
 				if map.host != previous_host and not previous_host.nil? then
@@ -64,7 +64,7 @@ module Qasim
 				end
 				itemx = Qt::Action.new(map.name, @map_menu)
 				itemx.setCheckable true;
-				if map.connected? then
+				if map.mounted? then
 					itemx.setChecked true
 				end
 				itemx.connect(SIGNAL(:triggered)) do 
@@ -131,7 +131,7 @@ module Qasim
 			act_pref.setIconVisibleInMenu true
 			act_pref.setEnabled false
 			act_pref.connect(SIGNAL(:triggered)) do 
-				res = @pref_dialog.show
+				_res = @pref_dialog.show
 			end
 			@context_menu.addAction act_pref;
 
@@ -140,7 +140,7 @@ module Qasim
 			act_about.setIconVisibleInMenu true
 			#act_about.setEnabled true
 			act_about.connect(SIGNAL(:triggered)) do 
-				res = @about_dialog.show
+				_res = @about_dialog.show
 			end
 			@context_menu.addAction act_about;
 
@@ -170,8 +170,8 @@ module Qasim
 			@pref_dialog = Qasim::Ui::Preferences.new @main_win
 
 			std_icon = Qt::Icon.new( ":/qasim/qasim-icon" )
-			alt_icon = Qt::Icon.new
-			blinking = false
+			_alt_icon = Qt::Icon.new
+			_blinking = false
 
 			@systray.icon  = std_icon
 			@systray.show
@@ -205,7 +205,7 @@ module Qasim
 		def lock_set
 			begin
 				# create an exclusive lock file
-				have_lock = true
+				_have_lock = true
 
 				FileUtils.mkdir_p APP_CONFIG_DIR unless File.exist? APP_CONFIG_DIR
 				lockfname = File.join APP_CONFIG_DIR, "lock"
@@ -214,7 +214,7 @@ module Qasim
 				f = IO.open(fd)
 				f.syswrite( "#{Process.pid}\n" )
 				f.close
-			rescue Errno::EEXIST => e
+			rescue Errno::EEXIST => _e
 				# test if the other process still exist
 				masterpid = File.read(lockfname).strip
 				other_path = "/proc/#{masterpid.to_i}"
