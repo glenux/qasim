@@ -4,7 +4,6 @@ class Qasim::MapManager
 	def initialize config
     @maps = []
     @config = config
-    puts "MapManager::initialize"
   end
   
   def sort &blk

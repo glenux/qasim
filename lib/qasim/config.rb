@@ -8,17 +8,14 @@ require 'qasim/map'
 require 'qasim/map/ssh'
 
 class Qasim::Config
-	attr_reader :maps_active
-	attr_reader :maps
 	attr_reader :mount_dir
   attr_reader :config_dir
 
 	def initialize
-		@mnt_dir = File.join ENV['HOME'], "mnt"
+		@mount_dir = File.join ENV['HOME'], 'mnt'
 
 		@config_dir = Qasim::APP_CONFIG_DIR
 		@config_file = nil
-		@maps = []
 		@initialize_enable = false
 		@umount_enable = false
 		@target = nil
