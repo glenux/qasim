@@ -108,8 +108,11 @@ module Qasim ; module Map
 			f.puts "REMOTE_CYPHER=%s" % @cypher
 		end
 	end
-  module_function :from_file,
-    :env_substitute,
-    :class_for
+
+  module_function :from_file
+  module_function :env_substitute
+  module_function :class_for
+  module_function :select
+
 end ; end
 

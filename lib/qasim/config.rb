@@ -7,48 +7,24 @@ require 'find'
 require 'qasim/map'
 require 'qasim/map/ssh'
 
-module Qasim
-	class Config
+class Qasim::Config
+	attr_reader :maps_active
+	attr_reader :maps
+	attr_reader :mount_dir
+  attr_reader :config_dir
 
-		attr_reader :maps_active
-		attr_reader :maps
-		attr_reader :mnt_dir
+	def initialize
+		@mnt_dir = File.join ENV['HOME'], "mnt"
 
-		def initialize
-			@mnt_dir = File.join ENV['HOME'], "mnt"
-
-			@config_dir = APP_CONFIG_DIR
-			@config_file = nil
-			@maps = []
-			@initialize_enable = false
-			@umount_enable = false
-			@target = nil
-			@verbose_enable = false
-			@debug = false
-		end
-
-    # FIXME: move out of config
-		def parse_maps &blk
-			@maps = []
-			map_dirs = [@config_dir, APP_SYSCONFIG_DIR].select{ |d|
-					File.exist? d and File.directory? d 
-			}
-
-			Find.find(*map_dirs) do |path|
-				# Skip unwanted files fast
-				next unless File.file? path
-				next unless File.basename(path) =~ /.map$/
-
-				begin
-					map = Map.from_file self, path
-					yield map if block_given?
-					maps.push map
-				rescue Map::ParseError
-					raise RuntimeError, "Error while parsing map file"
-				end
-			end
-		end
-
+		@config_dir = Qasim::APP_CONFIG_DIR
+		@config_file = nil
+		@maps = []
+		@initialize_enable = false
+		@umount_enable = false
+		@target = nil
+		@verbose_enable = false
+		@debug = false
+		@verbose = false
 	end
 end
 

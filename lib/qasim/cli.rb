@@ -1,23 +1,60 @@
 require 'thor'
+require 'pry'
 
 module Qasim
 	class Cli < Thor
+    class_option :verbose, 
+      type: :boolean,
+      aliases: '-v'
+
 		desc "init", "initialize user configuration"
 		def init
 			raise NotImplementedError
 		end
 
+
+    option :describe, 
+      type: :boolean,
+      aliases: '-d'
 		desc "list", "list"
 		def list
-			@config.maps.sort do |mx,my|
+			@map_manager.sort do |mx,my|
 				mx.host <=> my.host
 			end.each do |map|
 				puts map.name
+        if options[:describe] then
+          map.links.each do |link,where|
+            puts "  -    link: " + link
+            puts "         to: " + where
+            puts "    mounted: " + map.mounted?
+          end
+        end
 			end
 		end
 
+    desc "add MAP", "add a new map"
+    def add map_name
+			res = @config.maps.select do |map|
+        map.name == map_name
+			end
+      pp res
+      if not res.empty? then
+        puts "ERROR: name #{map_name} already exist !"
+        exit 1
+      end
+    end
+
+    desc "del MAP", "delete selected map"
+    def del map_name
+			res = @config.maps.select do |map|
+        map.name == map_name
+			end
+      pp res.first.filename
+    end
+
 		desc "mount MAPS", "mount selected maps"
 		def mount
+      Map.select name: map_name
 			raise NotImplementedError
 		end
 
@@ -27,17 +64,11 @@ module Qasim
 		#
 		def initialize *opts
 			super
-
-			@all_maps = nil
 			@active_maps = nil
-
 			@config = Config.new
-			@config.parse_maps
-			#@config.parse_cmd_line ARGV
-
-			@all_maps = {}
+			@map_manager = MapManager.new @config
+      @map_manager.parse_maps
 		end
-
 
 
 		# create default map for each selected map
@@ -47,7 +78,7 @@ module Qasim
 
 		def run_mount
 			# asynchronous mount
-			@config.maps.select do |map|
+			@map_manager.select do |map|
 				pp map
 				map.online?
 				# if map.available? then

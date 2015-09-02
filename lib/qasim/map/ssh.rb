@@ -22,6 +22,7 @@ class Qasim::Map::Ssh < Qasim::Map::Generic
     super.merge({
       ssh_user:     { required: true },           # ex : foo
       ssh_password: { required: true },           # ex : bar
+      ssh_host:     { required: true },           # ex : localhost, 127.0.0.1, ...
       ssh_port:     { default: 80 },              # ex : 80, 8080, ...
       ssh_cypher:   { default: CYPHER_AES256CBC } # ex : http, https
     })
@@ -36,38 +37,34 @@ class Qasim::Map::Ssh < Qasim::Map::Generic
 	#
 	def initialize *opts
 		super
-	  #@host = nil
-		#@port = 22
-		#@user = nil
-		#@cypher = :arcfour
 	end
 
-	#
-	#
-	# Test if map is connected / mounted
-	#
-	def mounted? 
+  def mount_include? fs_type, local_path
 		f = File.open("/proc/mounts")
-		sshfs_mounted = (f.readlines.select do |line|
-			line =~ /\s+fuse.sshfs\s+/
+		fs_mounts = (f.readlines.select do |line|
+			line =~ /\s+#{fs_type}\s+/
 		end).map do |line| 
 			line.split(/\s+/)[1]
 		end
 		f.close
+    fs_mounts.include? local_path
+  end
 
-		score = 0
+	#
+	# Test if map is connected / mounted
+	#
+	def mounted? 
+		score = @links.size
 		@links.each do |name, remotepath|
-			score += 1
-			local_path = File.join @config.mnt_dir, name
+			local_path = File.join @app_config.mount_dir, name
 
-			if sshfs_mounted.include? local_path then
+			if mount_include?("fuse.sshfs", local_path) then
 				score -= 1
 			end
 		end
-		if score == 0 then return true
-		else return false
-			# FIXME: explain why ?
-		end
+		# FIXME: handle the case of partial mounts (for remount/umount)
+		return true if score == 0
+    return false
 	end
 
 
@@ -122,7 +119,6 @@ class Qasim::Map::Ssh < Qasim::Map::Generic
 				"-u", #umount
 				"-z" ,#lazy
 				localpath ]
-			#rdebug "command: %s" % [ cmd, cmd_args ].flatten.join(' ')
 			if block_given? then
 				yield name, cmd, cmd_args
 			else
