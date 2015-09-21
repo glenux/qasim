@@ -71,14 +71,14 @@ module Qasim ; module Map
       when /^\s*TYPE\s*=\s*(.*)\s*$/ then
         params[:type] = $1
 			when /^\s*REMOTE_USER\s*=\s*(.*)\s*$/ then
-        params[:user] = $1
+        params[:ssh_user] = $1
 			when /^\s*REMOTE_PORT\s*=\s*(.*)\s*$/ then
-        params[:port] = $1.to_i
+        params[:ssh_port] = $1.to_i
 			when /^\s*REMOTE_HOST\s*=\s*(.*)\s*$/ then
-				params[:host] = $1
+				params[:ssh_host] = $1
 			when /^\s*REMOTE_CYPHER\s*=\s*(.*)\s*$/ then
 				if CYPHERS.map(&:to_s).include? $1 then
-					params[:cypher] = $1.to_sym
+					params[:ssh_cypher] = $1.to_sym
 				end
 			when /^\s*MAP\s*=\s*(.*)\s+(.*)\s*$/ then
         params[:links] ||= {}

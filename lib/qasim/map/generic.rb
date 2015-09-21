@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'pp'
 
 module Qasim ; module Map
 end ; end
@@ -16,8 +17,9 @@ class Qasim::Map::Generic
 
 		@filename = params[:filename] 
 		params.delete :filename
-
 		@name = File.basename @filename, '.map'
+		@params = params
+		pp @params
   end
 
 
