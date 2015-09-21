@@ -247,7 +247,7 @@ module Qasim
 		#
 		#
 		def run
-			Process.daemon(true) #FIXME: add foreground mode too
+			Process.daemon(false) #FIXME: add foreground mode too
 			lock_set
 			@app.exec
 			exit 0
