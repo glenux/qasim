@@ -81,8 +81,8 @@ module Qasim
 		def action_trigger_map_item map, item
 			@connect_error[map.path] = Set.new
 			@connect_running[map.path] = 0
-			method = if map.connected? then :disconnect
-					 else :connect
+			method = if map.mounted? then :umount
+					 else :mount
 					 end
 
 			begin
@@ -247,7 +247,7 @@ module Qasim
 		#
 		#
 		def run
-			Process.daemon(false) #FIXME: add foreground mode too
+			#Process.daemon(false) #FIXME: add foreground mode too
 			lock_set
 			@app.exec
 			exit 0
