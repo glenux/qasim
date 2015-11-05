@@ -29,7 +29,7 @@ module Qasim ; module Map ; class Ssh < Qasim::Map::Generic
   end
 
   def self.handles
-    [ :ssh, :sshfs ]
+    return [ :ssh, :sshfs ]
   end
 
 	#
@@ -39,96 +39,44 @@ module Qasim ; module Map ; class Ssh < Qasim::Map::Generic
 		super
 	end
 
-  def mount_include? fs_type, local_path
-		f = File.open("/proc/mounts")
-		fs_mounts = (f.readlines.select do |line|
-			line =~ /\s+#{fs_type}\s+/
-		end).map do |line| 
-			line.split(/\s+/)[1]
-		end
-		f.close
-    fs_mounts.include? local_path
+
+  def mount_id
+    return "fuse.sshfs"
   end
 
 	#
-	# Test if map is connected / mounted
+	# Connect single map
 	#
-	def mounted? 
-		score = @links.size
-		@links.each do |name, remotepath|
-			local_path = File.join @app_config.mount_dir, name
-
-			if mount_include?("fuse.sshfs", local_path) then
-				score -= 1
-			end
-		end
-		# FIXME: handle the case of partial mounts (for remount/umount)
-		return true if score == 0
-    return false
-	end
-
-
-	#
-	# Connect map
-	#
-	def mount &block
-		# FIXME: test connexion with Net::SSH + timeout or ask password
-		@links.each do |name, remotepath|
-			localpath = File.join ENV['HOME'], "mnt", name
-			FileUtils.mkdir_p localpath
-			cmd = "sshfs"
-			cmd_args = [
-				"-o","allow_root" ,
-				"-o","idmap=user" ,
-				"-o","uid=%s" % Process.uid,
-				"-o","gid=%s" % Process.gid,
-				"-o","reconnect", # auto-reconnection
-				"-o","workaround=all",
-				"-o","cache_timeout=900", # 15 min cache for files
-				"-o","cache_stat_timeout=1800", # 30 min cache for directories
-				"-o","cache_link_timeout=1800", # 30 min cache for links
-				"-o","attr_timeout=1800", # 30 min attr cache
-				"-o","entry_timeout=1800", # 30 min entry cache
-				"-o","ServerAliveInterval=15", # prevent I/O hang
-				"-o","ServerAliveCountMax=3", # prevent I/O hang
-				"-o","no_readahead",
-				#"-o","Ciphers=arcfour", # force cypher
-				"-o","Port=%s" % @params[:ssh_port],
-				"%s@%s:%s" % [@params[:ssh_user],@params[:ssh_host],remotepath],
-				localpath ]
-			STDERR.puts cmd + ' ' + cmd_args.join(' ')
-			if block_given? then
-				yield name, cmd, cmd_args
-			else
-				system cmd, cmd_args
-				if $?.exitstatus != 0 then
-					raise ConnectError, self
-				end
-			end
-		end
-	end
+  # FIXME: test connexion with Net::SSH + timeout or ask password
+  def mount_link name, remotepath
+    localpath = File.join ENV['HOME'], "mnt", name
+    FileUtils.mkdir_p localpath
+    cmd = "sshfs"
+    cmd_args = [
+      "-o","allow_root" ,
+      "-o","idmap=user" ,
+      "-o","uid=%s" % Process.uid,
+      "-o","gid=%s" % Process.gid,
+      "-o","reconnect", # auto-reconnection
+      "-o","workaround=all",
+      "-o","cache_timeout=900", # 15 min cache for files
+      "-o","cache_stat_timeout=1800", # 30 min cache for directories
+      "-o","cache_link_timeout=1800", # 30 min cache for links
+      "-o","attr_timeout=1800", # 30 min attr cache
+      "-o","entry_timeout=1800", # 30 min entry cache
+      "-o","ServerAliveInterval=15", # prevent I/O hang
+      "-o","ServerAliveCountMax=3", # prevent I/O hang
+      "-o","no_readahead",
+      #"-o","Ciphers=arcfour", # force cypher
+      "-o","Port=%s" % @params[:ssh_port],
+      "%s@%s:%s" % [@params[:ssh_user],@params[:ssh_host],remotepath],
+      localpath ]
+    STDERR.puts cmd + ' ' + cmd_args.join(' ')
+  end
+  
 
 
-	#
-	# Disconnect map
-	#
-	def umount &block
-		@links.each do |name, remotepath|
-			localpath = File.join ENV['HOME'], "mnt", name
-			cmd = "fusermount"
-			cmd_args = [
-				"-u", #umount
-				"-z" ,#lazy
-				localpath ]
-			if block_given? then
-				yield name, cmd, cmd_args
-			else
-				system cmd, cmd_args
-				if $?.exitstatus != 0 then
-					raise ConnectError, self
-				end
-			end
-		end
-	end
+
+
 end ; end ; end
 

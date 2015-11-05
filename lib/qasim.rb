@@ -12,11 +12,3 @@ require 'qasim/config'
 require 'qasim/map'
 require 'qasim/map_manager'
 
-## Plugins for maps
-require 'qasim/map/generic'
-require 'qasim/map/smb'
-require 'qasim/map/ssh'
-require 'qasim/map/webdav'
-
-
-

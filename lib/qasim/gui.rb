@@ -2,10 +2,7 @@ require 'qasim/qasim_qrc'
 require 'qasim/ui'
 
 module Qasim
-	class QasimApp
-		def initialize
-		end
-	end
+	class QasimApp ; end
 
 	class QasimGui < QasimApp
 
@@ -58,13 +55,15 @@ module Qasim
 
 			previous_host = nil
 			@map_manager.sort do |mx,my|
-				mx.host <=> my.host
+				mx.name <=> my.name
 			end.each do |map|
-				if map.host != previous_host and not previous_host.nil? then
-					@map_menu.addSeparator
-				end
+				#if map.host != previous_host and not previous_host.nil? then
+				#	@map_menu.addSeparator
+				#end
 				itemx = Qt::Action.new(map.name, @map_menu)
 				itemx.setCheckable true;
+        
+        #puts "Loading #{map.inspect}"
 				if map.mounted? then
 					itemx.setChecked true
 				end
@@ -72,7 +71,7 @@ module Qasim
 					action_trigger_map_item map, itemx
 				end
 				@map_menu.addAction itemx;
-				previous_host = map.host
+				#previous_host = map.name
 			end
 		end
 
@@ -80,8 +79,8 @@ module Qasim
 		# Action when map item triggered
 		#
 		def action_trigger_map_item map, item
-			@connect_error[map.path] = Set.new
-			@connect_running[map.path] = 0
+			@connect_error[map.filename] = Set.new
+			@connect_running[map.filename] = 0
 			method = if map.mounted? then :umount
 					 else :mount
 					 end
@@ -91,14 +90,14 @@ module Qasim
 					process = Qt::Process.new
 					process.connect(SIGNAL('finished(int, QProcess::ExitStatus)')) do |exitcode,exitstatus|
 						#puts "exitcode = %s, exitstatus = %s" % [exitcode, exitstatus]
-						@connect_running[map.path] -= 1 
+						@connect_running[map.filename] -= 1 
 						if exitcode != 0 then
-							@connect_error[map.path].add linkname
+							@connect_error[map.filename].add linkname
 						else
 						end
-						if @connect_running[map.path] == 0 then
+						if @connect_running[map.filename] == 0 then
 							# display someting
-							if @connect_error[map.path].empty? then
+							if @connect_error[map.filename].empty? then
 
 								dbus_notify "%s (%s)" % [APP_NAME, map.name], 
 									("<b>Map %sed successfully<b>" % method.to_s), 

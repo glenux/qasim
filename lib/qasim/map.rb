@@ -1,6 +1,7 @@
 
 require 'fileutils'
 require 'qasim/map/generic'
+require 'qasim/map/smb'
 require 'qasim/map/ssh'
 require 'qasim/map/webdav'
 
@@ -12,7 +13,9 @@ module Qasim ; module Map
   def class_for type
     plugin = nil
     ObjectSpace.each_object(Class) do |cls|
+      
       if cls < Qasim::Map::Generic then
+        puts "Searching #{type} in " + cls.handles.inspect
         plugin = cls if cls.handles.include? type.to_sym
       end 
     end
