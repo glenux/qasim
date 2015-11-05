@@ -1,10 +1,8 @@
+
 require 'fileutils'
 require 'pp'
 
-module Qasim ; module Map
-end ; end
-
-class Qasim::Map::Generic
+module Qasim ; class Map; class Generic
   attr_reader :links
   attr_reader :filename
   attr_reader :name
@@ -70,5 +68,4 @@ class Qasim::Map::Generic
   def umount
     raise NotImplementedError
   end
-end
-
+end ; end ; end

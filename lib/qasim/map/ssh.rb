@@ -2,7 +2,7 @@
 require 'fileutils'
 require 'qasim/map/generic'
 
-class Qasim::Map::Ssh < Qasim::Map::Generic
+module Qasim ; class Map ; class Ssh < Qasim::Map::Generic
 	attr_reader :path,
 		:host, 
 		:port, 
@@ -130,5 +130,5 @@ class Qasim::Map::Ssh < Qasim::Map::Generic
 			end
 		end
 	end
-end
+end ; end ; end
 
