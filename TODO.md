@@ -1,6 +1,14 @@
 TODO
 ====
 
+## Add unix tool requirement to plugins
+
+Each plugin plugin should declare its requirements concerning external tools.
+It should declare, at least the executable name, the versions and an optional test command.
+(The thing should work the same ways "TYPE" handles work.)
+
+During this self-check, and depending on the external tool presence, the plugin may disable itself from providing its services. Thus, all maps using this service should be disabled (or hidden, depending on global preferences).
+
 ## Normalize binaries
 
 qasim-cli    : A command line to manage maps & configure the thing
