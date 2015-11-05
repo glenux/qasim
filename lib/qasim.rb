@@ -5,11 +5,18 @@ def _ str
 	Qt::Object.tr(str)
 end
 
-module Qasim
-	autoload :Config,     'qasim/config'
-	autoload :Map,        'qasim/map'
-	autoload :Ui,         'qasim/ui'
-	autoload :Cli,        'qasim/cli'
-  autoload :MapManager, 'qasim/map_manager'
-end
+
+## Core libs
+require 'qasim/constants'
+require 'qasim/config'
+require 'qasim/map'
+require 'qasim/map_manager'
+
+## Plugins for maps
+require 'qasim/map/generic'
+require 'qasim/map/smb'
+require 'qasim/map/ssh'
+require 'qasim/map/webdav'
+
+
 

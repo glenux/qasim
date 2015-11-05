@@ -3,7 +3,7 @@
 require 'fileutils'
 require 'qasim/map/generic'
 
-class Qasim::Map::Webdav < Qasim::Map::Generic
+module Qasim; module Map; class Webdav < Qasim::Map::Generic
   def initialize *opts
 		super
   end
@@ -20,5 +20,6 @@ class Qasim::Map::Webdav < Qasim::Map::Generic
   def self.handles
     [ :webdav, :webdavs ]
   end
-end
+end ; end ; end
+
 

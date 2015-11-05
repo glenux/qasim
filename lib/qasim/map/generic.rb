@@ -2,7 +2,7 @@
 require 'fileutils'
 require 'pp'
 
-module Qasim ; class Map; class Generic
+module Qasim ; module Map; class Generic
   attr_reader :links
   attr_reader :filename
   attr_reader :name

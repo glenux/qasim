@@ -7,7 +7,7 @@ require 'qasim/map/webdav'
 module Qasim ; module Map
 
 	class ParseError < RuntimeError ; end
-	class ConnectError < RuntimeError ;	end
+	class ConnectError < RuntimeError ; end
 
   def class_for type
     plugin = nil
@@ -68,8 +68,6 @@ module Qasim ; module Map
       line = env_substitute(line)
       params[:filename] = filename
 			case line
-      when /^\s*TYPE\s*=\s*(.*)\s*$/ then
-        params[:type] = $1
 			when /^\s*REMOTE_USER\s*=\s*(.*)\s*$/ then
         params[:ssh_user] = $1
 			when /^\s*REMOTE_PORT\s*=\s*(.*)\s*$/ then
@@ -83,13 +81,20 @@ module Qasim ; module Map
 			when /^\s*MAP\s*=\s*(.*)\s+(.*)\s*$/ then
         params[:links] ||= {}
         params[:links][$1] = $2
+      when /^\s*([A-Z_]+)\s*=\s*(.*)\s*$/ then
+        key = $1.downcase.to_sym
+        params[key] = $2
 			when /^\s*$/,/^\s*#/ then
 			else
-				raise MapParseError, "parse error at #{@filename}:#{linect}"
+        STDERR.puts line
+				raise ParseError, "parse error at #{filename}:#{linect}"
 			end
 		end
 		f.close
 		map_class = class_for params[:type]
+    if map_class.nil? then
+      raise ParseError, "no plugin found for type « #{params[:type]} »"
+    end
     map = map_class.new appcfg, params
     return map
 	end

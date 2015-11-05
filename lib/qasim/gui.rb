@@ -1,4 +1,5 @@
 require 'qasim/qasim_qrc'
+require 'qasim/ui'
 
 module Qasim
 	class QasimApp
