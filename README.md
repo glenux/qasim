@@ -1,6 +1,10 @@
 Qasim (القاسم)
 ==============
 
+[![Travis-CI](https://api.travis-ci.org/glenux/qasim.png?branch=master)](https://travis-ci.org/glenux/qasim)
+[![Code Climate](https://codeclimate.com/github/glenux/qasim/badges/gpa.svg)](https://codeclimate.com/github/glenux/qasim)
+
+
 Qasim is a tool born to make your remote shares easily available from the system
 tray, on your desktop !
 
