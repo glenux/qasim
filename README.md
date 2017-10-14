@@ -21,6 +21,10 @@ As an example, for ruby 1.9.3-p392 with rbenv :
 
     $ CONFIGURE_OPTS="--enable-shared" rbenv install 1.9.3-p392
 
+For others versions of ruby with rbenv you can try :
+
+    $ CONFIGURE_OPTS="--enable-shared" rbenv install $(rbenv version |awk '{ print $1; }')
+
 
 ## Installation
 

@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   		.concat(Dir['*/**/*_ui.rb'])
 		.concat(Dir['*/**/*_qrc.rb'])
 
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
@@ -39,6 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "terminal-notifier-guard"
 
 
-  spec.add_runtime_dependency "qtbindings", "~> 4.8.6"
+  #spec.add_runtime_dependency "qtbindings", "~> 4.8.6"
+  spec.add_runtime_dependency "qml" 
   spec.add_runtime_dependency "thor", "~> 0.19.1"
 end
