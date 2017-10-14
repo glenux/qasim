@@ -1,54 +1,56 @@
-Qasim (القاسم)
-==============
+# Qasim (القاسم)
 
-[![Travis-CI](https://api.travis-ci.org/glenux/qasim.png?branch=master)](https://travis-ci.org/glenux/qasim)
-[![Code Climate](https://codeclimate.com/github/glenux/qasim/badges/gpa.svg)](https://codeclimate.com/github/glenux/qasim)
-
+[![Travis-CI](https://api.travis-ci.org/glenux/qasim.png?branch=master)](https://travis-ci.org/glenux/qasim) [![Code Climate](https://codeclimate.com/github/glenux/qasim/badges/gpa.svg)](https://codeclimate.com/github/glenux/qasim)
 
 Qasim is a tool born to make your remote shares easily available from the system
 tray, on your desktop !
 
-It uses FUSE filesystems, thus everything remains accessible even under
-command-line shell, under your favorite operating system (Linux, Windows,
-MacOsX).
+It uses the FUSE filesystem, thus everything gets accessible both on graphical environments and under
+command-line shell, on your favorite operating system (Linux, Windows, MacOsX, etc).
 
 
-Requirements
-------------
+## Requirements
 
-Qasim require the ``qtbindings`` gems. It installs automatically along qasim's
+Qasim require the `qtbindings` gems. It installs automatically along Qasim's
 installation, but is quite long to build a native gem package.
 
-**N.B :** If you experience trouble with Qasim dues to Qt bindings, make sure
-your Ruby installation was compiled with the ``--enable-shared`` option. 
+__N.B :__ If you experience trouble with Qasim dues to Qt bindings, make sure
+your Ruby installation was compiled with the `--enable-shared` option. If it was not, then reinstall it with the right arguments.
 
-If it was not, then reinstall it (let's say version 1.9.3-p392) with with :
+As an example, for ruby 1.9.3-p392 with rbenv :
 
     $ CONFIGURE_OPTS="--enable-shared" rbenv install 1.9.3-p392
 
 
-Installation
-------------
+## Installation
 
-Simply run :
+To install Qasim, type the following command :
 
     $ gem install qasim
 
 
-Usage
------
+## Usage
 
-Qasim provide two tools the CLI and the GUI.
+Qasim two tools : the CLI, for command-line environments, and the GUI, for desktop environments.
 
-To run the GUI :
+
+### Using the CLI 
+
+To run the CLI, type :
+
+    $ qasim-cli command [options]
+
+
+### Using the GUI
+
+To run the GUI, type :
 
     $ qasim-gui
 
-Then click on the icon red-yellow-blue icon in the system tray.
+Then Qasim icon (![quasim system tray](data/icons/qasim.32.png)) appears in your system tray.  Click on that icon to mount your filesystems, change your preferences, etc.
 
 
-Contributing
-------------
+## Contributing
 
 1. Fork it ( http://github.com/glenux/qasim/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
@@ -57,10 +59,9 @@ Contributing
 5. Create new Pull Request
 
 
-Copyright & License
--------------------
+## Copyright & License
 
-Copyright (C) 2010-2014 Glenn Y. Rolland
+Copyright (C) 2010-2017 Glenn Y. Rolland
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -76,8 +77,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-Alternatives
-------------
+## Alternatives
+
+If Qasim does not suit your needs, you can try these tools :
 
 * [Mountoid](http://kde-apps.org/content/show.php/Mountoid?content=115943)
 * [Xsshfs](http://david.mercereau.info/motclef/xsshfs/)
