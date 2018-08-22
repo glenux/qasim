@@ -1,4 +1,5 @@
-# Qasim (القاسم)
+
+# Qasim (القاسم)
 
 [![Travis-CI](https://api.travis-ci.org/glenux/qasim.png?branch=master)](https://travis-ci.org/glenux/qasim) [![Code Climate](https://codeclimate.com/github/glenux/qasim/badges/gpa.svg)](https://codeclimate.com/github/glenux/qasim)
 
@@ -33,7 +34,7 @@ To install Qasim, type the following command :
     $ gem install qasim
 
 
-## Usage
+## Usage
 
 Qasim two tools : the CLI, for command-line environments, and the GUI, for desktop environments.
 
